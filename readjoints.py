@@ -70,6 +70,6 @@ pynamics.toc()
 #        yaml.dump(readjoints,f1)
 
 #app = qg.QApplication(sys.argv)
-#animate.render(readjoints,show=True,save_files = False, render_video=False)
-##animate.animate(readjoints)
+##animate.render(readjoints,show=True,save_files = False, render_video=False)
+#animate.animate(readjoints)
 #sys.exit(app.exec_())
