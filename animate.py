@@ -10,9 +10,11 @@ import PyQt4.QtGui as qg
 import PyQt4.QtCore as qc
 from support import ReadJoints
 import yaml
-    
+import shutil
+import os
 import numpy
 import pyqtgraph.opengl as pgo
+import subprocess
 
 class ViewWidget(pgo.GLViewWidget):
     def __init__(self):
@@ -41,7 +43,6 @@ def gen_mesh_item(body):
     return meshitem
 
 def render(rundata,show=False,save_files = False, render_video=True):
-    app = qg.QApplication(sys.argv)
     w = ViewWidget()    
     w.setBackgroundColor(1,1,1,1)
         
@@ -55,10 +56,6 @@ def render(rundata,show=False,save_files = False, render_video=True):
     w.opts['elevation'] = 45
     w.resize(640,480)
     
-    
-    ii = 0
-    
-    import os
     if save_files or render_video:
         if not os.path.exists('render/'):
             os.mkdir('render')
@@ -81,7 +78,6 @@ def render(rundata,show=False,save_files = False, render_video=True):
             print(ii)
     if show:
         w.close()
-    import subprocess
 
     if render_video:
         if os.path.exists('render.mp4'):
@@ -89,11 +85,52 @@ def render(rundata,show=False,save_files = False, render_video=True):
         subprocess.call('"C:/program files/ffmpeg/bin/ffmpeg" -r {0} -i render/img_%04d.png -vcodec libxvid render.mp4'.format(str(rundata.animation_params.fps)))
     
     if save_files or render_video:
-        import shutil
         shutil.rmtree('render')
-    sys.exit(app.exec_())
+
+def update(t,w,ee,meshitems):
+    global ii
+    if ii<len(ee):
+        for jj,mi in enumerate(meshitems):
+            tr = ee[ii,jj]
+            tr =qg.QMatrix4x4(*tr.flatten().tolist())
+            mi.setTransform(tr)
+        ii+=1
+    else:
+        ii=0
+        t.stop()
+        w.showNormal()
+
+def animate(rundata):
+    w = ViewWidget()    
+    w.setBackgroundColor(1,1,1,1)
+        
+    meshitems = [gen_mesh_item(body) for body in rundata.rigidbodies]
+    [w.addItem(meshitem) for meshitem in meshitems]
+    centerpoint = qg.QVector3D(3.5,-1,1)
+    
+    w.opts['center'] = centerpoint
+    w.opts['distance'] = 5000
+    w.opts['azimuth'] = -45
+    w.opts['elevation'] = 45
+    w.resize(640,480)
+    
+    ee = numpy.array(rundata.ee)
+    
+    w.updateGL()
+    w.show()
+    t = qc.QTimer()
+    t.timeout.connect(lambda:update(t,w,ee,meshitems))
+    t.start(rundata.animation_params.t_step*1000)
+#    w.close()
+    
+ii = 0
 
 if __name__=='__main__':
+    app = qg.QApplication(sys.argv)
+    
     with open('rundata','r') as f:
         rundata = yaml.load(f)
-    render(rundata)
+#    render(rundata,show=True,render_video=False)
+    animate(rundata)
+        
+    sys.exit(app.exec_())
