@@ -74,8 +74,8 @@ class RigidBody(object):
         
 #        area = sum(areas)
 #        centroid = (areas*centroids).sum(0)/area
-        center_of_mass /= popupcad.SI_length_scaling
-        volume_total /=popupcad.SI_length_scaling**3
+#        center_of_mass /= popupcad.SI_length_scaling
+#        volume_total /=popupcad.SI_length_scaling**3
         return volume_total,center_of_mass
     def vector_from_fixed(self,new_matrix):
         fixed_matrix,fixed_vector = self.get_fixed()

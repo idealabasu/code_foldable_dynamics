@@ -8,18 +8,13 @@ Please see LICENSE for full license.
 import sys
 import PyQt4.QtGui as qg
 import PyQt4.QtCore as qc
-#import readjoints
-#rundata = readjoints.readjoints
-
 from support import ReadJoints
 import yaml
 with open('rundata','r') as f:
     rundata = yaml.load(f)
     
 import numpy
-#from pyqtgraph.opengl import GLViewWidget
 import pyqtgraph.opengl as pgo
-from pyqtgraph import Transform3D
 
 class ViewWidget(pgo.GLViewWidget):
     def __init__(self):
@@ -55,57 +50,43 @@ def gen_mesh_item(body):
 meshitems = [gen_mesh_item(body) for body in rundata.rigidbodies]
 [w.addItem(meshitem) for meshitem in meshitems]
 centerpoint = qg.QVector3D(3.5,-1,1)
+
 w.opts['center'] = centerpoint
 w.opts['distance'] = 5000
 w.opts['azimuth'] = -45
 w.opts['elevation'] = 45
-#w.opts['azimuth'] = 0
-#w.opts['elevation'] = 0
 w.resize(640,480)
 
-
-#mi = meshitems[3]
-#tr = Transform3D()
-#tr.translate(3000,0,0)
-#tr.rotate(5,0,1,0)
-#tr.translate(-3000,0,0)
-
-#tr.translate(2500,0,0)
-#mi.setTransform(tr)
-
-w.show()
-#w.showMaximized()
-#w.showFullScreen()
 
 ii = 0
 
 import os
 if not os.path.exists('render/'):
     os.mkdir('render')
+
 ee = numpy.array(rundata.ee)
-def update(t,w):
-    global ii
-    if ii<len(ee):
-        for jj,mi in enumerate(meshitems):
-            tr = ee[ii,jj]
-            tr =qg.QMatrix4x4(*tr.flatten().tolist())
-            mi.setTransform(tr)
-        ii+=1
-        w.grabFrameBuffer().save('render/{0:04d}.png'.format(ii))
-    else:
-        t.stop()
-        w.showNormal()
-#    tr = Transform3D()
-#    tr.translate(3000,0,0)
-#    tr.rotate(5,0,1,0)
-#    tr.translate(-3000,0,0)
-#    tr.setRow(0,qg.QVector4D(0.996195, 0.000000, 0.087156, 11.415906))
-#    qg.QVector4D(0.000000, 1.000000, 0.000000, 0.000000)
-#    mi.applyTransform(tr,True)
 
-t = qc.QTimer()
-t.timeout.connect(lambda:update(t,w))
-t.start(rundata.t_step*1000)
+#w.show()
+#w.showMaximized()
+#w.showFullScreen()
+w.updateGL()
 
+for ii in range(len(ee)):
+    for jj,mi in enumerate(meshitems):
+        tr = ee[ii,jj]
+        tr =qg.QMatrix4x4(*tr.flatten().tolist())
+        mi.setTransform(tr)
+    w.updateGL()
+    w.grabFrameBuffer().save('render/img_{0:04d}.png'.format(ii))
+    print(ii)
+#w.close()
+
+import subprocess
+if os.path.exists('render.mp4'):
+    os.remove('render.mp4')
+
+subprocess.call('"C:/program files/ffmpeg/bin/ffmpeg" -r 30 -i render/img_%04d.png -vcodec libxvid render.mp4')
+
+import shutil
+shutil.rmtree('render')
 sys.exit(app.exec_())
-#import makemovie
