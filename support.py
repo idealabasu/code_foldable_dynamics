@@ -32,6 +32,7 @@ def add_spring_between_points(P1,P3,accounting,N_rb,k_stop,b):
 
 def find_constraints(unused_connections):
     constraint_sets = []
+
     for line, bodies in unused_connections:
         points = line.exteriorpoints()
         points = numpy.c_[points,[0,0]]
@@ -42,6 +43,7 @@ def find_constraints(unused_connections):
         v3 = bodies[1].vector_from_fixed(points[0])
         v4 = bodies[1].vector_from_fixed(points[1])
         constraint_sets.append([v1,v2,v3,v4])
+
     return constraint_sets
     
 class RigidBody(object):
@@ -54,8 +56,10 @@ class RigidBody(object):
     def set_fixed(self,point,vector):
         self.fixed_initial_coordinates = point.tolist()
         self.fixed_vector = vector
+
     def get_fixed(self):
         return numpy.array(self.fixed_initial_coordinates),self.fixed_vector
+
     def set_particle(self,particle):
         self.particle = particle
         
@@ -77,10 +81,12 @@ class RigidBody(object):
 #        center_of_mass /= popupcad.SI_length_scaling
 #        volume_total /=popupcad.SI_length_scaling**3
         return volume_total,center_of_mass
+        
     def vector_from_fixed(self,new_matrix):
         fixed_matrix,fixed_vector = self.get_fixed()
         vec = vector_from_fixed(fixed_matrix,fixed_vector,new_matrix,self.frame)
         return vec
+
     def __lt__(self,other):
         return self.body.id<other.body.id
 
@@ -160,7 +166,7 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,conne
         child = child.rigidbody
         connections_rev = dict([(bodies,line) for line,bodies in connections])
         line = connections_rev[tuple(sorted([parent,child]))]
-        points = numpy.c_[line.exteriorpoints(),[0,0]]
+        points = numpy.c_[line.exteriorpoints(),[0,0]]/popupcad.SI_length_scaling
         newvec = parent.vector_from_fixed(points[0])
         child_velocities(child,newvec,points[0],N_rb,accounting,connections)
         
