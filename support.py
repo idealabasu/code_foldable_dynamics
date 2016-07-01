@@ -13,10 +13,10 @@ import popupcad
 from pynamics.vector import Vector
 
 class ReadJoints(object):
-    def __init__(self,rigidbodies,ee,t_step):
+    def __init__(self,rigidbodies,ee,animation_params):
         self.rigidbodies = rigidbodies
         self.ee = [[item.matrix().tolist() for item in item2] for item2 in ee]
-        self.t_step = t_step
+        self.animation_params = animation_params
         
 def vector_from_fixed(fixed_matrix,fixed_vector,new_matrix,frame):
     dx = new_matrix - fixed_matrix

@@ -10,8 +10,6 @@ import PyQt4.QtGui as qg
 import PyQt4.QtCore as qc
 from support import ReadJoints
 import yaml
-with open('rundata','r') as f:
-    rundata = yaml.load(f)
     
 import numpy
 import pyqtgraph.opengl as pgo
@@ -20,11 +18,6 @@ class ViewWidget(pgo.GLViewWidget):
     def __init__(self):
         super(ViewWidget,self).__init__()
         pass
-
-
-app = qg.QApplication(sys.argv)
-w = ViewWidget()    
-w.setBackgroundColor(1,1,1,1)
 
 def gen_mesh_item(body):
     colors = []
@@ -46,47 +39,61 @@ def gen_mesh_item(body):
     all_triangles = numpy.array(all_triangles)
     meshitem = pgo.GLMeshItem(vertexes=all_points, faces=all_triangles, vertexColors=colors,smooth=True)
     return meshitem
+
+def render(rundata,show=False,save_files = False, render_video=True):
+    app = qg.QApplication(sys.argv)
+    w = ViewWidget()    
+    w.setBackgroundColor(1,1,1,1)
+        
+    meshitems = [gen_mesh_item(body) for body in rundata.rigidbodies]
+    [w.addItem(meshitem) for meshitem in meshitems]
+    centerpoint = qg.QVector3D(3.5,-1,1)
     
-meshitems = [gen_mesh_item(body) for body in rundata.rigidbodies]
-[w.addItem(meshitem) for meshitem in meshitems]
-centerpoint = qg.QVector3D(3.5,-1,1)
-
-w.opts['center'] = centerpoint
-w.opts['distance'] = 5000
-w.opts['azimuth'] = -45
-w.opts['elevation'] = 45
-w.resize(640,480)
-
-
-ii = 0
-
-import os
-if not os.path.exists('render/'):
-    os.mkdir('render')
-
-ee = numpy.array(rundata.ee)
-
-#w.show()
-#w.showMaximized()
-#w.showFullScreen()
-w.updateGL()
-
-for ii in range(len(ee)):
-    for jj,mi in enumerate(meshitems):
-        tr = ee[ii,jj]
-        tr =qg.QMatrix4x4(*tr.flatten().tolist())
-        mi.setTransform(tr)
+    w.opts['center'] = centerpoint
+    w.opts['distance'] = 5000
+    w.opts['azimuth'] = -45
+    w.opts['elevation'] = 45
+    w.resize(640,480)
+    
+    
+    ii = 0
+    
+    import os
+    if save_files or render_video:
+        if not os.path.exists('render/'):
+            os.mkdir('render')
+    
+    ee = numpy.array(rundata.ee)
+    
     w.updateGL()
-    w.grabFrameBuffer().save('render/img_{0:04d}.png'.format(ii))
-    print(ii)
-#w.close()
+    
+    if show:
+        w.show()
+    for ii in range(len(ee)):
+        for jj,mi in enumerate(meshitems):
+            tr = ee[ii,jj]
+            tr =qg.QMatrix4x4(*tr.flatten().tolist())
+            mi.setTransform(tr)
+        w.updateGL()
+        if save_files or render_video:
+            w.grabFrameBuffer().save('render/img_{0:04d}.png'.format(ii))
+        if ii%100==0:
+            print(ii)
+    if show:
+        w.close()
+    import subprocess
 
-import subprocess
-if os.path.exists('render.mp4'):
-    os.remove('render.mp4')
+    if render_video:
+        if os.path.exists('render.mp4'):
+            os.remove('render.mp4')
+        subprocess.call('"C:/program files/ffmpeg/bin/ffmpeg" -r {0} -i render/img_%04d.png -vcodec libxvid render.mp4'.format(str(rundata.animation_params.fps)))
+    
+    if save_files or render_video:
+        import shutil
+        shutil.rmtree('render')
+    sys.exit(app.exec_())
 
-subprocess.call('"C:/program files/ffmpeg/bin/ffmpeg" -r 30 -i render/img_%04d.png -vcodec libxvid render.mp4')
-
-import shutil
-shutil.rmtree('render')
-sys.exit(app.exec_())
+if __name__=='__main__':
+    with open('rundata','r') as f:
+        rundata = yaml.load(f)
+    render(rundata)

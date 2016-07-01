@@ -24,6 +24,7 @@ import popupcad
 from pynamics.frame import Frame
 from pynamics.variable_types import Differentiable
 from math import pi
+import animate
 
 directory = 'C:\\Users\\daukes\\desktop'
 filename = 'pendulum2.cad.joints'
@@ -74,10 +75,11 @@ if __name__=='__main__':
     for body in bodies:
         del body.rigidbody
 
-readjoints = ReadJoints(bodies,T.tolist(),animation_params.t_step)
+readjoints = ReadJoints(bodies,T.tolist(),animation_params)
 
-if __name__=='__main__':
-    import yaml
-    with open('rundata','w') as f1:
-        yaml.dump(readjoints,f1)
+#if __name__=='__main__':
+#    import yaml
+#    with open('rundata','w') as f1:
+#        yaml.dump(readjoints,f1)
 
+animate.render(readjoints,show=True,save_files = False, render_video=False)
