@@ -56,7 +56,7 @@ meshitems = [gen_mesh_item(body) for body in rundata.rigidbodies]
 [w.addItem(meshitem) for meshitem in meshitems]
 centerpoint = qg.QVector3D(3.5,-1,1)
 w.opts['center'] = centerpoint
-w.opts['distance'] = 1000
+w.opts['distance'] = 5000
 w.opts['azimuth'] = -45
 w.opts['elevation'] = 45
 #w.opts['azimuth'] = 0
