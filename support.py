@@ -101,14 +101,15 @@ class AnimationParameters(object):
 def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
     from math import pi
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb)    
+    connections_rev = dict([(bodies,line) for line,bodies in connections])
+    joint_props_dict = dict([(item,prop) for (item,bodies),prop in zip(connections,joint_props)])
     for generation in generations:
         for parent in generation:    
             for child in parent_children[parent]:
-                connections_rev = dict([(bodies,line) for line,bodies in connections])
                 line = connections_rev[tuple(sorted([parent,child]))]
-                joint_props_dict = dict([(item,prop) for (item,bodies),prop in zip(connections,joint_props)])
-                k,b,q0,lim_neg,lim_pos = joint_props_dict[line]                
-                points = numpy.c_[line.exteriorpoints(),[0,0]]/popupcad.SI_length_scaling
+                k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
+                
+                points = numpy.c_[line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
                 axis = points[1] - points[0]
                 l = (axis.dot(axis))**.5
                 axis = axis/l
@@ -122,7 +123,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
                 spring_stretch = (x-(q0*pi/180))*fixedaxis
                 accounting.addforce(t_damper,w)
                 accounting.add_spring_force(k,spring_stretch,w)
-    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections)
+    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props_dict)
                 
     return unused_connections
                                 
@@ -155,20 +156,22 @@ def characterize_tree(connections,rigidbodies,N_rb):
         children = []
     return parent_children,unused_connections,generations
     
-def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections):
+def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict):
     parent.set_fixed(reference_coord,referencepoint)
     volume_total,center_of_mass = parent.gen_info()
 #    centroid = numpy.r_[centroid,[0]]
     newvec = parent.vector_from_fixed(center_of_mass)
     p = Particle(accounting,newvec,1)
     parent.set_particle(p)
+    
     for child in parent.frame.children:
         child = child.rigidbody
-        connections_rev = dict([(bodies,line) for line,bodies in connections])
         line = connections_rev[tuple(sorted([parent,child]))]
-        points = numpy.c_[line.exteriorpoints(),[0,0]]/popupcad.SI_length_scaling
+        k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
+
+        points = numpy.c_[line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
         newvec = parent.vector_from_fixed(points[0])
-        child_velocities(child,newvec,points[0],N_rb,accounting,connections)
+        child_velocities(child,newvec,points[0],N_rb,accounting,connections_rev,joint_props_dict)
         
 def plot(t,x,y):
     import matplotlib.pyplot as plt
@@ -191,15 +194,15 @@ def build_transformss(Rx,y):
         for jj,bb in enumerate(aa):
             bb=bb.T
             T1 = numpy.eye(4)
-            T1[:3,3] = -y[0,jj]
+            T1[:3,3] = -y[0,jj]*1000
             T2 = numpy.eye(4)
             T2[:3,:3] = bb
             T3 = numpy.eye(4)
-            T3[:3,3] = y[ii,jj]
+            T3[:3,3] = y[ii,jj]*1000
             T = T3.dot(T2.dot(T1))
             tr = Transform3D()
-            for kk in range(4):
-                tr.setRow(kk,qg.QVector4D(*T[kk]))
+            for kk,item in enumerate(T):
+                tr.setRow(kk,qg.QVector4D(*item))
             cc.append(tr)
         transformss.append(cc)
     transformss = numpy.array(transformss)    
