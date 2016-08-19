@@ -77,8 +77,8 @@ y2 = output2.calc(x)
 #        yaml.dump(readjoints,f1)
 #
 app = qg.QApplication(sys.argv)
-#animate.render(readjoints,show=True,save_files = False, render_video=False)
-animate.animate(readjoints)
+animate.render(readjoints,show=True,save_files = False, render_video=True)
+#animate.animate(readjoints)
 sys.exit(app.exec_())
 
 #plt.plot(y[:,1,0],y[:,1,2])
