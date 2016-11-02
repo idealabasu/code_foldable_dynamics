@@ -24,7 +24,8 @@ plt.ion()
 
 pynamics.tic()
 directory = 'C:\\Users\\daukes\\desktop'
-filename = 'pendulum2.cad.joints'
+#filename = 'pendulum2.cad.joints'
+filename = 'five bar linkage3.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     allbodies,connections,fixed_bodies,joint_props = yaml.load(f)
 system = System()
@@ -77,7 +78,7 @@ y2 = output2.calc(x)
 #        yaml.dump(readjoints,f1)
 #
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,show=True,save_files = False, render_video=True)
+animate.render(readjoints,show=False,save_files = False, render_video=True)
 #animate.animate(readjoints)
 sys.exit(app.exec_())
 
