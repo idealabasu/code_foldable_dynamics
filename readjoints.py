@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 plt.ion()
 
 pynamics.tic()
-directory = 'C:\\Users\\daukes\\desktop'
+directory = './'
 #filename = 'pendulum2.cad.joints'
 filename = 'five bar linkage3.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
@@ -78,8 +78,8 @@ y2 = output2.calc(x)
 #        yaml.dump(readjoints,f1)
 #
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,show=False,save_files = False, render_video=True)
-#animate.animate(readjoints)
+#animate.render(readjoints,show=False,save_files = False, render_video=True)
+animate.animate(readjoints)
 sys.exit(app.exec_())
 
 #plt.plot(y[:,1,0],y[:,1,2])
