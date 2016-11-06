@@ -48,7 +48,7 @@ g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
 ini = [0]*len(system.state_variables())
 f,ma = system.getdynamics()
-func1 = system.createsecondorderfunction2(f,ma)
+func1 = system.state_space_post_invert(f,ma)
 animation_params = support.AnimationParameters(t_final=5)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 x,details=scipy.integrate.odeint(func1,ini,t,full_output=True)
