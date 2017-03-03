@@ -62,6 +62,7 @@ class RigidBody(object):
 
     def set_particle(self,particle):
         self.particle = particle
+       
         
     @classmethod
     def build(cls,body):
@@ -103,16 +104,22 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb)    
     connections_rev = dict([(bodies,line) for line,bodies in connections])
     joint_props_dict = dict([(item,prop) for (item,bodies),prop in zip(connections,joint_props)])
+    axis_list = []
+    
+    counter = 0
     for generation in generations:
         for parent in generation:    
+            
             for child in parent_children[parent]:
                 line = connections_rev[tuple(sorted([parent,child]))]
                 k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
+                
                 
                 points = numpy.c_[line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
                 axis = points[1] - points[0]
                 l = (axis.dot(axis))**.5
                 axis = axis/l
+                axis_list.append(axis)
                 fixedaxis = axis[0]*parent.frame.x+axis[1]*parent.frame.y+axis[2]*parent.frame.z
 
                 x,x_d,x_dd = Differentiable(accounting)
@@ -123,9 +130,30 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
                 spring_stretch = (x-(q0*pi/180))*fixedaxis
                 accounting.addforce(t_damper,w)
                 accounting.add_spring_force(k,spring_stretch,w)
+                counter =counter+1
     child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props_dict)
+#==============================================================================
+#     unused_connections_rev = dict([(bodies,line) for line,bodies in unused_connections])
+#     unused_parent = unused_connections[0][1][0]
+#     unused_child = unused_connections[0][1][1]
+#     unused_line = unused_connections[0][0]
+#     k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[unused_line]
+#==============================================================================
     
-    return unused_connections
+#==============================================================================
+#     unused_points = numpy.c_[unused_line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
+#     unused_axis = unused_points[1] - unused_points[0]
+#     l = (unused_axis.dot(unused_axis))**.5
+#     unused_axis = unused_axis/l
+#     unused_fixedaxis = unused_axis[0]*unused_parent.frame.x+unused_axis[1]*unused_parent.frame.y+unused_axis[2]*unused_parent.frame.z
+# 
+#     x,x_d,x_dd = Differentiable(accounting)
+#     ghost_frame = Frame('ghost')     
+#     ghost_frame.rotate_fixed_axis_directed(unused_parent.frame,axis,x,accounting)
+# #    ghost_frame.rotate_fixed_axis_directed(unused_child.frame,axis,x,accounting)
+#==============================================================================
+    
+    return unused_connections, joint_props_dict, axis_list, parent_children, generations, counter
                                 
 def characterize_tree(connections,rigidbodies,N_rb):
     searchqueue = [N_rb]
@@ -146,6 +174,7 @@ def characterize_tree(connections,rigidbodies,N_rb):
                     child = bodies[1-ii]#in two body pairs, if the first one is parent, ii is 0 and child will be the index 1 (second body), otherwise ii would be 1 and child will be the first
                     if child in allchildren:
                         unused_connections.append((line,bodies))
+                        #parent_children[parent].append(child)# I added this line to close the last connection as well, it has to be tested to see if it works for all the cases
                     else:
                         parent_children[parent].append(child)
                         allchildren.append(child)
@@ -161,7 +190,7 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,conne
     volume_total,center_of_mass = parent.gen_info()
 #    centroid = numpy.r_[centroid,[0]]
     newvec = parent.vector_from_fixed(center_of_mass)
-    p = Particle(accounting,newvec,1)#fix actual mass instead of 1, use body instead with inertia calc.
+    p = Particle(accounting,newvec,1)
     parent.set_particle(p)
     
     for child in parent.frame.children:

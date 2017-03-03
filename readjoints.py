@@ -6,28 +6,50 @@ Please see LICENSE for full license.
 """
 
 import sys
-import PyQt4.QtGui as qg
-import pynamics
-from pynamics.variable_types import Constant
+import PyQt5.QtGui as qg
 import numpy
 import os
-from pynamics.system import System
-from support import ReadJoints
 import yaml
-import support
 import scipy.integrate
 import scipy.linalg
+import matplotlib.pyplot as plt
+plt.ion()#interactive mode on
+
+"""
+import costum made functions
+"""
+import pynamics
+from pynamics.variable_types import Constant
+from pynamics.system import System
+from support import ReadJoints
+import support
 from pynamics.output import Output
 import animate
-import matplotlib.pyplot as plt
-plt.ion()
 
-pynamics.tic()
+
+#pynamics.tic()
 directory = './'
-#filename = 'pendulum2.cad.joints'
 filename = 'five bar linkage3.cad.joints'
+#filename = 'test.joints'
+#filename = 'pendulum2.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     allbodies,connections,fixed_bodies,joint_props = yaml.load(f)
+
+# ==============================================================================
+#  a1 = allbodies[1]
+#  a2 = allbodies[2]
+#  a3 = allbodies[3]
+#  
+#  b1 = a1.mass_properties() #return volume_total,mass_total,center_of_mass,I
+#  b2 = a2.mass_properties()
+#  b3 = a3.mass_properties()
+#  
+#  print(b1)
+#  print(b2)
+#  print(b3)
+#  
+# ==============================================================================
+
 system = System()
 rigidbodies = []
 for line,items in connections:
@@ -48,8 +70,18 @@ g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
 ini = [0]*len(system.state_variables())
 f,ma = system.getdynamics()
-func1 = system.state_space_post_invert(f,ma)
-animation_params = support.AnimationParameters(t_final=5)    
+#==============================================================================
+# pCtip = 0
+# vCtip = pCtip.time_derivative(N,system)
+# eq1_d = [vCtip.dot(N.y)]
+# eq1_dd=[(system.derivative(item)) for item in eq1_d]
+# eq = eq1_dd
+#==============================================================================
+
+func1 = system.state_space_post_invert(f,ma)#original
+#func1 = system.state_space_post_invert2(f,ma, eq_1dd, eq_1d, eq_1, eq_active = [True,True])#original
+
+animation_params = support.AnimationParameters(t_final=100)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 x,details=scipy.integrate.odeint(func1,ini,t,full_output=True)
 print('calculating outputs..')
@@ -80,10 +112,13 @@ y2 = output2.calc(x)
 app = qg.QApplication(sys.argv)
 #animate.render(readjoints,show=False,save_files = False, render_video=True)
 animate.animate(readjoints)
-sys.exit(app.exec_())
+#sys.exit(app.exec_())
 
-#plt.plot(y[:,1,0],y[:,1,2])
-#plt.plot(y[:,2,0],y[:,2,2])
-#plt.plot(y[:,3,0],y[:,3,2])
-#plt.plot(t,y2)
-#plt.show()
+#==============================================================================
+# plt.plot(y[:,1,0],y[:,1,2])
+# plt.plot(y[:,2,0],y[:,2,2])
+# plt.plot(y[:,3,0],y[:,3,2])
+# plt.plot(t,y2)
+# plt.show()
+# 
+#==============================================================================
