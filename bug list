@@ -1,0 +1,19 @@
+ 
+0.0
+0.0023283205713196826
+0.00810730201659824
+0.014641059376351196
+0.01737102357829915
+0.018357265641031243
+0.01872405217209562
+0.01886848713241587
+0.0189279752057377
+0.01895218475153463
+0.0189629539594153
+C:\ProgramData\Anaconda3\lib\site-packages\scipy\integrate\odepack.py:218: ODEintWarning: Excess work done on this call (perhaps wrong Dfun type). Run with full_output = 1 to get quantitative information.
+  warnings.warn(warning_msg, ODEintWarning)
+Traceback (most recent call last):
+  File "C:\Users\rkhodamb\Google Drive\Code\code_foldable_dynamics\readjoints-test.py", line 133, in <module>
+    x,details = scipy.integrate.odeint(func1,ini,t,rtol=1e-12,atol=1e-12,hmin=1e-14)
+ValueError: too many values to unpack (expected 2)
+>>> 
