@@ -101,7 +101,35 @@ class AnimationParameters(object):
 
 def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
     from math import pi
-    parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb)    
+    parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb) 
+    
+    same_bodies = []
+    
+    for connection in unused_connections:
+        unused_joint = connection[0]
+        unused_parent = connection[1][0]
+        unused_child = connection[1][1]
+        #modify the mass properties of the unused_child and new_rigid_body
+        counter = 0
+        for layer in unused_child.body.layerdef.layers:
+            unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
+            #moment of inertia also changes when the mass changes so it should be taken care of in the future
+            #unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
+            counter = counter+1
+        new_laminate = unused_child.body.copy(identical=False)
+        new_rigid_body = RigidBody.build(new_laminate)
+        rigidbodies.append(new_rigid_body)
+        connections.append((unused_joint,(unused_parent,new_rigid_body)))
+        #connections[unused_joint][1] = new_rigid_body
+    
+        parent_children[unused_parent].append(new_rigid_body)#child ofunused_parent=new_rigid_body
+        parent_children[new_rigid_body]=[]
+        same_bodies.append((unused_child,new_rigid_body))
+        #=======
+        #modify generation, adding new rigid body to generation below unused parent
+        searchqueue = [new_rigid_body]
+        generations.append(searchqueue)
+        #========       
     connections_rev = dict([(bodies,line) for line,bodies in connections])
     joint_props_dict = dict([(item,prop) for (item,bodies),prop in zip(connections,joint_props)])
     axis_list = []
@@ -132,6 +160,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
                 accounting.add_spring_force(k,spring_stretch,w)
                 counter =counter+1
     child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props_dict)
+    #modify mass here of both unused_child and new_rigid body using same_bodies as a reference of the bodies which need to be changed.
 #==============================================================================
 #     unused_connections_rev = dict([(bodies,line) for line,bodies in unused_connections])
 #     unused_parent = unused_connections[0][1][0]
@@ -153,7 +182,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
 # #    ghost_frame.rotate_fixed_axis_directed(unused_child.frame,axis,x,accounting)
 #==============================================================================
     
-    return unused_connections, joint_props_dict, axis_list, parent_children, generations, counter
+    return unused_connections, unused_parent, unused_child, joint_props_dict, axis_list, parent_children, generations, counter
                                 
 def characterize_tree(connections,rigidbodies,N_rb):
     searchqueue = [N_rb]

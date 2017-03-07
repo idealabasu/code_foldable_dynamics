@@ -28,6 +28,7 @@ from support_test import RigidBody
 import support_test
 from pynamics.output import Output
 import animate
+from pynamics.particle import Particle
 
 
 #pynamics.tic()
@@ -38,6 +39,7 @@ filename = 'five bar linkage3.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     allbodies,connections,fixed_bodies,joint_props = yaml.load(f)
 
+#new_laminate = unused_child.body.copy(identical=False)
 
 system = System()
 L  = Constant('L' ,0.5,system)
@@ -46,12 +48,10 @@ rigidbodies = []
 for line,items in connections: #we already have allbodies, we dont need to iterate over connections, items are elements of allbodies???
     for item in items:
         if not item in [item2.body for item2 in rigidbodies]:
-            rigidbody = support_test.RigidBody.build(item)
+            rigidbody = support_test.RigidBody.build(item)#item is a laminate type 
             rigidbodies.append(rigidbody)
 
-#additional_body = copy.deepcopy(rigidbodies[3])#the right wing
-#rigidbodies.append(additional_body)
-connections = [(line,tuple(sorted([b1.rigidbody,b2.rigidbody]))) for line,(b1,b2) in connections]#rebuilding connections with new rigid bodies created
+connections = [(line,tuple(sorted([b1.rigidbody,b2.rigidbody]))) for line,(b1,b2) in connections]#rebuilding connections with new "rigid bodies" created instead of "laminates"
 top = fixed_bodies[0]
 N_rb = [body for body in rigidbodies if body.body==top][0]#when we have already chosen the fixed_bodies[0] in previous line, why should we choose the [0] in here?? maybe because we want the same body from 'connections' instead of 'rigidbodies'
 N = N_rb.frame
@@ -59,47 +59,24 @@ system.set_newtonian(N)
 O = 0*N.x
 basis_vectors = [N.x,N.y,N.z]
 
-unused_connections, joint_props_dict, axis_list,parent_children, generations, counter = support_test.build_frames(rigidbodies,N_rb,connections,system,O,joint_props)
-#additional_body = copy.copy(rigidbodies[3])
+unused_connections, unused_parent, unused_child, joint_props_dict, axis_list,parent_children, generations, counter = support_test.build_frames(rigidbodies,N_rb,connections,system,O,joint_props)
 
 g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
-ini = [0]*len(system.state_variables())
+ini = [.01]*len(system.state_variables())
 f,ma = system.getdynamics()
 
 #=========mycode=============
-unused_parent = unused_connections[0][1][0]
-unused_child = unused_connections[0][1][1]
 
-counter = 0
-for layer in unused_child.body.layerdef.layers:
-        unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
-        counter = counter+1
-unused_child_copy = copy.copy(unused_child)
-#==============================================================================
-# for layer in unused_childCopy.body.layerdef.layers:
-#         unused_childCopy.body.layerdef.layers[counter].density = unused_childCopy.body.layerdef.layers[counter].density/2
-#         counter = counter+1
-#==============================================================================
-#unused_childCopy = copy.deepcopy(unused_child)      
-unused_line = unused_connections[0][0]
-k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[unused_line]
-unused_points = numpy.c_[unused_line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
-unused_axis = unused_points[1] - unused_points[0]
-l = (unused_axis.dot(unused_axis))**.5
-unused_axis = unused_axis/l
-unused_fixedaxis = unused_axis[0]*unused_parent.frame.x+unused_axis[1]*unused_parent.frame.y+unused_axis[2]*unused_parent.frame.z
-ghost_frame = unused_child_copy.frame
-x,x_d,x_dd = Differentiable(system)
-   
-unused_child_copy.frame.rotate_fixed_axis_directed(unused_parent.frame,unused_axis,x,system)
-x_vec = ghost_frame.x
-y_vec = ghost_frame.y
+
+ghost_frame = generations[3][0].frame#this is the copy of the body that has been created using the half of the mass and inertia of the unused bodies  (unused_child or unused_parent)
+
 eq1 = [
-       x_vec.dot(N.x)-1, 
-       y_vec.dot(N.y)-1,
-       unused_child_copy.vector_from_fixed(unused_child_copy.body.mass_properties()[2]).dot(N.x) - unused_child_copy.vector_from_fixed(unused_parent.body.mass_properties()[2]).dot(N.x),      
-       unused_child_copy.vector_from_fixed(unused_child_copy.body.mass_properties()[2]).dot(N.y) - unused_child_copy.vector_from_fixed(unused_parent.body.mass_properties()[2]).dot(N.y) 
+       ghost_frame.x.dot(N.x)-1, 
+       ghost_frame.y.dot(N.y)-1,
+       generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.x) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.x)      
+       #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)
+        
        ] 
 
 #==============================================================================
@@ -151,7 +128,7 @@ eq1_dd = [(system.derivative(item)) for item in eq1_d]
 func1 = system.state_space_post_invert(f, ma, eq1_dd)#original
 #func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True])#constraint, the number of True should be equal to number of active constraints
 
-animation_params = support_test.AnimationParameters(t_final=100)    
+animation_params = support_test.AnimationParameters(t_final=.1)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-12,atol=1e-12,hmin=1e-14)
 print('calculating outputs..')
