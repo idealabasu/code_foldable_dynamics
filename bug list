@@ -18,3 +18,4 @@ Traceback (most recent call last):
 ValueError: too many values to unpack (expected 2)
 >>>
 1=================================================
+I modified line 133 of readjoints-test to include full output, an option which was removed from readjoints.  I changed the zoom level, and moved around a pyqt option
