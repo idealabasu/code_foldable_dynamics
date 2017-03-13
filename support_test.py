@@ -11,6 +11,7 @@ from pynamics.particle import Particle
 import numpy
 import popupcad
 from pynamics.vector import Vector
+import PyQt5.QtGui as qg
 
 class ReadJoints(object):
     def __init__(self,rigidbodies,ee,animation_params):
@@ -245,7 +246,6 @@ def plot(t,x,y):
     
 def build_transformss(Rx,y):
     from pyqtgraph import Transform3D
-    import PyQt5.QtGui as qg
     transformss = []
     for ii,aa in enumerate(Rx):
         cc = []
