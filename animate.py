@@ -6,8 +6,8 @@ Please see LICENSE for full license.
 """
 
 import sys
-import PyQt5.QtGui as qg
-import PyQt5.QtCore as qc
+import PyQt4.QtGui as qg
+import PyQt4.QtCore as qc
 from support import ReadJoints
 import yaml
 import shutil
@@ -112,7 +112,7 @@ def animate(rundata):
     w.opts['distance'] = 200
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 45
-    w.resize(640,480)
+    w.resize(1280,1020)
     
     ee = numpy.array(rundata.ee)
     
