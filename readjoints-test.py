@@ -73,8 +73,8 @@ ghost_frame = generations[3][0].frame#this is the copy of the body that has been
 
 eq1 = [
        ghost_frame.x.dot(N.x)-1, 
-       ghost_frame.y.dot(N.y)-1,
-       generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.x) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.x)      
+       ghost_frame.y.dot(N.y)-1
+       #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.x) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.x)      
        #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)
         
        ] 
@@ -130,7 +130,7 @@ func1 = system.state_space_post_invert(f, ma, eq1_dd)#original
 
 animation_params = support_test.AnimationParameters(t_final=.1)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-12,atol=1e-12,hmin=1e-14)
+x,details = scipy.integrate.odeint(func1,ini,t,rtol=1e-12,atol=1e-12,hmin=1e-14)
 print('calculating outputs..')
 points1 = [[rb.particle.pCM.dot(bv) for bv in basis_vectors] for rb in rigidbodies]
 output = Output(points1,system)
