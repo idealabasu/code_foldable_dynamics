@@ -63,7 +63,13 @@ new_rigid_body,unused_child, generations = support_test.build_frames(rigidbodies
 
 g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
+
+
+#==============================================================================
+# initial conditions should later be updated from the cad file
+#==============================================================================
 ini = [.01]*len(system.state_variables())
+#==============================================================================
 f,ma = system.getdynamics()
 
 #=========mycode=============
@@ -74,66 +80,24 @@ unused_child_frame = unused_child.frame
 eq1 = [
        ghost_frame.x.dot(unused_child_frame.x)-1, 
        ghost_frame.y.dot(unused_child_frame.y)-1,
-       generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.x) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.x)      
-       #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)
-        
+       new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.x) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.x),     
+       new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.y) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.y),      
+       new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.z) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.z)          
+       #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)   
        ] 
 
-#==============================================================================
-# newvec = unused_parent.vector_from_fixed(unused_points[0])
-# newvec1 = unused_child.vector_from_fixed(unused_points[0])
-# newvec2 = unused_parent.vector_from_fixed(unused_points[1])
-# newvec3 = unused_child.vector_from_fixed(unused_points[1])
-#==============================================================================
-
-#==============================================================================
-# N = Frame('N')
-# A = Frame('A')
-# B = Frame('B')
-# C = Frame('C')
-# D = Frame('D')
-# system.set_newtonian(N)
-# A.rotate_fixed_axis_directed(N,axis_list[0],system.q[0][0],system)
-# B.rotate_fixed_axis_directed(A,axis_list[2],system.q[0][2],system)
-# C.rotate_fixed_axis_directed(N,axis_list[1],system.q[0][1],system)
-# D.rotate_fixed_axis_directed(C,axis_list[3],system.q[0][3],system)
-# 
-# pNA=0*N.x
-# pAB=pNA+lA*A.x
-# pBC = pAB + lB*B.x
-# pCtip = pBC + lC*C.x
-#==============================================================================
-#==============================================================================
-# ghost_frame.x.dot(unused_child.frame.x)-1,
-# ghost_frame.y.dot(unused_child.frame.y)-1,
-# ghost_frame.z.dot(unused_child.frame.z)-1,
-#==============================================================================
-#==============================================================================
-# eq1 = [
-#        newvec.dot(newvec1)-newvec.dot(newvec), 
-#        newvec2.dot(newvec3)-newvec2.dot(newvec2)              
-#         ] 
-#==============================================================================
-#==============================================================================
-# newvec = unused_parent.vector_from_fixed(unused_points[0])
-# newvec1 = unused_child.vector_from_fixed(unused_points[0])
-# eq1 = [newvec.dot(N.x) - newvec1.dot(N.x),
-#        newvec.dot(N.y) - newvec1.dot(N.y),
-#        newvec.dot(N.z) - newvec1.dot(N.z)
-#         ] 
-#==============================================================================
 eq1_d = [system.derivative(item) for item in eq1]
 eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
 #func1 = system.state_space_post_invert(f, ma, eq1_dd)#original
 #func1 = system.state_space_post_invert(f, ma)
-func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True])#constraint, the number of True should be equal to number of active constraints
+func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True, True, True])#constraint, the number of True should be equal to number of active constraints
 
 animation_params = support_test.AnimationParameters(t_final=10)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-12,atol=1e-12,hmin=1e-14,full_output=True)
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-12,atol=1e-12,hmin=1e-14,full_output=True,args=(1e5,1e2))
+x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-12,atol=1e-12,hmin=1e-14,full_output=1,args=(1e3,1e1))
 print('calculating outputs..')
 points1 = [[rb.particle.pCM.dot(bv) for bv in basis_vectors] for rb in rigidbodies]
 output = Output(points1,system)
@@ -152,23 +116,8 @@ PE = system.getPEGravity(O) - system.getPESprings()
 output2=Output([KE-PE],system)
 y2 = output2.calc(x)
 
-#if __name__=='__main__':
-#    import yaml
-#    for body in bodies:
-#        del body.rigidbody
-#    with open('rundata','w') as f1:
-#        yaml.dump(readjoints,f1)
-#
 app = qg.QApplication(sys.argv)
 #animate.render(readjoints,show=False,save_files = True, render_video=True)
 animate.animate(readjoints)
 #sys.exit(app.exec_())
 
-#==============================================================================
-# plt.plot(y[:,1,0],y[:,1,2])
-# plt.plot(y[:,2,0],y[:,2,2])
-# plt.plot(y[:,3,0],y[:,3,2])
-# plt.plot(t,y2)
-# plt.show()
-# 
-#==============================================================================
