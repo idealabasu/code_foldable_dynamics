@@ -183,7 +183,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
 # #    ghost_frame.rotate_fixed_axis_directed(unused_child.frame,axis,x,accounting)
 #==============================================================================
     
-    return unused_connections, unused_parent, unused_child, joint_props_dict, axis_list, parent_children, generations, counter
+    return new_rigid_body,unused_child, generations
                                 
 def characterize_tree(connections,rigidbodies,N_rb):
     searchqueue = [N_rb]

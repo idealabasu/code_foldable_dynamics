@@ -54,7 +54,7 @@ def render(rundata,show=False,save_files = False, render_video=True):
     w.opts['distance'] = 200
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 45
-    w.resize(640,480)
+    w.resize(1024,768)
     
     if save_files or render_video:
         if not os.path.exists('render/'):
