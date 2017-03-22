@@ -68,7 +68,7 @@ basis_vectors = [N.x,N.y,N.z]
 unused = support.build_frames(rigidbodies,N_rb,connections,system,O,joint_props)
 g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
-ini = [0]*len(system.state_variables())
+ini = [.01]*len(system.state_variables())
 f,ma = system.getdynamics()
 #==============================================================================
 # pCtip = 0
@@ -81,7 +81,7 @@ f,ma = system.getdynamics()
 func1 = system.state_space_post_invert(f,ma)#original
 #func1 = system.state_space_post_invert2(f,ma, eq_1dd, eq_1d, eq_1, eq_active = [True,True])#original
 
-animation_params = support.AnimationParameters(t_final=100)    
+animation_params = support.AnimationParameters(t_final=5)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 x,details=scipy.integrate.odeint(func1,ini,t,full_output=True)
 print('calculating outputs..')
@@ -94,6 +94,7 @@ R = R.reshape(-1,len(rigidbodies),3,3)
 T = support.build_transformss(R,y)
 bodies = [item.body for item in rigidbodies]    
 readjoints = ReadJoints(bodies,T.tolist(),animation_params)
+readjoints2 = ReadJoints(bodies,T[0:1,:].tolist(),animation_params)
 
 pynamics.toc()
 
@@ -111,7 +112,7 @@ y2 = output2.calc(x)
 #
 app = qg.QApplication(sys.argv)
 #animate.render(readjoints,show=False,save_files = False, render_video=True)
-animate.animate(readjoints)
+animate.animate(readjoints2)
 #sys.exit(app.exec_())
 
 #==============================================================================

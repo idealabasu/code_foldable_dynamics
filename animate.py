@@ -112,7 +112,7 @@ def animate(rundata):
     w.opts['distance'] = 200
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 45
-    w.resize(640,480)
+    w.resize(1024,768)
     
     ee = numpy.array(rundata.ee)
     
