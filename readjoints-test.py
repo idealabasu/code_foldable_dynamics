@@ -120,6 +120,6 @@ y2 = output2.calc(x)
 
 app = qg.QApplication(sys.argv)
 #animate.render(readjoints,show=False,save_files = True, render_video=True)
-animate.animate(readjoints)
+animate.render(readjoints,show=True)
 #sys.exit(app.exec_())
 
