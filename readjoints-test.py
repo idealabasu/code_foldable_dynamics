@@ -33,7 +33,7 @@ from pynamics.particle import Particle
 
 #pynamics.tic()
 directory = './'
-filename = 'five bar linkage3.cad.joints'
+filename = 'five bar linkage3_Torgue.cad.joints'
 #filename = 'test.joints'
 #filename = 'pendulum2.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
