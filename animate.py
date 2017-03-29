@@ -84,8 +84,8 @@ def render(rundata,show=False,save_files = False, render_video=True):
             os.remove('render.mp4')
         subprocess.call('ffmpeg -r {0} -i render/img_%04d.png -vcodec libx264 -preset slow -crf 10 render.mp4'.format(str(rundata.animation_params.fps)))
     
-    if save_files or render_video:
-        shutil.rmtree('render')
+#    if save_files or render_video:
+#        shutil.rmtree('render')
 
 def update(t,w,ee,meshitems):
     global ii
