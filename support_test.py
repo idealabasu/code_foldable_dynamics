@@ -11,7 +11,7 @@ from pynamics.particle import Particle
 import numpy
 import popupcad
 from pynamics.vector import Vector
-import PyQt5.QtGui as qg
+import PyQt4.QtGui as qg
 
 class ReadJoints(object):
     def __init__(self,rigidbodies,ee,animation_params):
