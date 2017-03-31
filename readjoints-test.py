@@ -33,6 +33,7 @@ from pynamics.particle import Particle
 
 #pynamics.tic()
 directory = './'
+#filename = 'five bar linkage3.cad.joints'
 filename = 'five bar linkage3_Torgue.cad.joints'
 #filename = 'test.joints'
 #filename = 'pendulum2.cad.joints'
@@ -68,9 +69,9 @@ system.addforcegravity(-g*N.z)
 #==============================================================================
 # initial conditions should later be updated from the cad file
 #==============================================================================
-#ini = [0]*len(system.state_variables())
+ini = [.01]*len(system.state_variables())
 #ini = [.01, -.002, .01, -.001, .002, -.02, .001, -.003, -.02, .01]
-ini = [.01, -.01, 0.01, 0.01, 0, 0, 0, 0, 0, 0]
+#ini = [.01, -.01, 0.01, 0.01, 0, 0, 0, 0, 0, 0]
 #==============================================================================
 f,ma = system.getdynamics()
 
@@ -82,24 +83,26 @@ unused_child_frame = unused_child.frame
 eq1 = [
        ghost_frame.x.dot(unused_child_frame.x)-1, 
        ghost_frame.y.dot(unused_child_frame.y)-1,
-       new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.x) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.x)    
-       #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.y) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.y),      
+       #ghost_frame.z.dot(unused_child_frame.z)-1,
+       new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.x) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.x)  
+       #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.y) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.y)      
        #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.z) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.z)          
-       #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)   
+       #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)     
        ] 
 
 eq1_d = [system.derivative(item) for item in eq1]
 eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
-func1 = system.state_space_post_invert(f, ma, eq1_dd)#original
-#func1 = system.state_space_post_invert(f, ma)
-#func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True, True, True])#constraint, the number of True should be equal to number of active constraints
+#func1 = system.state_space_post_invert(f, ma)#no constraints
+func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+#func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
-animation_params = support_test.AnimationParameters(t_final=10)    
+animation_params = support_test.AnimationParameters(t_final=5)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=True)
-#x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=1,args=(1e5,1e2))
+x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=True)#use without Baumgartes
+#x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=1,args=(1e5,1e3))#use with Baumgartes
+
 print('calculating outputs..')
 points1 = [[rb.particle.pCM.dot(bv) for bv in basis_vectors] for rb in rigidbodies]
 output = Output(points1,system)
@@ -120,6 +123,8 @@ y2 = output2.calc(x)
 
 app = qg.QApplication(sys.argv)
 #animate.render(readjoints,show=False,save_files = True, render_video=True)
+animate.animate(readjoints)
 animate.render(readjoints,show=True)
+
 #sys.exit(app.exec_())
 

@@ -132,6 +132,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
         generations.append(searchqueue)
         #========       
     connections_rev = dict([(bodies,line) for line,bodies in connections])
+    connections_rev.update(dict([(tuple(bodies[::-1]),line) for line,bodies in connections]))
     joint_props_dict = dict([(item,prop) for (item,bodies),prop in zip(connections,joint_props)])
     axis_list = []
     
@@ -140,7 +141,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
         for parent in generation:    
             
             for child in parent_children[parent]:
-                line = connections_rev[tuple(sorted([parent,child]))]
+                line = connections_rev[(parent,child)]
                 k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
                 
                 
@@ -225,7 +226,7 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,conne
     
     for child in parent.frame.children:
         child = child.rigidbody
-        line = connections_rev[tuple(sorted([parent,child]))]
+        line = connections_rev[(parent,child)]
         k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
 
         points = numpy.c_[line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
