@@ -103,9 +103,11 @@ class AnimationParameters(object):
 def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
     from math import pi
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb) 
-    
+#==============================================================================
+#     if unused_connections==[]:
+#         unused_connections = [connections[-1] ]
+#==============================================================================
     same_bodies = []
-    
     for connection in unused_connections:
         unused_joint = connection[0]
         unused_parent = connection[1][0]
@@ -184,7 +186,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
 # #    ghost_frame.rotate_fixed_axis_directed(unused_child.frame,axis,x,accounting)
 #==============================================================================
     
-    return new_rigid_body,unused_child, generations
+    return  new_rigid_body,unused_child, generations
                                 
 def characterize_tree(connections,rigidbodies,N_rb):
     searchqueue = [N_rb]

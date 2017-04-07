@@ -92,7 +92,7 @@ class RigidBody(object):
 
 
 class AnimationParameters(object):
-    def __init__(self,t_initial=0,t_final=2000,fps=30):
+    def __init__(self,t_initial=0,t_final=20,fps=30):
         self.t_initial = t_initial
         self.t_final = t_final
         self.fps = fps
@@ -187,7 +187,7 @@ def plot(t,x,y):
     
 def build_transformss(Rx,y):
     from pyqtgraph import Transform3D
-    import PyQt5.QtGui as qg
+    import PyQt4.QtGui as qg
     transformss = []
     for ii,aa in enumerate(Rx):
         cc = []

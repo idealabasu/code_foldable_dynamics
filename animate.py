@@ -51,7 +51,7 @@ def render(rundata,show=False,save_files = False, render_video=True):
     centerpoint = qg.QVector3D(3.5,-1,1)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 200
+    w.opts['distance'] = 10000
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 45
     w.resize(1024,768)
@@ -109,7 +109,7 @@ def animate(rundata):
     centerpoint = qg.QVector3D(3.5,-1,1)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 200
+    w.opts['distance'] = 10000
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 45
     w.resize(1280,1020)

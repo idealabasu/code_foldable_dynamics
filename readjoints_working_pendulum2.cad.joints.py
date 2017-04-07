@@ -52,12 +52,7 @@ system.addforcegravity(-g*N.z)
 ini = [0, 0, 0.0, 0.0, 0, 100]
 f,ma = system.getdynamics()
 
-pCtip = rigidbodies[-1].vector_from_fixed(rigidbodies[-1].body.mass_properties()[2])
-#vCtip = pCtip.time_derivative(N,system)
-eq1 = [pCtip.dot(N.y)]
-#eq1_d =
-
-func1 = system.state_space_post_invert(f,ma,eq1)#original
+func1 = system.state_space_post_invert(f,ma)#original
 
 animation_params = support.AnimationParameters(t_final=5)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
