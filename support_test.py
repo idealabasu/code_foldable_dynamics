@@ -187,7 +187,8 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
 #==============================================================================
     
     return  new_rigid_body,unused_child, generations
-                                
+    #return  generations   
+                             
 def characterize_tree(connections,rigidbodies,N_rb):
     searchqueue = [N_rb]
     connections = connections[:]
