@@ -65,7 +65,7 @@ basis_vectors = [N.x,N.y,N.z]
 
 new_rigid_body,unused_child, generations = support_test.build_frames(rigidbodies,N_rb,connections,system,O,joint_props)
 
-g = Constant('g',9.81,system)
+g = Constant('g',90.81,system)
 system.addforcegravity(-g*N.z)
 
 
@@ -75,7 +75,7 @@ system.addforcegravity(-g*N.z)
 #ini = [.01]*len(system.state_variables())
 #ini = [.01, -.002, .01, -.001, .002, -.02, .001, -.003, -.02, .01]
 ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]
-#ini = [0.0001, 0, 0, 0, 0, 0, 0, 0]
+#ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, 0, 0]
 #==============================================================================
 f,ma = system.getdynamics()
 
@@ -86,31 +86,51 @@ ghost_frame = new_rigid_body.frame#this is the copy of the body that has been cr
 unused_child_frame = unused_child.frame
 eq1 = [
               
-       #ghost_frame.x.dot(unused_child_frame.x)-1, 
-       #ghost_frame.y.dot(unused_child_frame.y)-1,
-       #ghost_frame.z.dot(unused_child_frame.z)-1,
-              
-       #new_rigid_body.particle.pCM.dot(N.x)-unused_child.particle.pCM.dot(N.x),#for this constraint, the ini matrix can be zero
-       #new_rigid_body.particle.pCM.dot(N.y)-unused_child.particle.pCM.dot(N.y),       
-       #new_rigid_body.particle.pCM.dot(N.z)-unused_child.particle.pCM.dot(N.z),
-       
-       #ghost_frame.x.dot(N.x)-unused_child_frame.x.dot(N.x),
-       #ghost_frame.x.dot(N.y)-unused_child_frame.x.dot(N.y),
-       #ghost_frame.x.dot(N.z)-unused_child_frame.x.dot(N.z),
-       
-       ghost_frame.y.dot(N.y)-unused_child_frame.y.dot(N.y),
+#==============================================================================
+# #these settings are best for 5 bar mechanism with no singularity (test.cad.joints)      
+#        ghost_frame.y.dot(N.y)-unused_child_frame.y.dot(N.y),
+#        ghost_frame.z.dot(N.z)-unused_child_frame.z.dot(N.z),
+#        new_rigid_body.vector_from_fixed((1,2,3)).dot(N.y) - unused_child.vector_from_fixed((1,2,3)).dot(N.y),
+#        new_rigid_body.vector_from_fixed((3,2,1)).dot(N.z) - unused_child.vector_from_fixed((3,2,1)).dot(N.z),
+#==============================================================================
+#==============================================================================
+# #these settings work best for 4 bar mechanism  (newMechanism.cad.joints)    
+#        ghost_frame.z.dot(N.z)-unused_child_frame.z.dot(N.z),
+#        new_rigid_body.vector_from_fixed((1,2,1)).dot(N.z) - unused_child.vector_from_fixed((1,2,1)).dot(N.z),  
+#        new_rigid_body.vector_from_fixed((3,2,1)).dot(N.z) - unused_child.vector_from_fixed((3,2,1)).dot(N.z),
+#==============================================================================
+#these settins work for both 5 bar and 4 bar mechanisms mentioned above, tolerance should be e^-8 for 5 bar to solve       
        ghost_frame.z.dot(N.z)-unused_child_frame.z.dot(N.z),
-       #ghost_frame.z.dot(N.y)-unused_child_frame.z.dot(N.y),
-       #ghost_frame.z.dot(N.x)-unused_child_frame.z.dot(N.x),
-       #ghost_frame.z.dot(unused_child_frame.z)-1,
-       
-       #new_rigid_body.vector_from_fixed((1,2,1)).dot(N.x) - unused_child.vector_from_fixed((1,2,1)).dot(N.x),
-       new_rigid_body.vector_from_fixed((1,2,3)).dot(N.y) - unused_child.vector_from_fixed((1,2,3)).dot(N.y),   
-       #new_rigid_body.vector_from_fixed((1,2,1)).dot(N.z) - unused_child.vector_from_fixed((1,2,1)).dot(N.z),  
-       new_rigid_body.vector_from_fixed((3,2,1)).dot(N.z) - unused_child.vector_from_fixed((3,2,1)).dot(N.z),  
-       #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.x) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.x)      
-       #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.z) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.z)          
-       #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)     
+       new_rigid_body.vector_from_fixed((1,2,1)).dot(N.z) - unused_child.vector_from_fixed((1,2,1)).dot(N.z),
+       new_rigid_body.vector_from_fixed((3,2,1)).dot(N.z) - unused_child.vector_from_fixed((3,2,1)).dot(N.z),
+
+#==============================================================================
+#        #ghost_frame.x.dot(unused_child_frame.x)-1, 
+#        #ghost_frame.y.dot(unused_child_frame.y)-1,
+#        #ghost_frame.z.dot(unused_child_frame.z)-1,
+#               
+#        #new_rigid_body.particle.pCM.dot(N.x)-unused_child.particle.pCM.dot(N.x),#for this constraint, the ini matrix can be zero
+#        #new_rigid_body.particle.pCM.dot(N.y)-unused_child.particle.pCM.dot(N.y),       
+#        #new_rigid_body.particle.pCM.dot(N.z)-unused_child.particle.pCM.dot(N.z),
+#        
+#        #ghost_frame.x.dot(N.x)-unused_child_frame.x.dot(N.x),
+#        #ghost_frame.x.dot(N.y)-unused_child_frame.x.dot(N.y),
+#        #ghost_frame.x.dot(N.z)-unused_child_frame.x.dot(N.z),
+#        
+#        #ghost_frame.y.dot(N.y)-unused_child_frame.y.dot(N.y),
+#        ghost_frame.z.dot(N.z)-unused_child_frame.z.dot(N.z),
+#        #ghost_frame.z.dot(N.y)-unused_child_frame.z.dot(N.y),
+#        #ghost_frame.z.dot(N.x)-unused_child_frame.z.dot(N.x),
+#        #ghost_frame.z.dot(unused_child_frame.z)-1,
+#        
+#        #new_rigid_body.vector_from_fixed((1,2,1)).dot(N.x) - unused_child.vector_from_fixed((1,2,1)).dot(N.x),
+#        #new_rigid_body.vector_from_fixed((1,2,3)).dot(N.y) - unused_child.vector_from_fixed((1,2,3)).dot(N.y),   
+#        new_rigid_body.vector_from_fixed((1,2,1)).dot(N.z) - unused_child.vector_from_fixed((1,2,1)).dot(N.z),  
+#        new_rigid_body.vector_from_fixed((3,2,1)).dot(N.z) - unused_child.vector_from_fixed((3,2,1)).dot(N.z),  
+#        #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.x) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.x)      
+#        #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.z) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.z)          
+#        #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)     
+#==============================================================================
        ] 
 
 eq1_d = [system.derivative(item) for item in eq1]
