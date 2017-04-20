@@ -26,7 +26,9 @@ from pynamics.output import Output
 import animate
 
 directory = './'
-filename = 'pendulum2.cad.joints'
+#filename = 'pendulum2.cad.joints'
+#filename = '30_Width_Hinge_Scrapt.cad.joints'
+filename = 'newMechanism1.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     allbodies,connections,fixed_bodies,joint_props = yaml.load(f)
 
@@ -48,8 +50,9 @@ O = 0*N.x
 basis_vectors = [N.x,N.y,N.z]
 unused = support.build_frames(rigidbodies,N_rb,connections,system,O,joint_props)
 g = Constant('g',9.81,system)
-system.addforcegravity(-g*N.z)
-ini = [0, 0, 0.0, 0.0, 0, 100]
+system.addforcegravity(-g*N.y)
+#ini = [0.1, 0]
+ini = [0.00001, 0, 0, 0, 0, 0.000001, 0, 0, 0, 0]
 f,ma = system.getdynamics()
 
 pCtip = rigidbodies[-1].vector_from_fixed(rigidbodies[-1].body.mass_properties()[2])
@@ -57,7 +60,8 @@ pCtip = rigidbodies[-1].vector_from_fixed(rigidbodies[-1].body.mass_properties()
 eq1 = [pCtip.dot(N.y)]
 #eq1_d =
 
-func1 = system.state_space_post_invert(f,ma,eq1)#original
+#func1 = system.state_space_post_invert(f,ma,eq1)#original
+func1 = system.state_space_post_invert(f,ma)#original
 
 animation_params = support.AnimationParameters(t_final=5)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
@@ -86,3 +90,7 @@ output2=Output([KE-PE],system)
 y2 = output2.calc(x)
 app = qg.QApplication(sys.argv)
 animate.render(readjoints,show=True,save_files = False, render_video=True)
+animate.animate(readjoints)
+
+plt.plot(t,x[:,0])
+plt.savefig('output.png')
