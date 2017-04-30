@@ -157,7 +157,7 @@ eq1_d = [system.derivative(item) for item in eq1]
 eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
 #func1 = system.state_space_post_invert(f, ma)#no constraints
-func1,A_full = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
 #func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 animation_params = support_test.AnimationParameters(t_final=5,fps=1000)    
