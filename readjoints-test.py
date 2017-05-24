@@ -7,6 +7,8 @@ Please see LICENSE for full license.
 import sys
 import PyQt4.QtGui as qg
 import numpy
+import sympy
+import math
 import os
 import yaml
 import scipy.integrate
@@ -29,7 +31,7 @@ import support_test
 from pynamics.output import Output
 import animate
 from pynamics.particle import Particle
-
+from sympy.functions import Abs
 
 #pynamics.tic()
 directory = './'
@@ -68,8 +70,22 @@ N = N_rb.frame
 system.set_newtonian(N)
 O = 0*N.x
 basis_vectors = [N.x,N.y,N.z]
+#torqueFunctions = [0,0,0,0,10*sympy.sin(5*sympy.pi*system.t),0]#sin function
+animation_params = support_test.AnimationParameters(t_final=10)#,fps=1000)    
+t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+def stepFunction(time):
+    if time <1:    
+        return 0
+    else:    
+        return 1
+       
+#aaa =round(.5*(1+(system.t-2)/(Abs(system.t-2)+0.000000001)))
+#bbb = round(0.5*(1+(system.t-8)/(Abs(system.t-8)+0.000000001)))
+#torqueFunctions = [0,0,0,0,1*system.t,0]#step function
+#torqueFunctions = [0,0,0,0,2*((Abs(system.t-2)+(system.t-2))/(2*Abs(system.t-2))-(Abs(system.t-8)+(system.t-8))/(2*Abs(system.t-8))),0]#step function
+torqueFunctions = [0,0,0,0,20*((.5*(1+(system.t-50)/(Abs(system.t-50)+0.000000001)))-(.5*(1+(system.t-60)/(Abs(system.t-60)+0.000000001)))),0]#step function
 
-new_rigid_body,unused_child, generations = support_test.build_frames(rigidbodies,N_rb,connections,system,O,joint_props)
+new_rigid_body,unused_child, generations = support_test.build_frames(rigidbodies,N_rb,connections,system,O,joint_props,torqueFunctions)
 
 g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
@@ -85,6 +101,7 @@ ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
+
 f,ma = system.getdynamics()
 
 #=========mycode=============
@@ -160,8 +177,8 @@ eq1_dd = [(system.derivative(item)) for item in eq1_d]
 func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
 #func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
-animation_params = support_test.AnimationParameters(t_final=5,fps=1000)    
-t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+#animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
+#t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=1,args=(1e8,1e3))#use with Baumgartes
@@ -171,7 +188,7 @@ points1 = [[rb.particle.pCM.dot(bv) for bv in basis_vectors] for rb in rigidbodi
 output = Output(points1,system)
 y = output.calc(x)
 output3 = Output([N.getR(rb.frame) for rb in rigidbodies],system)
-output4 = Output(A_full,system)
+#output4 = Output(A_full,system)
 R = output3.calc(x)
 R = R.reshape(-1,len(rigidbodies),3,3)
 T = support_test.build_transformss(R,y)

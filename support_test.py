@@ -9,6 +9,7 @@ from pynamics.variable_types import Differentiable
 from pynamics.frame import Frame
 from pynamics.particle import Particle
 import numpy
+import sympy
 import popupcad
 from pynamics.vector import Vector
 import PyQt4.QtGui as qg
@@ -100,7 +101,7 @@ class AnimationParameters(object):
         self.fps = fps
         self.t_step = 1./fps
 
-def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
+def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,torqueFunctions):
     from math import pi
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb) 
 #==============================================================================
@@ -162,6 +163,8 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props):
                 spring_stretch = (x-(q0*pi/180))*fixedaxis
                 accounting.addforce(t_damper,w)
                 accounting.add_spring_force(k,spring_stretch,w)
+                
+                accounting.addforce(torqueFunctions[counter]*fixedaxis,w) 
                 counter =counter+1
     child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props_dict)
     #modify mass here of both unused_child and new_rigid body using same_bodies as a reference of the bodies which need to be changed.
