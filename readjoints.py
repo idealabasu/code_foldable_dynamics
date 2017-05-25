@@ -54,24 +54,24 @@ basis_vectors = [N.x,N.y,N.z]
 unused = support.build_frames(rigidbodies,N_rb,connections,system,O,joint_props,thickness,density)
 constraints = []
 
-for line,(body1,body2) in unused:
-    k,b,q0,lim_neg,lim_pos,joint_z = joint_props[line]                
-    points = numpy.c_[line,[joint_z,joint_z]]
-    axis = points[1] - points[0]
-    l = (axis.dot(axis))**.5
-    axis = axis/l
-    fixedaxis = axis[0]*body1.frame.x+axis[1]*body1.frame.y+axis[2]*body1.frame.z
-    x,x_d,x_dd = Differentiable(system)
-    redundant_frame = Frame()
-    redundant_frame.rotate_fixed_axis_directed(body1.frame,axis,x,system)
-#    w = body1.frame.getw_(redundant_frame)
-#    t_damper = -b*w
-#    spring_stretch = (x-(q0*pi/180))*fixedaxis
-#    system.addforce(t_damper,w)
-#    system.add_spring_force(k,spring_stretch,w)
-    constraints.append(redundant_frame.x.dot(body2.frame.x)-1)
-    constraints.append(redundant_frame.y.dot(body2.frame.y)-1)
-    constraints.append(redundant_frame.z.dot(body2.frame.z)-1)
+#for line,(body1,body2) in unused:
+#    k,b,q0,lim_neg,lim_pos,joint_z = joint_props[line]                
+#    points = numpy.c_[line,[joint_z,joint_z]]
+#    axis = points[1] - points[0]
+#    l = (axis.dot(axis))**.5
+#    axis = axis/l
+#    fixedaxis = axis[0]*body1.frame.x+axis[1]*body1.frame.y+axis[2]*body1.frame.z
+#    x,x_d,x_dd = Differentiable(system)
+#    redundant_frame = Frame()
+#    redundant_frame.rotate_fixed_axis_directed(body1.frame,axis,x,system)
+##    w = body1.frame.getw_(redundant_frame)
+##    t_damper = -b*w
+##    spring_stretch = (x-(q0*pi/180))*fixedaxis
+##    system.addforce(t_damper,w)
+##    system.add_spring_force(k,spring_stretch,w)
+#    constraints.append(redundant_frame.x.dot(body2.frame.x)-1)
+#    constraints.append(redundant_frame.y.dot(body2.frame.y)-1)
+#    constraints.append(redundant_frame.z.dot(body2.frame.z)-1)
     
     
 eq1_dd=[system.derivative(system.derivative(item)) for item in constraints]
