@@ -88,9 +88,11 @@ KE = system.KE
 PE = system.getPEGravity(O) - system.getPESprings()
 output2=Output([KE-PE],system)
 y2 = output2.calc(x)
-app = qg.QApplication(sys.argv)
-animate.render(readjoints,show=True,save_files = False, render_video=True)
-animate.animate(readjoints)
-
 plt.plot(t,x[:,0])
 plt.savefig('output.png')
+
+app = qg.QApplication(sys.argv)
+animate.render(readjoints)
+animate.animate(readjoints)
+#sys.exit(app.exec_())
+

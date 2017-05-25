@@ -140,9 +140,6 @@ output2=Output([KE-PE],system)
 y2 = output2.calc(x)
 
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,show=True,save_files = False, render_video=True)
-#animate.animate(readjoints)
-#animate.render(readjoints,show=True)
-
+animate.render(readjoints)
+animate.animate(readjoints)
 #sys.exit(app.exec_())
-

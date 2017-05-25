@@ -209,8 +209,6 @@ pynamics.toc()
 
 app = qg.QApplication(sys.argv)
 animate.render(readjoints)
-
-#animate.render(readjoints,show=True)
 animate.animate(readjoints)
 #sys.exit(app.exec_())
 
