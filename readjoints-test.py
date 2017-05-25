@@ -71,7 +71,7 @@ system.set_newtonian(N)
 O = 0*N.x
 basis_vectors = [N.x,N.y,N.z]
 #torqueFunctions = [0,0,0,0,10*sympy.sin(5*sympy.pi*system.t),0]#sin function
-animation_params = support_test.AnimationParameters(t_final=10)#,fps=1000)    
+animation_params = support_test.AnimationParameters(t_final=.5)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 def stepFunction(time):
     if time <1:    
@@ -203,7 +203,7 @@ pynamics.toc()
 #y2 = output2.calc(x)
 
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,show=True,save_files = True, render_video=True)
+animate.render(readjoints)
 
 #animate.render(readjoints,show=True)
 animate.animate(readjoints)
