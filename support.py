@@ -187,7 +187,7 @@ def plot(t,x,y):
     
 def build_transformss(Rx,y):
     from pyqtgraph import Transform3D
-    import PyQt4.QtGui as qg
+    import PyQt5.QtGui as qg
     transformss = []
     for ii,aa in enumerate(Rx):
         cc = []

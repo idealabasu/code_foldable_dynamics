@@ -5,7 +5,7 @@ Email: danaukes<at>gmail.com
 Please see LICENSE for full license.
 """
 import sys
-import PyQt4.QtGui as qg
+import PyQt5.QtGui as qg
 import numpy
 import os
 import yaml
