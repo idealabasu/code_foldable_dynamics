@@ -6,7 +6,7 @@ Please see LICENSE for full license.
 """
 
 import sys
-import PyQt4.QtGui as qg
+import PyQt5.QtGui as qg
 import pynamics
 from pynamics.variable_types import Constant
 import numpy

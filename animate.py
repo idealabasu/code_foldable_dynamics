@@ -6,8 +6,8 @@ Please see LICENSE for full license.
 """
 
 import sys
-import PyQt4.QtGui as qg
-import PyQt4.QtCore as qc
+import PyQt5.QtGui as qg
+import PyQt5.QtCore as qc
 from support import ReadJoints
 import yaml
 import shutil
