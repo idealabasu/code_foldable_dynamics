@@ -25,7 +25,7 @@ import support
 from pynamics.output import Output
 import animate
 
-directory = './'
+directory = './designs'
 filename = 'pendulum2.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     allbodies,connections,fixed_bodies,joint_props = yaml.load(f)

@@ -32,7 +32,7 @@ from pynamics.particle import Particle
 
 
 #pynamics.tic()
-directory = './'
+directory = './designs'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
 #filename = 'test.joints'

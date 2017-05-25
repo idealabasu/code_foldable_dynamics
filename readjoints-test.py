@@ -34,7 +34,7 @@ from pynamics.particle import Particle
 from sympy.functions import Abs
 
 #pynamics.tic()
-directory = './'
+directory = './designs'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'

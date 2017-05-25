@@ -25,7 +25,7 @@ import support
 from pynamics.output import Output
 import animate
 
-directory = './'
+directory = './designs'
 #filename = 'pendulum2.cad.joints'
 #filename = '30_Width_Hinge_Scrapt.cad.joints'
 filename = 'newMechanism1.cad.joints'
