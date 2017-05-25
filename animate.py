@@ -30,14 +30,14 @@ def gen_mesh_item(body):
         z = body.layerdef.z_values[layer]
         for geom in body.geoms[layer]:
             cdt = geom.triangles_inner()
-            triangles = [[(point.x,point.y,z*1000) for point in triangle.points_] for triangle in cdt.GetTriangles()]        
+            triangles = [[(point.x,point.y,z) for point in triangle.points_] for triangle in cdt.GetTriangles()]        
             points = list(set([point for triangle in triangles for point in triangle]))
             all_points.extend(points)
             triangles2 = [[all_points.index(point) for point in tri] for tri in triangles]
             all_triangles.extend(triangles2)
             colors.extend([layer.color]*len(points))
             
-    all_points = numpy.array(all_points)/1000
+    all_points = numpy.array(all_points)
     all_triangles = numpy.array(all_triangles)
     meshitem = pgo.GLMeshItem(vertexes=all_points, faces=all_triangles, vertexColors=colors,smooth=True)
     return meshitem
@@ -93,23 +93,24 @@ def update(t,w,ee,meshitems):
         for jj,mi in enumerate(meshitems):
             tr = ee[ii,jj]
             tr =qg.QMatrix4x4(*tr.flatten().tolist())
-            mi.setTransform(tr)
+            for kk in mi:
+                kk.setTransform(tr)
         ii+=1
     else:
         ii=0
         t.stop()
         w.showNormal()
 
-def animate(rundata):
+def animate(rundata,thickness):
     w = ViewWidget()    
     w.setBackgroundColor(1,1,1,1)
         
-    meshitems = [gen_mesh_item(body) for body in rundata.rigidbodies]
-    [w.addItem(meshitem) for meshitem in meshitems]
+    meshitemss = [body.mesh_items(thickness) for body in rundata.rigidbodies]
+    [[w.addItem(meshitem) for meshitem in meshitems] for meshitems in meshitemss]
     centerpoint = qg.QVector3D(3.5,-1,1)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 5000
+    w.opts['distance'] = 10
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 45
     w.resize(640,480)
@@ -119,7 +120,7 @@ def animate(rundata):
     w.updateGL()
     w.show()
     t = qc.QTimer()
-    t.timeout.connect(lambda:update(t,w,ee,meshitems))
+    t.timeout.connect(lambda:update(t,w,ee,meshitemss))
     t.start(rundata.animation_params.t_step*1000)
 #    w.close()
     
