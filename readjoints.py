@@ -23,18 +23,19 @@ import animate
 import matplotlib.pyplot as plt
 plt.ion()
 from pynamics.frame import Frame
-
+from foldable_robotics.dynamics_info import DynamicsInfo
 pynamics.tic()
 #directory = './'
 directory = 'C:\\Users\\daukes\\code\\foldable_robotics\\python\\tests'
+#directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
 #filename = 'pendulum2.cad.joints'
-filename = 'test.yaml'
+filename = 'dynamics-info.yaml'
 with open(os.path.join(directory,filename),'r') as f:
-    allbodies,connections,fixed_bodies,joint_props,thickness,density = yaml.load(f)
+    d = yaml.load(f)
 from foldable_robotics.laminate import Laminate
-allbodies = [Laminate.import_dict(item) for item in allbodies]
+allbodies = [Laminate.import_dict(item) for item in d.connected_items]
 allbodies_dict = dict([(item.id,support.RigidBody.build(item)) for item in allbodies])
 system = System()
 rigidbodies =allbodies_dict.values()
@@ -43,15 +44,15 @@ b = Constant('b',1e1,system)
 g = Constant('g',9.81,system)
 
 
-connections = [(line,tuple(sorted([allbodies_dict[b1],allbodies_dict[b2]]))) for line,(b1,b2) in connections]
-top = fixed_bodies[0]
+connections = [(line,tuple(sorted([allbodies_dict[b1],allbodies_dict[b2]])),joint_prop) for line,(b1,b2),joint_prop in d.connections]
+top = d.newtonian_ids[0]
 N_rb = allbodies_dict[top]
 N = N_rb.frame
 system.set_newtonian(N)
 O = 0*N.x
 basis_vectors = [N.x,N.y,N.z]
 
-unused = support.build_frames(rigidbodies,N_rb,connections,system,O,joint_props,thickness,density)
+unused = support.build_frames(rigidbodies,N_rb,connections,system,O,d.joint_info,d.material_properties)
 constraints = []
 
 #for line,(body1,body2) in unused:

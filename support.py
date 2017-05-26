@@ -97,15 +97,21 @@ class AnimationParameters(object):
         self.fps = fps
         self.t_step = 1./fps
 
-def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,thickness,density):
+def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,material_properties):
     from math import pi
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb)    
-    connections_rev = dict([(bodies,line) for line,bodies in connections])
+    connections_rev = dict([(bodies,line,joint_props) for line,bodies,joint_props in connections])
     for generation in generations:
         for parent in generation:    
             for child in parent_children[parent]:
-                line = connections_rev[tuple(sorted([parent,child]))]
-                k,b,q0,lim_neg,lim_pos,joint_z = joint_props[line]   
+                line,joint_props = connections_rev[tuple(sorted([parent,child]))]
+                
+                k = joint_props.stiffness
+                b = joint_props.damping
+                q0 = joint_props.preload
+                lim_neg = joint_props.limit_neg
+                lim_pos = joint_props.limit_pos
+                joint_z = joint_props.z_pos
                 
                 points = numpy.c_[line,[joint_z,joint_z]]
                 axis = points[1] - points[0]
@@ -121,7 +127,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,thickness
                 spring_stretch = (x-(q0*pi/180))*fixedaxis
                 accounting.addforce(t_damper,w)
                 accounting.add_spring_force(k,spring_stretch,w)
-    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props,thickness,density)
+    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props,material_properties)
                 
     return unused_connections
                                 
@@ -137,13 +143,13 @@ def characterize_tree(connections,rigidbodies,N_rb):
     while not not connections:
         children = []
         for parent in searchqueue:
-            for line,bodies in connections[:]:
+            for line,bodies,joint_props in connections[:]:
                 if parent in bodies:
                     connections.remove((line,bodies))
                     ii = bodies.index(parent)                
                     child = bodies[1-ii]
                     if child in allchildren:
-                        unused_connections.append((line,bodies))
+                        unused_connections.append((line,bodies,joint_props))
                     else:
                         parent_children[parent].append(child)
                         allchildren.append(child)
@@ -154,9 +160,9 @@ def characterize_tree(connections,rigidbodies,N_rb):
         children = []
     return parent_children,unused_connections,generations
     
-def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict,thickness,density):
+def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict,material_properties):
     parent.set_fixed(reference_coord,referencepoint)
-    volume_total,center_of_mass = parent.gen_info(thickness,density)
+    volume_total,center_of_mass = parent.gen_info(material_properties)
 #    centroid = numpy.r_[centroid,[0]]
     newvec = parent.vector_from_fixed(center_of_mass)
     p = Particle(accounting,newvec,1)
@@ -164,12 +170,18 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,conne
     
     for child in parent.frame.children:
         child = child.rigidbody
-        line = connections_rev[tuple(sorted([parent,child]))]
-        k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
+        line,joint_props = connections_rev[tuple(sorted([parent,child]))]
 
+        k = joint_props.stiffness
+        b = joint_props.damping
+        q0 = joint_props.preload
+        lim_neg = joint_props.limit_neg
+        lim_pos = joint_props.limit_pos
+        joint_z = joint_props.z_pos
+                
         points = numpy.c_[line,[joint_z,joint_z]]
         newvec = parent.vector_from_fixed(points[0])
-        child_velocities(child,newvec,points[0],N_rb,accounting,connections_rev,joint_props_dict,thickness,density)
+        child_velocities(child,newvec,points[0],N_rb,accounting,connections_rev,joint_props_dict,material_properties)
         
 def plot(t,x,y):
     import matplotlib.pyplot as plt
