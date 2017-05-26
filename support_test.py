@@ -95,7 +95,7 @@ class RigidBody(object):
 
 
 class AnimationParameters(object):
-    def __init__(self,t_initial=0,t_final=2000,fps=30):
+    def __init__(self,t_initial=0,t_final=2000,fps=20):
         self.t_initial = t_initial
         self.t_final = t_final
         self.fps = fps
@@ -109,6 +109,8 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,torqueFun
 #         unused_connections = [connections[-1] ]
 #==============================================================================
     same_bodies = []
+    new_rigid_body = []
+    unused_child = []
     for connection in unused_connections:
         unused_joint = connection[0]
         unused_parent = connection[1][0]
@@ -126,7 +128,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,torqueFun
         connections.append((unused_joint,(unused_parent,new_rigid_body)))
         #connections[unused_joint][1] = new_rigid_body
     
-        parent_children[unused_parent].append(new_rigid_body)#child ofunused_parent=new_rigid_body
+        parent_children[unused_parent].append(new_rigid_body)#child of unused_parent=new_rigid_body
         parent_children[new_rigid_body]=[]
         same_bodies.append((unused_child,new_rigid_body))
         #=======
@@ -219,7 +221,7 @@ def characterize_tree(connections,rigidbodies,N_rb):
                         
         generations.append(searchqueue)
         searchqueue = children
-        children = []#children is reseted in the beginnig of the while loop, is tere a need to rest it here again?
+        children = []#children is reseted in the beginnig of the while loop, is there a need to reset it here again?
     return parent_children,unused_connections,generations
     
 def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict):

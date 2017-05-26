@@ -42,11 +42,11 @@ directory = './'
 #filename = 'pendulum2.cad.joints'
 
 
-#filename = 'newMechanism.cad.joints'
+filename = 'newMechanism.cad.joints'
 #filename = 'newMechanism1.cad.joints'
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
-filename = 'sixBar1.cad.joints'
+#filename = 'sixBar1.cad.joints'
 
 with open(os.path.join(directory,filename),'r') as f:
     allbodies,connections,fixed_bodies,joint_props = yaml.load(f)
@@ -71,8 +71,8 @@ system.set_newtonian(N)
 O = 0*N.x
 basis_vectors = [N.x,N.y,N.z]
 #torqueFunctions = [0,0,0,0,10*sympy.sin(5*sympy.pi*system.t),0]#sin function
-animation_params = support_test.AnimationParameters(t_final=10)#,fps=1000)    
-t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+#torqueFunctions = [0,0,0,0,0,0]#zero
+
 def stepFunction(time):
     if time <1:    
         return 0
@@ -81,9 +81,9 @@ def stepFunction(time):
        
 #aaa =round(.5*(1+(system.t-2)/(Abs(system.t-2)+0.000000001)))
 #bbb = round(0.5*(1+(system.t-8)/(Abs(system.t-8)+0.000000001)))
-#torqueFunctions = [0,0,0,0,1*system.t,0]#step function
+#torqueFunctions = [0,0,0,0,1*system.t,0]#ramp function
 #torqueFunctions = [0,0,0,0,2*((Abs(system.t-2)+(system.t-2))/(2*Abs(system.t-2))-(Abs(system.t-8)+(system.t-8))/(2*Abs(system.t-8))),0]#step function
-torqueFunctions = [0,0,0,0,20*((.5*(1+(system.t-50)/(Abs(system.t-50)+0.000000001)))-(.5*(1+(system.t-60)/(Abs(system.t-60)+0.000000001)))),0]#step function
+torqueFunctions = [0,0,0,0,20*((.5*(1+(system.t-20)/(Abs(system.t-20)+0.000000001)))-(.5*(1+(system.t-30)/(Abs(system.t-30)+0.000000001)))),0]#step function
 
 new_rigid_body,unused_child, generations = support_test.build_frames(rigidbodies,N_rb,connections,system,O,joint_props,torqueFunctions)
 
@@ -95,33 +95,36 @@ system.addforcegravity(-g*N.z)
 # initial conditions should later be updated from the cad file
 #==============================================================================
 #ini = [.01]*len(system.state_variables())
-
+#ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
-ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
-#ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
+#ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
 
 f,ma = system.getdynamics()
 
 #=========mycode=============
+if new_rigid_body== []:
+    func1 = system.state_space_post_invert(f, ma)#no constraints    
+        
+else:
+    p1 = new_rigid_body.vector_from_fixed((1,2,3))
+    p2 = unused_child.vector_from_fixed((1,2,3))
+    p3 = new_rigid_body.vector_from_fixed((4,5,6))
+    p4 = unused_child.vector_from_fixed((4,5,6))
+    p5 = new_rigid_body.vector_from_fixed((1,0,0))
+    p6 = unused_child.vector_from_fixed((1,0,0))
 
-p1 = new_rigid_body.vector_from_fixed((1,2,3))
-p2 = unused_child.vector_from_fixed((1,2,3))
-p3 = new_rigid_body.vector_from_fixed((4,5,6))
-p4 = unused_child.vector_from_fixed((4,5,6))
-p5 = new_rigid_body.vector_from_fixed((1,0,0))
-p6 = unused_child.vector_from_fixed((1,0,0))
-
-l1 = p1-p2
-l2 = p3-p4
-l3 = p5-p6
+    l1 = p1-p2
+    l2 = p3-p4
+    l3 = p5-p6
 
 
 
-ghost_frame = new_rigid_body.frame#this is the copy of the body that has been created using the half of the mass and inertia of the unused bodies  (unused_child or unused_parent)
-unused_child_frame = unused_child.frame
-eq1 = [
+    ghost_frame = new_rigid_body.frame#this is the copy of the body that has been created using the half of the mass and inertia of the unused bodies  (unused_child or unused_parent)
+    unused_child_frame = unused_child.frame
+    eq1 = [
 #==============================================================================
 #         l1.dot(l1),
 #         l2.dot(l2),
@@ -170,15 +173,17 @@ eq1 = [
 #==============================================================================
        ] 
 
-eq1_d = [system.derivative(item) for item in eq1]
-eq1_dd = [(system.derivative(item)) for item in eq1_d]
+    eq1_d = [system.derivative(item) for item in eq1]
+    eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
-#func1 = system.state_space_post_invert(f, ma)#no constraints
-func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+
+    func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
 #func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+animation_params = support_test.AnimationParameters(t_final=40)#,fps=1000)    
+t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=1,args=(1e8,1e3))#use with Baumgartes
