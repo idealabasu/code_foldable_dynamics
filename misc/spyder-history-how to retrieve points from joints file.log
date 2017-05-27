@@ -1,0 +1,18 @@
+>>> connections
+[(<popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D554A8>, [<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278E60390>, <popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DEE160>]), (<popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D4FA58>, [<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DEE240>, <popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DC70B8>]), (<popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D2C128>, [<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DC70B8>, <popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DA1860>]), (<popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D1DE10>, [<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278E60390>, <popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DEE240>]), (<popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D1DBE0>, [<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DEE160>, <popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DA1860>])]
+>>> connections[0]
+(<popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D554A8>, [<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278E60390>, <popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000023278DEE160>])
+>>> connections[0][0]
+<popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D554A8>
+>>> a=connections[0][0]
+>>> a.exterior
+[vertex4897797624(19.78593649, 0.0), vertex4897798184(30.64546723, 26.08299887)]
+>>> a.exteriorpo
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'GenericPolyline' object has no attribute 'exteriorpo'
+>>> a.exteriorpoints
+<bound method GenericShapeBase.exteriorpoints of <popupcad.filetypes.genericshapes.GenericPolyline object at 0x0000023278D554A8>>
+>>> a.exteriorpoints()
+[(19.78593649, 0.0), (30.64546723, 26.08299887)]
+>>> a.
