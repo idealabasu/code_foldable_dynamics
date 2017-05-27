@@ -1,0 +1,76 @@
+0.0
+0.005960593703730787
+0.03533638550720523
+0.06658621121722669
+0.10353552473909312
+0.14009428759963305
+0.21823428086116667
+0.8205240921842003
+1.0854313567450864
+1.414863454884775
+1.8747537726775345
+2.1547959868051185
+3.3279365170036668
+4.85500925218438
+5.606944571561975
+6.669408956457417
+7.497225392320817
+7.823349801706847
+9.915507070748511
+11.209674836827226
+12.69588257154103
+14.122069553894145
+16.231853126286154
+18.486831245777438
+21.263561329468402
+25.57755344572415
+31.72459700261454
+35.39472511959978
+36.177802382235726
+43.3586651959033
+calculating outputs..
+1487268709.8802857
+>>> animate.animate(readjoints)
+>>> a = rigidbodies[0]
+>>> a.frame
+147218272
+>>> a.frame.build_topology
+<bound method TreeNode.build_topology of 147218272>
+>>> a.frame.x
+147218272.x
+>>> a.frame.path_to
+<bound method TreeNode.path_to of 147218272>
+>>> a.frame.path_to_top
+<bound method TreeNode.path_to_top of 147218272>
+>>> a.frame.path_to_top()
+[147218272]
+>>> b = rigidbodies[1]
+>>> b.frame.path_to_top
+<bound method TreeNode.path_to_top of 209781032>
+>>> top
+<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000024F19728908>
+>>> top.calculateCentroid
+<bound method GenericLaminate.calculateCentroid of <popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000024F19728908>>
+>>> top.calculateCentroid.__call__
+<method-wrapper '__call__' of method object at 0x0000024F2A335108>
+>>> top.calculateCentroid()
+(-0.5000040999999998, 0.5, 0.2000000000000001)
+>>> a.calculateCentroid()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'RigidBody' object has no attribute 'calculateCentroid'
+>>> allbodies[0]
+<popupcad.filetypes.genericlaminate.GenericLaminate object at 0x0000024F19728908>
+>>> c = allbodies[0]
+>>> c.calculateCentroid()
+(-0.5000040999999998, 0.5, 0.2000000000000001)
+>>> c = allbodies[1]
+>>> c.calculateCentroid()
+(0.5, 0.5, 0.2000000000000001)
+>>> c = allbodies[2]
+>>> c.calculateCentroid()
+(1.5, 0.5, 0.2000000000000001)
+>>> c = allbodies[3]
+>>> c.calculateCentroid()
+(2.5000041, 0.5, 0.2000000000000001)
+>>> 

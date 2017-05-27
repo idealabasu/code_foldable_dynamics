@@ -1,0 +1,318 @@
+!!python/tuple
+- - &id009 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
+    geoms:
+      ? &id003 !!python/object:popupcad.filetypes.material2.Material2
+        E1: 1
+        E2: 1
+        color: &id001 !!python/tuple [0.68359375, 0.31640625, 0.31640625, 0.5]
+        density: 1
+        id: 72450232
+        is_adhesive: true
+        is_conductive: false
+        is_rigid: false
+        name: adhesive
+        poisson: 0.5
+        thickness: 200.0
+      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+          construction: false
+          exterior:
+          - !ShapeVertex_1 [209784224, -1000.0, 0.0]
+          - !ShapeVertex_1 [209781144, -1000.0, 1000.0]
+          - !ShapeVertex_1 [209784056, -0.01, 1000.0]
+          - !ShapeVertex_1 [209784448, -0.01, 0.0]
+          id: 209784112
+          interiors: []
+      ? &id004 !!python/object:popupcad.filetypes.material2.Material2
+        E1: 1
+        E2: 1
+        color: *id001
+        density: 1
+        id: 72450120
+        is_adhesive: true
+        is_conductive: false
+        is_rigid: false
+        name: adhesive
+        poisson: 0.5
+        thickness: 200.0
+      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+          construction: false
+          exterior:
+          - !ShapeVertex_1 [209783888, -1000.0, 0.0]
+          - !ShapeVertex_1 [209783160, -1000.0, 1000.0]
+          - !ShapeVertex_1 [209784280, -0.01, 1000.0]
+          - !ShapeVertex_1 [209783832, -0.01, 0.0]
+          id: 209783440
+          interiors: []
+      ? &id005 !!python/object:popupcad.filetypes.material2.Material2
+        E1: 1
+        E2: 1
+        color: &id002 !!python/tuple [0.2, 0.2, 0.2, 0.5]
+        density: 1
+        id: 72450400
+        is_adhesive: false
+        is_conductive: false
+        is_rigid: true
+        name: rigid
+        poisson: 0.5
+        thickness: 200.0
+      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+          construction: false
+          exterior:
+          - !ShapeVertex_1 [209781704, -1000.0, 0.0]
+          - !ShapeVertex_1 [209784672, -1000.0, 1000.0]
+          - !ShapeVertex_1 [209783328, -0.01, 1000.0]
+          - !ShapeVertex_1 [209784560, -0.01, 0.0]
+          id: 209784504
+          interiors: []
+      ? &id006 !!python/object:popupcad.filetypes.material2.Material2
+        E1: 1
+        E2: 1
+        color: !!python/tuple [1.0, 1.0, 0.0, 0.5]
+        density: 1
+        id: 72450568
+        is_adhesive: false
+        is_conductive: false
+        is_rigid: false
+        name: flexible
+        poisson: 0.5
+        thickness: 200.0
+      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+          construction: false
+          exterior:
+          - !ShapeVertex_1 [209781312, -1000.0, 0.0]
+          - !ShapeVertex_1 [209783272, -1000.0, 1000.0]
+          - !ShapeVertex_1 [209783944, -0.001, 1000.0]
+          - !ShapeVertex_1 [209783104, -0.001, 0.0]
+          id: 209783496
+          interiors: []
+      ? &id007 !!python/object:popupcad.filetypes.material2.Material2
+        E1: 1
+        E2: 1
+        color: *id002
+        density: 1
+        id: 72450176
+        is_adhesive: false
+        is_conductive: false
+        is_rigid: true
+        name: rigid
+        poisson: 0.5
+        thickness: 200.0
+      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+          construction: false
+          exterior:
+          - !ShapeVertex_1 [209781872, -1000.0, 0.0]
+          - !ShapeVertex_1 [209782320, -1000.0, 1000.0]
+          - !ShapeVertex_1 [209782040, -0.01, 1000.0]
+          - !ShapeVertex_1 [209783776, -0.01, 0.0]
+          id: 209782376
+          interiors: []
+    id: 147218272
+    layerdef: &id008 !!python/object:popupcad.filetypes.layerdef.LayerDef
+      _z_values:
+        *id003: 600.0
+        *id004: 200.0
+        *id005: 800.0
+        *id006: 400.0
+        *id007: 0.0
+      layers:
+      - *id007
+      - *id004
+      - *id006
+      - *id003
+      - *id005
+  - &id010 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
+    geoms:
+      *id003:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209685528, 0.01, 1000.0]
+        - !ShapeVertex_1 [209683008, 999.99, 1000.0]
+        - !ShapeVertex_1 [209683288, 999.99, 0.0]
+        - !ShapeVertex_1 [209683512, 0.01, 0.0]
+        id: 209782208
+        interiors: []
+      *id004:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209783048, 0.01, 1000.0]
+        - !ShapeVertex_1 [209781984, 999.99, 1000.0]
+        - !ShapeVertex_1 [209783552, 999.99, 0.0]
+        - !ShapeVertex_1 [209784168, 0.01, 0.0]
+        id: 209783384
+        interiors: []
+      *id005:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209685864, 0.01, 1000.0]
+        - !ShapeVertex_1 [209682728, 999.99, 1000.0]
+        - !ShapeVertex_1 [209685248, 999.99, 0.0]
+        - !ShapeVertex_1 [209683624, 0.01, 0.0]
+        id: 209682840
+        interiors: []
+      *id006:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209784728, 0.001, 1000.0]
+        - !ShapeVertex_1 [209684240, 999.999, 1000.0]
+        - !ShapeVertex_1 [209686424, 999.999, 0.0]
+        - !ShapeVertex_1 [209685920, 0.001, 0.0]
+        id: 209782768
+        interiors: []
+      *id007:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209784392, 0.01, 1000.0]
+        - !ShapeVertex_1 [209784336, 999.99, 1000.0]
+        - !ShapeVertex_1 [209781816, 999.99, 0.0]
+        - !ShapeVertex_1 [209784616, 0.01, 0.0]
+        id: 209783608
+        interiors: []
+    id: 209781032
+    layerdef: *id008
+  - &id011 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
+    geoms:
+      *id003:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209684016, 1000.01, 1000.0]
+        - !ShapeVertex_1 [209682560, 1999.99, 1000.0]
+        - !ShapeVertex_1 [209686200, 1999.99, 0.0]
+        - !ShapeVertex_1 [209685416, 1000.01, 0.0]
+        id: 209683064
+        interiors: []
+      *id004:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209686256, 1000.01, 1000.0]
+        - !ShapeVertex_1 [209684072, 1999.99, 1000.0]
+        - !ShapeVertex_1 [209682784, 1999.99, 0.0]
+        - !ShapeVertex_1 [209684184, 1000.01, 0.0]
+        id: 209685080
+        interiors: []
+      *id005:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209683792, 1000.01, 1000.0]
+        - !ShapeVertex_1 [209686480, 1999.99, 1000.0]
+        - !ShapeVertex_1 [209686144, 1999.99, 0.0]
+        - !ShapeVertex_1 [209684464, 1000.01, 0.0]
+        id: 209685752
+        interiors: []
+      *id006:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209685584, 1000.001, 1000.0]
+        - !ShapeVertex_1 [209683736, 1999.999, 1000.0]
+        - !ShapeVertex_1 [209682504, 1999.999, 0.0]
+        - !ShapeVertex_1 [209683960, 1000.001, 0.0]
+        id: 209683848
+        interiors: []
+      *id007:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209683400, 1000.01, 1000.0]
+        - !ShapeVertex_1 [209685696, 1999.99, 1000.0]
+        - !ShapeVertex_1 [209684520, 1999.99, 0.0]
+        - !ShapeVertex_1 [209684408, 1000.01, 0.0]
+        id: 209683176
+        interiors: []
+    id: 209784784
+    layerdef: *id008
+  - &id012 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
+    geoms:
+      *id003:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209684968, 2000.01, 1000.0]
+        - !ShapeVertex_1 [209685360, 3000.0, 1000.0]
+        - !ShapeVertex_1 [209685304, 3000.0, 0.0]
+        - !ShapeVertex_1 [209746744, 2000.01, 0.0]
+        id: 209684688
+        interiors: []
+      *id004:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209686088, 2000.01, 1000.0]
+        - !ShapeVertex_1 [209683120, 3000.0, 1000.0]
+        - !ShapeVertex_1 [209685024, 3000.0, 0.0]
+        - !ShapeVertex_1 [209684128, 2000.01, 0.0]
+        id: 209683904
+        interiors: []
+      *id005:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209685472, 2000.01, 1000.0]
+        - !ShapeVertex_1 [209759088, 3000.0, 1000.0]
+        - !ShapeVertex_1 [209759424, 3000.0, 0.0]
+        - !ShapeVertex_1 [209759648, 2000.01, 0.0]
+        id: 209684912
+        interiors: []
+      *id006:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209684744, 2000.001, 1000.0]
+        - !ShapeVertex_1 [209685136, 3000.0, 1000.0]
+        - !ShapeVertex_1 [209685192, 3000.0, 0.0]
+        - !ShapeVertex_1 [209684856, 2000.001, 0.0]
+        id: 209684800
+        interiors: []
+      *id007:
+      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
+        construction: false
+        exterior:
+        - !ShapeVertex_1 [209682896, 2000.01, 1000.0]
+        - !ShapeVertex_1 [209684296, 3000.0, 1000.0]
+        - !ShapeVertex_1 [209684632, 3000.0, 0.0]
+        - !ShapeVertex_1 [209684352, 2000.01, 0.0]
+        id: 209683232
+        interiors: []
+    id: 209685976
+    layerdef: *id008
+- - !!python/tuple
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [209703880, 0.0, 0.0]
+      - !ShapeVertex_1 [209703992, 0.0, 1000.0]
+      id: 209703936
+      interiors: []
+    - - *id009
+      - *id010
+  - !!python/tuple
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [209703656, 1000.0, 0.0]
+      - !ShapeVertex_1 [209704104, 1000.0, 1000.0]
+      id: 209703488
+      interiors: []
+    - - *id010
+      - *id011
+  - !!python/tuple
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [209704328, 2000.0, 1000.0]
+      - !ShapeVertex_1 [209705112, 2000.0, 0.0]
+      id: 209703824
+      interiors: []
+    - - *id011
+      - *id012
+- - *id009
+- - !!python/tuple [100.0, 10.0, 0.0, -180, 180, 500.0]
+  - !!python/tuple [100.0, 10.0, 0.0, -180, 180, 500.0]
+  - !!python/tuple [100.0, 10.0, 0.0, -180, 180, 500.0]
