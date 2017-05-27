@@ -25,9 +25,9 @@ from pynamics.variable_types import Constant
 from pynamics.variable_types import Differentiable
 from pynamics.system import System
 from pynamics.frame import Frame
-from support_test import ReadJoints
-from support_test import RigidBody
-import support_test
+from support import ReadJoints
+from support import RigidBody
+import support
 from pynamics.output import Output
 import animate
 from pynamics.particle import Particle
@@ -60,7 +60,7 @@ rigidbodies = []
 for line,items in connections: #we already have allbodies, we dont need to iterate over connections, items are elements of allbodies???
     for item in items:
         if not item in [item2.body for item2 in rigidbodies]:
-            rigidbody = support_test.RigidBody.build(item)#item is a laminate type 
+            rigidbody = support.RigidBody.build(item)#item is a laminate type 
             rigidbodies.append(rigidbody)
 
 connections = [(line,tuple(sorted([b1.rigidbody,b2.rigidbody]))) for line,(b1,b2) in connections]#rebuilding connections with new "rigid bodies" created instead of "laminates"
@@ -85,7 +85,7 @@ def stepFunction(time):
 #torqueFunctions = [0,0,0,0,2*((Abs(system.t-2)+(system.t-2))/(2*Abs(system.t-2))-(Abs(system.t-8)+(system.t-8))/(2*Abs(system.t-8))),0]#step function
 torqueFunctions = [0,0,0,0,20*((.5*(1+(system.t-20)/(Abs(system.t-20)+0.000000001)))-(.5*(1+(system.t-30)/(Abs(system.t-30)+0.000000001)))),0]#step function
 
-new_rigid_body,unused_child, generations = support_test.build_frames(rigidbodies,N_rb,connections,system,O,joint_props,torqueFunctions)
+new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,joint_props,torqueFunctions)
 
 g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
@@ -182,7 +182,7 @@ else:
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support_test.AnimationParameters(t_final=40)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final=40)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
@@ -196,7 +196,7 @@ output3 = Output([N.getR(rb.frame) for rb in rigidbodies],system)
 #output4 = Output(A_full,system)
 R = output3.calc(x)
 R = R.reshape(-1,len(rigidbodies),3,3)
-T = support_test.build_transformss(R,y)
+T = support.build_transformss(R,y)
 bodies = [item.body for item in rigidbodies]    
 readjoints = ReadJoints(bodies,T.tolist(),animation_params)
 
