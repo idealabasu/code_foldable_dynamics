@@ -9,8 +9,8 @@ from pynamics.variable_types import Differentiable
 from pynamics.frame import Frame
 from pynamics.particle import Particle
 import numpy
+#import popupcad
 import sympy
-import popupcad
 from pynamics.vector import Vector
 import PyQt5.QtGui as qg
 
@@ -38,7 +38,6 @@ def find_constraints(unused_connections):
     for line, bodies in unused_connections:
         points = line.exteriorpoints()
         points = numpy.c_[points,[0,0]]
-        points = points/popupcad.SI_length_scaling
         
         v1 = bodies[0].vector_from_fixed(points[0])
         v2 = bodies[0].vector_from_fixed(points[1])
@@ -72,8 +71,8 @@ class RigidBody(object):
         new = cls(body,frame)
         return new
 
-    def gen_info(rigidbody):
-        volume_total,mass_total,center_of_mass,I = rigidbody.body.mass_properties()
+    def gen_info(rigidbody,mass_properties):
+        volume_total,mass_total,center_of_mass,I = rigidbody.body.mass_properties(mass_properties)
 #        layers = lam[:]
 #        layer = layers[0].unary_union(layers)
 #        areas = numpy.array([shape.area for shape in layer.geoms])
@@ -95,13 +94,13 @@ class RigidBody(object):
 
 
 class AnimationParameters(object):
-    def __init__(self,t_initial=0,t_final=2000,fps=20):
+    def __init__(self,t_initial=0,t_final=20,fps=30):
         self.t_initial = t_initial
         self.t_final = t_final
         self.fps = fps
         self.t_step = 1./fps
 
-def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,torqueFunctions):
+def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,torqueFunctions):
     from math import pi
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb) 
 #==============================================================================
@@ -136,9 +135,8 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,torqueFun
         searchqueue = [new_rigid_body]
         generations.append(searchqueue)
         #========       
-    connections_rev = dict([(bodies,line) for line,bodies in connections])
-    connections_rev.update(dict([(tuple(bodies[::-1]),line) for line,bodies in connections]))
-    joint_props_dict = dict([(item,prop) for (item,bodies),prop in zip(connections,joint_props)])
+    connections_rev = dict([(bodies,(line,joint_props)) for line,bodies in connections])
+    connections_rev.update(dict([(tuple(bodies[::-1]),(line,joint_props)) for line,bodies in connections]))
     axis_list = []
     
     counter = 0
@@ -146,11 +144,16 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,torqueFun
         for parent in generation:    
             
             for child in parent_children[parent]:
-                line = connections_rev[(parent,child)]
-                k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
+                line,joint_props = connections_rev[(parent,child)]
                 
+                k = joint_props.stiffness
+                b = joint_props.damping
+                q0 = joint_props.preload
+                lim_neg = joint_props.limit_neg
+                lim_pos = joint_props.limit_pos
+                joint_z = joint_props.z_pos
                 
-                points = numpy.c_[line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
+                points = numpy.c_[line,[joint_z,joint_z]]
                 axis = points[1] - points[0]
                 l = (axis.dot(axis))**.5
                 axis = axis/l
@@ -165,10 +168,9 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,torqueFun
                 spring_stretch = (x-(q0*pi/180))*fixedaxis
                 accounting.addforce(t_damper,w)
                 accounting.add_spring_force(k,spring_stretch,w)
-                
                 accounting.addforce(torqueFunctions[counter]*fixedaxis,w) 
                 counter =counter+1
-    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props_dict)
+    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props,material_properties)
     #modify mass here of both unused_child and new_rigid body using same_bodies as a reference of the bodies which need to be changed.
 #==============================================================================
 #     unused_connections_rev = dict([(bodies,line) for line,bodies in unused_connections])
@@ -206,13 +208,13 @@ def characterize_tree(connections,rigidbodies,N_rb):
     while not not connections:
         children = []
         for parent in searchqueue:# the first loop picks the first fixed body from rigidbodies (which is in searchqeue)
-            for line,bodies in connections[:]:#the first loop picks the first connection and corresponding bodies from connections
+            for line,bodies,joint_props in connections[:]:#the first loop picks the first connection and corresponding bodies from connections
                 if parent in bodies:
-                    connections.remove((line,bodies))
+                    connections.remove((line,bodies,joint_props))
                     ii = bodies.index(parent)                
                     child = bodies[1-ii]#in two body pairs, if the first one is parent, ii is 0 and child will be the index 1 (second body), otherwise ii would be 1 and child will be the first
                     if child in allchildren:
-                        unused_connections.append((line,bodies))
+                        unused_connections.append((line,bodies,joint_props))
                         #parent_children[parent].append(child)# I added this line to close the last connection as well, it has to be tested to see if it works for all the cases
                     else:
                         parent_children[parent].append(child)
@@ -224,9 +226,9 @@ def characterize_tree(connections,rigidbodies,N_rb):
         children = []#children is reseted in the beginnig of the while loop, is there a need to reset it here again?
     return parent_children,unused_connections,generations
     
-def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict):
+def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict,material_properties):
     parent.set_fixed(reference_coord,referencepoint)
-    volume_total,center_of_mass = parent.gen_info()
+    volume_total,center_of_mass = parent.gen_info(material_properties)
 #    centroid = numpy.r_[centroid,[0]]
     newvec = parent.vector_from_fixed(center_of_mass)
     p = Particle(accounting,newvec,1)
@@ -234,12 +236,18 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,conne
     
     for child in parent.frame.children:
         child = child.rigidbody
-        line = connections_rev[(parent,child)]
-        k,b,q0,lim_neg,lim_pos,joint_z = joint_props_dict[line]   
+        line,joint_props = connections_rev[(parent,child)]
 
-        points = numpy.c_[line.exteriorpoints(),[joint_z,joint_z]]/popupcad.SI_length_scaling
+        k = joint_props.stiffness
+        b = joint_props.damping
+        q0 = joint_props.preload
+        lim_neg = joint_props.limit_neg
+        lim_pos = joint_props.limit_pos
+        joint_z = joint_props.z_pos
+                
+        points = numpy.c_[line,[joint_z,joint_z]]
         newvec = parent.vector_from_fixed(points[0])
-        child_velocities(child,newvec,points[0],N_rb,accounting,connections_rev,joint_props_dict)
+        child_velocities(child,newvec,points[0],N_rb,accounting,connections_rev,joint_props_dict,material_properties)
         
 def plot(t,x,y):
     import matplotlib.pyplot as plt
@@ -261,11 +269,11 @@ def build_transformss(Rx,y):
         for jj,bb in enumerate(aa):
             bb=bb.T
             T1 = numpy.eye(4)
-            T1[:3,3] = -y[0,jj]*1000
+            T1[:3,3] = -y[0,jj]
             T2 = numpy.eye(4)
             T2[:3,:3] = bb
             T3 = numpy.eye(4)
-            T3[:3,3] = y[ii,jj]*1000
+            T3[:3,3] = y[ii,jj]
             T = T3.dot(T2.dot(T1))
             tr = Transform3D()
             for kk,item in enumerate(T):

@@ -19,7 +19,6 @@ import copy
 """
 import costum made functions
 """
-import popupcad
 import pynamics
 from pynamics.variable_types import Constant
 from pynamics.variable_types import Differentiable
@@ -32,15 +31,20 @@ from pynamics.output import Output
 import animate
 from pynamics.particle import Particle
 from sympy.functions import Abs
-
-#pynamics.tic()
+from pynamics.frame import Frame
+from foldable_robotics.dynamics_info import DynamicsInfo
 directory = './designs'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
-
+#directory = './'
+directory = 'C:\\Users\\daukes\\code\\foldable_robotics\\python\\tests'
+directory = 'C:\\Users\\danaukes\\code\\code_foldable_robotics\\python\\tests'
+#directory = 'C:\\Users\\daukes\\desktop'
+from pynamics.variable_types import Differentiable
+from math import pi
 #filename = 'pendulum2.cad.joints'
-
+filename = 'dynamics-info.yaml'
 
 filename = 'newMechanism.cad.joints'
 #filename = 'newMechanism1.cad.joints'
@@ -49,23 +53,19 @@ filename = 'newMechanism.cad.joints'
 #filename = 'sixBar1.cad.joints'
 
 with open(os.path.join(directory,filename),'r') as f:
-    allbodies,connections,fixed_bodies,joint_props = yaml.load(f)
-
-#new_laminate = unused_child.body.copy(identical=False)
-
+    d = yaml.load(f)
+from foldable_robotics.laminate import Laminate
+allbodies = [Laminate.import_dict(item) for item in d.connected_items]
+allbodies_dict = dict([(item.id,support.RigidBody.build(item)) for item in allbodies])
 system = System()
-#L  = Constant('L' ,0.5,system)
+rigidbodies =allbodies_dict.values()
 
-rigidbodies = []
-for line,items in connections: #we already have allbodies, we dont need to iterate over connections, items are elements of allbodies???
-    for item in items:
-        if not item in [item2.body for item2 in rigidbodies]:
-            rigidbody = support.RigidBody.build(item)#item is a laminate type 
-            rigidbodies.append(rigidbody)
 
-connections = [(line,tuple(sorted([b1.rigidbody,b2.rigidbody]))) for line,(b1,b2) in connections]#rebuilding connections with new "rigid bodies" created instead of "laminates"
-top = fixed_bodies[0]
-N_rb = [body for body in rigidbodies if body.body==top][0]#when we have already chosen the fixed_bodies[0] in previous line, why should we choose the [0] in here?? maybe because we want the same body from 'connections' instead of 'rigidbodies'
+
+
+connections = [(line,tuple(sorted([allbodies_dict[b1],allbodies_dict[b2]])),joint_prop) for line,(b1,b2),joint_prop in d.connections]
+top = d.newtonian_ids[0]
+N_rb = allbodies_dict[top]
 N = N_rb.frame
 system.set_newtonian(N)
 O = 0*N.x
@@ -209,6 +209,6 @@ pynamics.toc()
 
 app = qg.QApplication(sys.argv)
 animate.render(readjoints)
-animate.animate(readjoints)
+animate.animate()
 #sys.exit(app.exec_())
 
