@@ -68,8 +68,8 @@ class RigidBody(object):
         new = cls(body,frame)
         return new
 
-    def gen_info(rigidbody,thickness,density):
-        volume_total,mass_total,center_of_mass = rigidbody.body.mass_properties(thickness,density)
+    def gen_info(rigidbody,mass_properties):
+        volume_total,mass_total,center_of_mass = rigidbody.body.mass_properties(mass_properties)
 #        layers = lam[:]
 #        layer = layers[0].unary_union(layers)
 #        areas = numpy.array([shape.area for shape in layer.geoms])
@@ -97,10 +97,10 @@ class AnimationParameters(object):
         self.fps = fps
         self.t_step = 1./fps
 
-def build_frames(rigidbodies,N_rb,connections,accounting,O,joint_props,material_properties):
+def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties):
     from math import pi
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb)    
-    connections_rev = dict([(bodies,line,joint_props) for line,bodies,joint_props in connections])
+    connections_rev = dict([(bodies,(line,joint_props)) for line,bodies,joint_props in connections])
     for generation in generations:
         for parent in generation:    
             for child in parent_children[parent]:
@@ -145,7 +145,7 @@ def characterize_tree(connections,rigidbodies,N_rb):
         for parent in searchqueue:
             for line,bodies,joint_props in connections[:]:
                 if parent in bodies:
-                    connections.remove((line,bodies))
+                    connections.remove((line,bodies,joint_props))
                     ii = bodies.index(parent)                
                     child = bodies[1-ii]
                     if child in allchildren:

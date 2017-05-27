@@ -27,6 +27,7 @@ from foldable_robotics.dynamics_info import DynamicsInfo
 pynamics.tic()
 #directory = './'
 directory = 'C:\\Users\\daukes\\code\\foldable_robotics\\python\\tests'
+directory = 'C:\\Users\\danaukes\\code\\code_foldable_robotics\\python\\tests'
 #directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
@@ -52,7 +53,7 @@ system.set_newtonian(N)
 O = 0*N.x
 basis_vectors = [N.x,N.y,N.z]
 
-unused = support.build_frames(rigidbodies,N_rb,connections,system,O,d.joint_info,d.material_properties)
+unused = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties)
 constraints = []
 
 #for line,(body1,body2) in unused:
@@ -121,7 +122,7 @@ y2 = output2.calc(x)
 #
 app = qg.QApplication(sys.argv)
 #animate.render(readjoints,show=False,save_files = False, render_video=True)
-animate.animate(readjoints,thickness)
+animate.animate()
 sys.exit(app.exec_())
 
 #plt.plot(y[:,1,0],y[:,1,2])
