@@ -5,7 +5,7 @@ Email: danaukes<at>gmail.com
 Please see LICENSE for full license.
 """
 import sys
-import PyQt4.QtGui as qg
+import PyQt5.QtGui as qg
 import numpy
 import sympy
 import math
@@ -208,7 +208,7 @@ pynamics.toc()
 #y2 = output2.calc(x)
 
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,show=True,save_files = True, render_video=True)
+animate.render(readjoints)
 
 #animate.render(readjoints,show=True)
 animate.animate(readjoints)

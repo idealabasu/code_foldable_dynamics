@@ -12,7 +12,7 @@ import numpy
 import sympy
 import popupcad
 from pynamics.vector import Vector
-import PyQt4.QtGui as qg
+import PyQt5.QtGui as qg
 
 class ReadJoints(object):
     def __init__(self,rigidbodies,ee,animation_params):

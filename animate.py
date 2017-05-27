@@ -6,8 +6,8 @@ Please see LICENSE for full license.
 """
 
 import sys
-import PyQt4.QtGui as qg
-import PyQt4.QtCore as qc
+import PyQt5.QtGui as qg
+import PyQt5.QtCore as qc
 from support import ReadJoints
 import yaml
 import shutil
@@ -42,7 +42,7 @@ def gen_mesh_item(body):
     meshitem = pgo.GLMeshItem(vertexes=all_points, faces=all_triangles, vertexColors=colors,smooth=True)
     return meshitem
 
-def render(rundata,show=False,save_files = False, render_video=True):
+def render(rundata,size=(1024,768),delete_images=False):
     w = ViewWidget()    
     w.setBackgroundColor(1,1,1,1)
         
@@ -54,49 +54,47 @@ def render(rundata,show=False,save_files = False, render_video=True):
     w.opts['distance'] = 5000
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
-    w.resize(1024,768)
+    w.resize(*size)
     
-    if save_files or render_video:
-        if not os.path.exists('render/'):
-            os.mkdir('render')
+    if not os.path.exists('render/'):
+        os.mkdir('render')
     
     ee = numpy.array(rundata.ee)
     
-    w.updateGL()
+#    w.updateGL()
+    w.paintGL()
     
-    if show:
-        w.show()
+    w.show()
     for ii in range(len(ee)):
         for jj,mi in enumerate(meshitems):
             tr = ee[ii,jj]
             tr =qg.QMatrix4x4(*tr.flatten().tolist())
             mi.setTransform(tr)
-        w.updateGL()
-        if save_files or render_video:
-            w.grabFrameBuffer().save('render/img_{0:04d}.png'.format(ii))
+#        w.updateGL()
+        w.paintGL()
+        w.grabFrameBuffer().save('render/img_{0:04d}.png'.format(ii))
         if ii%100==0:
             print(ii)
-    if show:
-        w.close()
-
-    if render_video:
-        if os.path.exists('render.mp4'):
-            os.remove('render.mp4')
-        subprocess.call('ffmpeg -r {0} -i render/img_%04d.png -vcodec libx264 -preset slow -crf 10 render.mp4'.format(str(rundata.animation_params.fps)))
+    w.close()
+    if os.path.exists('render.mp4'):
+        os.remove('render.mp4')
+    subprocess.call('ffmpeg -r {0} -i render/img_%04d.png -vcodec libx264 -preset slow -crf 10 render.mp4'.format(str(rundata.animation_params.fps)))
     
-#    if save_files or render_video:
-#        shutil.rmtree('render')
+    if delete_images:
+        shutil.rmtree('render')
 
+import idealab_tools.decorators
+
+@idealab_tools.decorators.static_vars(ii=0)
 def update(t,w,ee,meshitems):
-    global ii
-    if ii<len(ee):
+    if update.ii<len(ee):
         for jj,mi in enumerate(meshitems):
-            tr = ee[ii,jj]
+            tr = ee[update.ii,jj]
             tr =qg.QMatrix4x4(*tr.flatten().tolist())
             mi.setTransform(tr)
-        ii+=1
+        update.ii+=1
     else:
-        ii=0
+        update.ii=0
         t.stop()
         w.showNormal()
 
@@ -116,7 +114,9 @@ def animate(rundata):
     
     ee = numpy.array(rundata.ee)
     
-    w.updateGL()
+#    w.updateGL()
+    w.paintGL()
+
     w.show()
     t = qc.QTimer()
     t.timeout.connect(lambda:update(t,w,ee,meshitems))
