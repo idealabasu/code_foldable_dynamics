@@ -38,13 +38,13 @@ directory = './designs'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
 #directory = './'
-directory = 'C:\\Users\\daukes\\code\\foldable_robotics\\python\\tests'
-directory = 'C:\\Users\\danaukes\\code\\code_foldable_robotics\\python\\tests'
+#directory = 'C:\\Users\\daukes\\code\\foldable_robotics\\python\\tests'
+#directory = 'C:\\Users\\danaukes\\code\\code_foldable_robotics\\python\\tests'
 #directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
 #filename = 'pendulum2.cad.joints'
-filename = 'dynamics-info.yaml'
+#filename = 'dynamics-info.yaml'
 
 filename = 'newMechanism.cad.joints'
 #filename = 'newMechanism1.cad.joints'
@@ -85,7 +85,7 @@ def stepFunction(time):
 #torqueFunctions = [0,0,0,0,2*((Abs(system.t-2)+(system.t-2))/(2*Abs(system.t-2))-(Abs(system.t-8)+(system.t-8))/(2*Abs(system.t-8))),0]#step function
 torqueFunctions = [0,0,0,0,20*((.5*(1+(system.t-20)/(Abs(system.t-20)+0.000000001)))-(.5*(1+(system.t-30)/(Abs(system.t-30)+0.000000001)))),0]#step function
 
-new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,joint_props,torqueFunctions)
+new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
 g = Constant('g',9.81,system)
 system.addforcegravity(-g*N.z)
