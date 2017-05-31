@@ -26,11 +26,11 @@ def vector_from_fixed(fixed_matrix,fixed_vector,new_matrix,frame):
     vec2 = fixed_vector+vec1
     return vec2     
 
-def add_spring_between_points(P1,P3,accounting,N_rb,k_stop,b):
+def add_spring_between_points(P1,P3,pynamics_system,N_rb,k_stop,b):
     constraint1 = P1 - P3
-    c1_d = constraint1.diff_in_parts(N_rb.frame,accounting)
-    accounting.add_spring_force(k_stop,constraint1,c1_d)
-#    accounting.addforce(-b*c1_d,c1_d)
+    c1_d = constraint1.diff_in_parts(N_rb.frame,pynamics_system)
+    pynamics_system.add_spring_force(k_stop,constraint1,c1_d)
+#    pynamics_system.addforce(-b*c1_d,c1_d)
 
 def find_constraints(unused_connections):
     constraint_sets = []
@@ -100,8 +100,10 @@ class AnimationParameters(object):
         self.fps = fps
         self.t_step = 1./fps
 
-def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,torqueFunctions):
+def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_properties,torqueFunctions):
     from math import pi
+    rigidbodies = rigidbodies[:]
+    connections = connections[:]
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb) 
 #==============================================================================
 #     if unused_connections==[]:
@@ -114,7 +116,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,t
         unused_joint = connection[0]
         unused_parent = connection[1][0]
         unused_child = connection[1][1]
-        prop = connection [2]
+        joint_prop = connection [2]
         #modify the mass properties of the unused_child and new_rigid_body
         counter = 0
         for prop in material_properties:
@@ -128,7 +130,7 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,t
         new_laminate = unused_child.body.copy(identical=False)
         new_rigid_body = RigidBody.build(new_laminate)
         rigidbodies.append(new_rigid_body)
-        connections.append((unused_joint,(unused_parent,new_rigid_body),prop))
+        connections.append((unused_joint,(unused_parent,new_rigid_body),joint_prop))
         #connections[unused_joint][1] = new_rigid_body
     
         parent_children[unused_parent].append(new_rigid_body)#child of unused_parent=new_rigid_body
@@ -164,17 +166,17 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,t
                 axis_list.append(axis)
                 fixedaxis = axis[0]*parent.frame.x+axis[1]*parent.frame.y+axis[2]*parent.frame.z
 
-                x,x_d,x_dd = Differentiable(accounting)
-                child.frame.rotate_fixed_axis_directed(parent.frame,axis,x,accounting)
+                x,x_d,x_dd = Differentiable(pynamics_system)
+                child.frame.rotate_fixed_axis_directed(parent.frame,axis,x,pynamics_system)
                 
                 w = parent.frame.getw_(child.frame)
                 t_damper = -b*w
                 spring_stretch = (x-(q0*pi/180))*fixedaxis
-                accounting.addforce(t_damper,w)
-                accounting.add_spring_force(k,spring_stretch,w)
-                accounting.addforce(torqueFunctions[counter]*fixedaxis,w) 
+                pynamics_system.addforce(t_damper,w)
+                pynamics_system.add_spring_force(k,spring_stretch,w)
+                pynamics_system.addforce(torqueFunctions[counter]*fixedaxis,w) 
                 counter =counter+1
-    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,accounting,connections_rev,joint_props,material_properties)
+    child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,pynamics_system,connections_rev,material_properties)
     #modify mass here of both unused_child and new_rigid body using same_bodies as a reference of the bodies which need to be changed.
 #==============================================================================
 #     unused_connections_rev = dict([(bodies,line) for line,bodies in unused_connections])
@@ -191,10 +193,10 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,t
 #     unused_axis = unused_axis/l
 #     unused_fixedaxis = unused_axis[0]*unused_parent.frame.x+unused_axis[1]*unused_parent.frame.y+unused_axis[2]*unused_parent.frame.z
 # 
-#     x,x_d,x_dd = Differentiable(accounting)
+#     x,x_d,x_dd = Differentiable(pynamics_system)
 #     ghost_frame = Frame('ghost')     
-#     ghost_frame.rotate_fixed_axis_directed(unused_parent.frame,axis,x,accounting)
-# #    ghost_frame.rotate_fixed_axis_directed(unused_child.frame,axis,x,accounting)
+#     ghost_frame.rotate_fixed_axis_directed(unused_parent.frame,axis,x,pynamics_system)
+# #    ghost_frame.rotate_fixed_axis_directed(unused_child.frame,axis,x,pynamics_system)
 #==============================================================================
     
     return  new_rigid_body,unused_child, generations
@@ -218,7 +220,7 @@ def characterize_tree(connections,rigidbodies,N_rb):
                     ii = bodies.index(parent)                
                     child = bodies[1-ii]#in two body pairs, if the first one is parent, ii is 0 and child will be the index 1 (second body), otherwise ii would be 1 and child will be the first
                     if child in allchildren:
-                        unused_connections.append((line,bodies,joint_props))
+                        unused_connections.append((line,(parent,child),joint_props))
                         #parent_children[parent].append(child)# I added this line to close the last connection as well, it has to be tested to see if it works for all the cases
                     else:
                         parent_children[parent].append(child)
@@ -230,12 +232,12 @@ def characterize_tree(connections,rigidbodies,N_rb):
         children = []#children is reseted in the beginnig of the while loop, is there a need to reset it here again?
     return parent_children,unused_connections,generations
     
-def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict,material_properties):
+def child_velocities(parent,referencepoint,reference_coord,N_rb,pynamics_system,connections_rev,material_properties):
     parent.set_fixed(reference_coord,referencepoint)
     volume_total,center_of_mass,I = parent.gen_info(material_properties)
 #    centroid = numpy.r_[centroid,[0]]
     newvec = parent.vector_from_fixed(center_of_mass)
-    p = Particle(accounting,newvec,1)
+    p = Particle(pynamics_system,newvec,1)
     parent.set_particle(p)
     
     for child in parent.frame.children:
@@ -251,7 +253,7 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,conne
                 
         points = numpy.c_[line,[joint_z,joint_z]]
         newvec = parent.vector_from_fixed(points[0])
-        child_velocities(child,newvec,points[0],N_rb,accounting,connections_rev,joint_props_dict,material_properties)
+        child_velocities(child,newvec,points[0],N_rb,pynamics_system,connections_rev,material_properties)
         
 def plot(t,x,y):
     import matplotlib.pyplot as plt

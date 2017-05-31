@@ -26,7 +26,7 @@ def gen_mesh_item(body):
     all_points = []
     all_triangles = []
     
-    for layer in body.layers():
+    for layer in body:
         z = body.layerdef.z_values[layer]
         for geom in body.geoms[layer]:
             cdt = geom.triangles_inner()
@@ -42,16 +42,16 @@ def gen_mesh_item(body):
     meshitem = pgo.GLMeshItem(vertexes=all_points, faces=all_triangles, vertexColors=colors,smooth=True)
     return meshitem
 
-def render(rundata,size=(1024,768),delete_images=False):
+def render(rundata,material_properties,size=(1024,768),delete_images=False):
     w = ViewWidget()    
     w.setBackgroundColor(1,1,1,1)
         
-    meshitems = [gen_mesh_item(body) for body in rundata.rigidbodies]
-    [w.addItem(meshitem) for meshitem in meshitems]
+    meshitemss = [body.mesh_items(material_properties) for body in rundata.rigidbodies]
+    [[w.addItem(meshitem) for meshitem in meshitems] for meshitems in meshitemss]
     centerpoint = qg.QVector3D(3.5,-1,1)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 200
+    w.opts['distance'] = 5
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(*size)
@@ -66,10 +66,11 @@ def render(rundata,size=(1024,768),delete_images=False):
     
     w.show()
     for ii in range(len(ee)):
-        for jj,mi in enumerate(meshitems):
+        for jj,mi in enumerate(meshitemss):
             tr = ee[ii,jj]
             tr =qg.QMatrix4x4(*tr.flatten().tolist())
-            mi.setTransform(tr)
+            for kk in mi:
+                kk.setTransform(tr)
 #        w.updateGL()
         w.paintGL()
         w.grabFrameBuffer().save('render/img_{0:04d}.png'.format(ii))
@@ -99,16 +100,16 @@ def update(t,w,ee,meshitems):
         t.stop()
         w.showNormal()
 
-def animate(rundata,thickness):
+def animate(rundata,material_properties):
     w = ViewWidget()    
     w.setBackgroundColor(1,1,1,1)
         
-    meshitemss = [body.mesh_items(thickness) for body in rundata.rigidbodies]
+    meshitemss = [body.mesh_items(material_properties) for body in rundata.rigidbodies]
     [[w.addItem(meshitem) for meshitem in meshitems] for meshitems in meshitemss]
-    centerpoint = qg.QVector3D(3.5,-1,1)
+    centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 10
+    w.opts['distance'] = 5
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(1280,1020)

@@ -206,7 +206,7 @@ pynamics.toc()
 #y2 = output2.calc(x)
 
 app = qg.QApplication(sys.argv)
-animate.render(readjoints)
-animate.animate()
+#animate.render(readjoints,d.material_properties)
+animate.animate(readjoints,d.material_properties)
 #sys.exit(app.exec_())
 
