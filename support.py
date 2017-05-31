@@ -8,6 +8,7 @@ Please see LICENSE for full license.
 from pynamics.variable_types import Differentiable
 from pynamics.frame import Frame
 from pynamics.particle import Particle
+from pynamics.body import Body
 import numpy
 #import popupcad
 import sympy
@@ -48,11 +49,11 @@ def find_constraints(unused_connections):
     return constraint_sets
     
 class RigidBody(object):
-    def __init__(self,body,frame):
-        self.body = body
+    def __init__(self,laminate,frame):
+        self.laminate = laminate
         self.frame = frame
         self.frame.rigidbody = self
-        self.body.rigidbody = self
+        self.laminate.rigidbody = self
 
     def set_fixed(self,point,vector):
         self.fixed_initial_coordinates = point.tolist()
@@ -63,16 +64,15 @@ class RigidBody(object):
 
     def set_particle(self,particle):
         self.particle = particle
-       
-        
+
     @classmethod
-    def build(cls,body):
-        frame = Frame(str(body.id))
-        new = cls(body,frame)
+    def build(cls,laminate):
+        frame = Frame(str(laminate.id))
+        new = cls(laminate,frame)
         return new
 
-    def gen_info(rigidbody,mass_properties):
-        volume_total,mass_total,center_of_mass,I = rigidbody.body.mass_properties(mass_properties)
+    def gen_info(self,mass_properties):
+        volume_total,mass_total,center_of_mass,I = self.laminate.mass_properties(mass_properties)
 #        layers = lam[:]
 #        layer = layers[0].unary_union(layers)
 #        areas = numpy.array([shape.area for shape in layer.geoms])
@@ -90,7 +90,7 @@ class RigidBody(object):
         return vec
 
     def __lt__(self,other):
-        return self.body.id<other.body.id
+        return self.laminate.id<other.laminate.id
 
 
 class AnimationParameters(object):
@@ -127,7 +127,7 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
             #moment of inertia also changes when the mass changes so it should be taken care of in the future
             #unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
             counter = counter+1
-        new_laminate = unused_child.body.copy(identical=False)
+        new_laminate = unused_child.laminate.copy(identical=False)
         new_rigid_body = RigidBody.build(new_laminate)
         rigidbodies.append(new_rigid_body)
         connections.append((unused_joint,(unused_parent,new_rigid_body),joint_prop))

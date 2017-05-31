@@ -195,7 +195,7 @@ output3 = Output([N.getR(rb.frame) for rb in rigidbodies],system)
 R = output3.calc(x)
 R = R.reshape(-1,len(rigidbodies),3,3)
 T = support.build_transformss(R,y)
-bodies = [item.body for item in rigidbodies]    
+bodies = [item.laminate for item in rigidbodies]    
 readjoints = ReadJoints(bodies,T.tolist(),animation_params)
 
 pynamics.toc()
