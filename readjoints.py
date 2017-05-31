@@ -57,10 +57,8 @@ with open(os.path.join(directory,filename),'r') as f:
 from foldable_robotics.laminate import Laminate
 allbodies = [Laminate.import_dict(item) for item in d.connected_items]
 allbodies_dict = dict([(item.id,support.RigidBody.build(item)) for item in allbodies])
+rigidbodies = [allbodies_dict[item.id] for item in allbodies]
 system = System()
-rigidbodies =allbodies_dict.values()
-
-
 
 
 connections = [(line,tuple(sorted([allbodies_dict[b1],allbodies_dict[b2]])),joint_prop) for line,(b1,b2),joint_prop in d.connections]

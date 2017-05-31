@@ -82,7 +82,7 @@ class RigidBody(object):
 #        centroid = (areas*centroids).sum(0)/area
 #        center_of_mass /= popupcad.SI_length_scaling
 #        volume_total /=popupcad.SI_length_scaling**3
-        return volume_total,center_of_mass
+        return volume_total,center_of_mass,I
         
     def vector_from_fixed(self,new_matrix):
         fixed_matrix,fixed_vector = self.get_fixed()
@@ -114,17 +114,21 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,t
         unused_joint = connection[0]
         unused_parent = connection[1][0]
         unused_child = connection[1][1]
+        prop = connection [2]
         #modify the mass properties of the unused_child and new_rigid_body
         counter = 0
-        for layer in unused_child.body.layerdef.layers:
-            unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
+        for prop in material_properties:
+            density = prop.density
+            #TODO: fix next line
+#            unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
+
             #moment of inertia also changes when the mass changes so it should be taken care of in the future
             #unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
             counter = counter+1
         new_laminate = unused_child.body.copy(identical=False)
         new_rigid_body = RigidBody.build(new_laminate)
         rigidbodies.append(new_rigid_body)
-        connections.append((unused_joint,(unused_parent,new_rigid_body)))
+        connections.append((unused_joint,(unused_parent,new_rigid_body),prop))
         #connections[unused_joint][1] = new_rigid_body
     
         parent_children[unused_parent].append(new_rigid_body)#child of unused_parent=new_rigid_body
@@ -135,8 +139,8 @@ def build_frames(rigidbodies,N_rb,connections,accounting,O,material_properties,t
         searchqueue = [new_rigid_body]
         generations.append(searchqueue)
         #========       
-    connections_rev = dict([(bodies,(line,joint_props)) for line,bodies in connections])
-    connections_rev.update(dict([(tuple(bodies[::-1]),(line,joint_props)) for line,bodies in connections]))
+    connections_rev = dict([(bodies,(line,joint_props)) for line,bodies,joint_props in connections])
+    connections_rev.update(dict([(tuple(bodies[::-1]),(line,joint_props)) for line,bodies,joint_props in connections]))
     axis_list = []
     
     counter = 0
@@ -228,7 +232,7 @@ def characterize_tree(connections,rigidbodies,N_rb):
     
 def child_velocities(parent,referencepoint,reference_coord,N_rb,accounting,connections_rev,joint_props_dict,material_properties):
     parent.set_fixed(reference_coord,referencepoint)
-    volume_total,center_of_mass = parent.gen_info(material_properties)
+    volume_total,center_of_mass,I = parent.gen_info(material_properties)
 #    centroid = numpy.r_[centroid,[0]]
     newvec = parent.vector_from_fixed(center_of_mass)
     p = Particle(accounting,newvec,1)
