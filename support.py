@@ -7,13 +7,16 @@ Please see LICENSE for full license.
 
 from pynamics.variable_types import Differentiable
 from pynamics.frame import Frame
-from pynamics.particle import Particle
+#from pynamics.particle import Particle
 from pynamics.body import Body
+from pynamics.dyadic import Dyadic
 import numpy
 #import popupcad
 import sympy
 from pynamics.vector import Vector
 import PyQt5.QtGui as qg
+
+
 
 class ReadJoints(object):
     def __init__(self,rigidbodies,ee,animation_params):
@@ -82,7 +85,7 @@ class RigidBody(object):
 #        centroid = (areas*centroids).sum(0)/area
 #        center_of_mass /= popupcad.SI_length_scaling
 #        volume_total /=popupcad.SI_length_scaling**3
-        return volume_total,center_of_mass,I
+        return volume_total,mass_total,center_of_mass,I
         
     def vector_from_fixed(self,new_matrix):
         fixed_matrix,fixed_vector = self.get_fixed()
@@ -234,11 +237,15 @@ def characterize_tree(connections,rigidbodies,N_rb):
     
 def child_velocities(parent,referencepoint,reference_coord,N_rb,pynamics_system,connections_rev,material_properties):
     parent.set_fixed(reference_coord,referencepoint)
-    volume_total,center_of_mass,I = parent.gen_info(material_properties)
+    volume_total,mass_total,center_of_mass,I = parent.gen_info(material_properties)
 #    centroid = numpy.r_[centroid,[0]]
+    
+    I_dyadic = Dyadic.build(parent.frame,I[0,0],I[1,1],I[2,2],I[0,1],I[1,2],I[2,0])
+
     newvec = parent.vector_from_fixed(center_of_mass)
-    p = Particle(pynamics_system,newvec,1)
-    parent.set_particle(p)
+#    p = Particle(pynamics_system,newvec,1)
+    b = Body(str(parent.laminate.id),parent.frame,newvec,mass_total,I_dyadic,pynamics_system)
+    parent.set_particle(b)
     
     for child in parent.frame.children:
         child = child.rigidbody
