@@ -86,7 +86,7 @@ torqueFunctions = [0]*len(connections)
 
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
-g = Constant('g',9.81,system)
+g = Constant(9.81,'g',system)
 system.addforcegravity(-g*N.z)
 
 
