@@ -243,7 +243,7 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,pynamics_system,
     I_dyadic = Dyadic.build(parent.frame,I[0,0],I[1,1],I[2,2],I[0,1],I[1,2],I[2,0])
 
     newvec = parent.vector_from_fixed(center_of_mass)
-#    p = Particle(pynamics_system,newvec,1)
+#    p = Particle(newvec,1,pynamics_system)
     b = Body(str(parent.laminate.id),parent.frame,newvec,mass_total,I_dyadic,pynamics_system)
     parent.set_particle(b)
     
