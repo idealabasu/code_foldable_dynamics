@@ -4,7 +4,8 @@ Written by Daniel M. Aukes
 Email: danaukes<at>gmail.com
 Please see LICENSE for full license.
 """
-
+import pynamics
+pynamics.script_mode = False
 from pynamics.variable_types import Differentiable
 from pynamics.frame import Frame
 #from pynamics.particle import Particle
@@ -169,7 +170,7 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
                 axis_list.append(axis)
                 fixedaxis = axis[0]*parent.frame.x+axis[1]*parent.frame.y+axis[2]*parent.frame.z
 
-                x,x_d,x_dd = Differentiable(pynamics_system)
+                x,x_d,x_dd = Differentiable(system = pynamics_system)
                 child.frame.rotate_fixed_axis_directed(parent.frame,axis,x,pynamics_system)
                 
                 w = parent.frame.getw_(child.frame)
