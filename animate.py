@@ -44,7 +44,7 @@ def gen_mesh_item(body):
 
 def render(rundata,material_properties,size=(1024,768),delete_images=False):
     w = ViewWidget()    
-    w.setBackgroundColor(1,1,1,1)
+    #w.setBackgroundColor(1,1,1,1)
         
     meshitemss = [body.mesh_items(material_properties) for body in rundata.rigidbodies]
     [[w.addItem(meshitem) for meshitem in meshitems] for meshitems in meshitemss]
@@ -102,7 +102,7 @@ def update(t,w,ee,meshitems):
 
 def animate(rundata,material_properties):
     w = ViewWidget()    
-    w.setBackgroundColor(1,1,1,1)
+    w.setBackgroundColor(1,0,1,1)
         
     meshitemss = [body.mesh_items(material_properties) for body in rundata.rigidbodies]
     [[w.addItem(meshitem) for meshitem in meshitems] for meshitems in meshitemss]

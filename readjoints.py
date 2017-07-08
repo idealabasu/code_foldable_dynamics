@@ -43,10 +43,10 @@ directory = './designs'
 #directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
-#filename = 'pendulum2.cad.joints'
+filename = 'pendulum2.cad.joints'
 #filename = 'dynamics-info.yaml'
 
-filename = 'newMechanism.cad.joints'
+#filename = 'newMechanism.cad.joints'
 #filename = 'newMechanism1.cad.joints'
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
@@ -92,11 +92,11 @@ system.addforcegravity(-g*N.z)
 #==============================================================================
 # initial conditions should later be updated from the cad file
 #==============================================================================
-#ini = [.01]*len(system.state_variables())
+ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
-ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
+#ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
 
@@ -180,7 +180,7 @@ else:
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final=40)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final=5)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes

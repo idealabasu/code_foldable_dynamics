@@ -1,323 +1,174 @@
-!!python/tuple
-- - &id009 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
-    geoms:
-      ? &id003 !!python/object:popupcad.filetypes.material2.Material2
-        E1: 1
-        E2: 1
-        color: &id001 !!python/tuple [0.2, 0.2, 0.2, 0.5]
-        density: 1
-        id: 72450400
-        is_adhesive: false
-        is_conductive: false
-        is_flexible: false
-        is_rigid: true
-        name: rigid
-        poisson: 0.5
-        thickness: 200.0
-      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-          construction: false
-          exterior:
-          - !ShapeVertex_1 [2436694366360, -1000.0, 0.0]
-          - !ShapeVertex_1 [2436694366416, -1000.0, 1000.0]
-          - !ShapeVertex_1 [2436694366472, -0.01, 1000.0]
-          - !ShapeVertex_1 [2436694366528, -0.01, 0.0]
-          id: 2436694366304
-          interiors: []
-      ? &id004 !!python/object:popupcad.filetypes.material2.Material2
-        E1: 1
-        E2: 1
-        color: !!python/tuple [1.0, 1.0, 0.0, 0.5]
-        density: 1
-        id: 72450568
-        is_adhesive: false
-        is_conductive: false
-        is_flexible: true
-        is_rigid: false
-        name: flexible
-        poisson: 0.5
-        thickness: 200.0
-      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-          construction: false
-          exterior:
-          - !ShapeVertex_1 [2436694365800, -1000.0, 0.0]
-          - !ShapeVertex_1 [2436694365856, -1000.0, 1000.0]
-          - !ShapeVertex_1 [2436694365912, -0.001, 1000.0]
-          - !ShapeVertex_1 [2436694365968, -0.001, 0.0]
-          id: 2436694365744
-          interiors: []
-      ? &id005 !!python/object:popupcad.filetypes.material2.Material2
-        E1: 1
-        E2: 1
-        color: *id001
-        density: 1
-        id: 72450176
-        is_adhesive: false
-        is_conductive: false
-        is_flexible: false
-        is_rigid: true
-        name: rigid
-        poisson: 0.5
-        thickness: 200.0
-      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-          construction: false
-          exterior:
-          - !ShapeVertex_1 [2436691605376, -1000.0, 0.0]
-          - !ShapeVertex_1 [2436691604480, -1000.0, 1000.0]
-          - !ShapeVertex_1 [2436691430536, -0.01, 1000.0]
-          - !ShapeVertex_1 [2436691502248, -0.01, 0.0]
-          id: 2436691571208
-          interiors: []
-      ? &id006 !!python/object:popupcad.filetypes.material2.Material2
-        E1: 1
-        E2: 1
-        color: &id002 !!python/tuple [0.68359375, 0.31640625, 0.31640625, 0.5]
-        density: 1
-        id: 72450232
-        is_adhesive: true
-        is_conductive: false
-        is_flexible: false
-        is_rigid: false
-        name: adhesive
-        poisson: 0.5
-        thickness: 200.0
-      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-          construction: false
-          exterior:
-          - !ShapeVertex_1 [2436694366080, -1000.0, 0.0]
-          - !ShapeVertex_1 [2436694366136, -1000.0, 1000.0]
-          - !ShapeVertex_1 [2436694366192, -0.01, 1000.0]
-          - !ShapeVertex_1 [2436694366248, -0.01, 0.0]
-          id: 2436694366024
-          interiors: []
-      ? &id007 !!python/object:popupcad.filetypes.material2.Material2
-        E1: 1
-        E2: 1
-        color: *id002
-        density: 1
-        id: 72450120
-        is_adhesive: true
-        is_conductive: false
-        is_flexible: false
-        is_rigid: false
-        name: adhesive
-        poisson: 0.5
-        thickness: 200.0
-      : - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-          construction: false
-          exterior:
-          - !ShapeVertex_1 [2436694365520, -1000.0, 0.0]
-          - !ShapeVertex_1 [2436694365576, -1000.0, 1000.0]
-          - !ShapeVertex_1 [2436694365632, -0.01, 1000.0]
-          - !ShapeVertex_1 [2436694365688, -0.01, 0.0]
-          id: 2436694365464
-          interiors: []
-    id: 2436694362544
-    layerdef: &id008 !!python/object:popupcad.filetypes.layerdef.LayerDef
-      _z_values:
-        *id003: 800.0
-        *id004: 400.0
-        *id005: 0.0
-        *id006: 600.0
-        *id007: 200.0
-      layers:
-      - *id005
-      - *id007
-      - *id004
-      - *id006
-      - *id003
-  - &id010 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
-    geoms:
-      *id003:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694364960, 0.01, 1000.0]
-        - !ShapeVertex_1 [2436694365016, 999.99, 1000.0]
-        - !ShapeVertex_1 [2436694365072, 999.99, 0.0]
-        - !ShapeVertex_1 [2436694365128, 0.01, 0.0]
-        id: 2436694364904
-        interiors: []
-      *id004:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694368152, 0.001, 1000.0]
-        - !ShapeVertex_1 [2436694368208, 999.999, 1000.0]
-        - !ShapeVertex_1 [2436694364288, 999.999, 0.0]
-        - !ShapeVertex_1 [2436694364232, 0.001, 0.0]
-        id: 2436694368096
-        interiors: []
-      *id005:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694367592, 0.01, 1000.0]
-        - !ShapeVertex_1 [2436694367704, 999.99, 1000.0]
-        - !ShapeVertex_1 [2436694367760, 999.99, 0.0]
-        - !ShapeVertex_1 [2436694367648, 0.01, 0.0]
-        id: 2436694367536
-        interiors: []
-      *id006:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694364624, 0.01, 1000.0]
-        - !ShapeVertex_1 [2436694364848, 999.99, 1000.0]
-        - !ShapeVertex_1 [2436694364680, 999.99, 0.0]
-        - !ShapeVertex_1 [2436694364400, 0.01, 0.0]
-        id: 2436694364344
-        interiors: []
-      *id007:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694367872, 0.01, 1000.0]
-        - !ShapeVertex_1 [2436694367984, 999.99, 1000.0]
-        - !ShapeVertex_1 [2436694368040, 999.99, 0.0]
-        - !ShapeVertex_1 [2436694367928, 0.01, 0.0]
-        id: 2436694367816
-        interiors: []
-    id: 2436694363720
-    layerdef: *id008
-  - &id011 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
-    geoms:
-      *id003:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694392960, 1000.01, 1000.0]
-        - !ShapeVertex_1 [2436694393016, 1999.99, 1000.0]
-        - !ShapeVertex_1 [2436694393184, 1999.99, 0.0]
-        - !ShapeVertex_1 [2436694393072, 1000.01, 0.0]
-        id: 2436694392904
-        interiors: []
-      *id004:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694366976, 1000.001, 1000.0]
-        - !ShapeVertex_1 [2436694367032, 1999.999, 1000.0]
-        - !ShapeVertex_1 [2436694367088, 1999.999, 0.0]
-        - !ShapeVertex_1 [2436694367144, 1000.001, 0.0]
-        id: 2436694366920
-        interiors: []
-      *id005:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694365296, 1000.01, 1000.0]
-        - !ShapeVertex_1 [2436694365408, 1999.99, 1000.0]
-        - !ShapeVertex_1 [2436694366584, 1999.99, 0.0]
-        - !ShapeVertex_1 [2436694365352, 1000.01, 0.0]
-        id: 2436694365240
-        interiors: []
-      *id006:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694367256, 1000.01, 1000.0]
-        - !ShapeVertex_1 [2436694367312, 1999.99, 1000.0]
-        - !ShapeVertex_1 [2436694367368, 1999.99, 0.0]
-        - !ShapeVertex_1 [2436694367424, 1000.01, 0.0]
-        id: 2436694367200
-        interiors: []
-      *id007:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694366696, 1000.01, 1000.0]
-        - !ShapeVertex_1 [2436694366752, 1999.99, 1000.0]
-        - !ShapeVertex_1 [2436694366808, 1999.99, 0.0]
-        - !ShapeVertex_1 [2436694366864, 1000.01, 0.0]
-        id: 2436694366640
-        interiors: []
-    id: 2436694367480
-    layerdef: *id008
-  - &id012 !!python/object:popupcad.filetypes.genericlaminate.GenericLaminate
-    geoms:
-      *id003:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694396768, 2000.01, 1000.0]
-        - !ShapeVertex_1 [2436694396880, 3000.0, 1000.0]
-        - !ShapeVertex_1 [2436694405248, 3000.0, 0.0]
-        - !ShapeVertex_1 [2436694405192, 2000.01, 0.0]
-        id: 2436694396712
-        interiors: []
-      *id004:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694393856, 2000.001, 1000.0]
-        - !ShapeVertex_1 [2436694393912, 3000.0, 1000.0]
-        - !ShapeVertex_1 [2436694393968, 3000.0, 0.0]
-        - !ShapeVertex_1 [2436694394024, 2000.001, 0.0]
-        id: 2436694393800
-        interiors: []
-      *id005:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694393296, 2000.01, 1000.0]
-        - !ShapeVertex_1 [2436694393352, 3000.0, 1000.0]
-        - !ShapeVertex_1 [2436694393408, 3000.0, 0.0]
-        - !ShapeVertex_1 [2436694393464, 2000.01, 0.0]
-        id: 2436694393240
-        interiors: []
-      *id006:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694394136, 2000.01, 1000.0]
-        - !ShapeVertex_1 [2436694394192, 3000.0, 1000.0]
-        - !ShapeVertex_1 [2436694394248, 3000.0, 0.0]
-        - !ShapeVertex_1 [2436694394304, 2000.01, 0.0]
-        id: 2436694394080
-        interiors: []
-      *id007:
-      - !!python/object:popupcad.filetypes.genericshapes.GenericPoly
-        construction: false
-        exterior:
-        - !ShapeVertex_1 [2436694393576, 2000.01, 1000.0]
-        - !ShapeVertex_1 [2436694393632, 3000.0, 1000.0]
-        - !ShapeVertex_1 [2436694393688, 3000.0, 0.0]
-        - !ShapeVertex_1 [2436694393744, 2000.01, 0.0]
-        id: 2436694393520
-        interiors: []
-    id: 2436694365184
-    layerdef: *id008
-- - !!python/tuple
-    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
-      construction: false
-      exterior:
-      - !ShapeVertex_1 [2436691501296, 0.0, 0.0]
-      - !ShapeVertex_1 [2436691501240, 0.0, 1000.0]
-      id: 2436691501184
-      interiors: []
-    - - *id009
-      - *id010
+!!python/object:foldable_robotics.dynamics_info.DynamicsInfo
+connected_items:
+- id: 2401236750120
+  layers:
+  - geoms: ['POLYGON ((-1.0000000000000000 0.0000000000000000, -1.0000000000000000
+        1.0000000000000000, -0.0000100000000000 1.0000000000000000, -0.0000100000000000
+        0.0000000000000000, -1.0000000000000000 0.0000000000000000))']
+    id: 2401236691768
+  - geoms: ['POLYGON ((-1.0000000000000000 0.0000000000000000, -1.0000000000000000
+        1.0000000000000000, -0.0000100000000000 1.0000000000000000, -0.0000100000000000
+        0.0000000000000000, -1.0000000000000000 0.0000000000000000))']
+    id: 2401236692272
+  - geoms: ['POLYGON ((-1.0000000000000000 0.0000000000000000, -1.0000000000000000
+        1.0000000000000000, -0.0000010000000000 1.0000000000000000, -0.0000010000000000
+        0.0000000000000000, -1.0000000000000000 0.0000000000000000))']
+    id: 2401096292840
+  - geoms: ['POLYGON ((-1.0000000000000000 0.0000000000000000, -1.0000000000000000
+        1.0000000000000000, -0.0000100000000000 1.0000000000000000, -0.0000100000000000
+        0.0000000000000000, -1.0000000000000000 0.0000000000000000))']
+    id: 2401236692104
+  - geoms: ['POLYGON ((-1.0000000000000000 0.0000000000000000, -1.0000000000000000
+        1.0000000000000000, -0.0000100000000000 1.0000000000000000, -0.0000100000000000
+        0.0000000000000000, -1.0000000000000000 0.0000000000000000))']
+    id: 2401236691040
+- id: 2401236750176
+  layers:
+  - geoms: ['POLYGON ((0.0000100000000000 1.0000000000000000, 0.9999900000000000 1.0000000000000000,
+        0.9999900000000000 0.0000000000000000, 0.0000100000000000 0.0000000000000000,
+        0.0000100000000000 1.0000000000000000))']
+    id: 2401236766792
+  - geoms: ['POLYGON ((0.0000100000000000 1.0000000000000000, 0.9999900000000000 1.0000000000000000,
+        0.9999900000000000 0.0000000000000000, 0.0000100000000000 0.0000000000000000,
+        0.0000100000000000 1.0000000000000000))']
+    id: 2401236767072
+  - geoms: ['POLYGON ((0.0000010000000000 1.0000000000000000, 0.9999990000000001 1.0000000000000000,
+        0.9999990000000001 0.0000000000000000, 0.0000010000000000 0.0000000000000000,
+        0.0000010000000000 1.0000000000000000))']
+    id: 2401236768136
+  - geoms: ['POLYGON ((0.0000100000000000 1.0000000000000000, 0.9999900000000000 1.0000000000000000,
+        0.9999900000000000 0.0000000000000000, 0.0000100000000000 0.0000000000000000,
+        0.0000100000000000 1.0000000000000000))']
+    id: 2401236767128
+  - geoms: ['POLYGON ((0.0000100000000000 1.0000000000000000, 0.9999900000000000 1.0000000000000000,
+        0.9999900000000000 0.0000000000000000, 0.0000100000000000 0.0000000000000000,
+        0.0000100000000000 1.0000000000000000))']
+    id: 2401236767744
+- id: 2401236749896
+  layers:
+  - geoms: ['POLYGON ((1.0000100000000001 1.0000000000000000, 1.9999900000000002 1.0000000000000000,
+        1.9999900000000002 0.0000000000000000, 1.0000100000000001 0.0000000000000000,
+        1.0000100000000001 1.0000000000000000))']
+    id: 2401236692720
+  - geoms: ['POLYGON ((1.0000100000000001 1.0000000000000000, 1.9999900000000002 1.0000000000000000,
+        1.9999900000000002 0.0000000000000000, 1.0000100000000001 0.0000000000000000,
+        1.0000100000000001 1.0000000000000000))']
+    id: 2401236691096
+  - geoms: ['POLYGON ((1.0000009999999999 1.0000000000000000, 1.9999990000000001 1.0000000000000000,
+        1.9999990000000001 0.0000000000000000, 1.0000009999999999 0.0000000000000000,
+        1.0000009999999999 1.0000000000000000))']
+    id: 2401236692216
+  - geoms: ['POLYGON ((1.0000100000000001 1.0000000000000000, 1.9999900000000002 1.0000000000000000,
+        1.9999900000000002 0.0000000000000000, 1.0000100000000001 0.0000000000000000,
+        1.0000100000000001 1.0000000000000000))']
+    id: 2401236691768
+  - geoms: ['POLYGON ((1.0000100000000001 1.0000000000000000, 1.9999900000000002 1.0000000000000000,
+        1.9999900000000002 0.0000000000000000, 1.0000100000000001 0.0000000000000000,
+        1.0000100000000001 1.0000000000000000))']
+    id: 2401236690872
+- id: 2401236746424
+  layers:
+  - geoms: ['POLYGON ((2.0000100000000001 1.0000000000000000, 3.0000000000000000 1.0000000000000000,
+        3.0000000000000000 0.0000000000000000, 2.0000100000000001 0.0000000000000000,
+        2.0000100000000001 1.0000000000000000))']
+    id: 2401236766792
+  - geoms: ['POLYGON ((2.0000100000000001 1.0000000000000000, 3.0000000000000000 1.0000000000000000,
+        3.0000000000000000 0.0000000000000000, 2.0000100000000001 0.0000000000000000,
+        2.0000100000000001 1.0000000000000000))']
+    id: 2401236768024
+  - geoms: ['POLYGON ((2.0000010000000001 1.0000000000000000, 3.0000000000000000 1.0000000000000000,
+        3.0000000000000000 0.0000000000000000, 2.0000010000000001 0.0000000000000000,
+        2.0000010000000001 1.0000000000000000))']
+    id: 2401236768528
+  - geoms: ['POLYGON ((2.0000100000000001 1.0000000000000000, 3.0000000000000000 1.0000000000000000,
+        3.0000000000000000 0.0000000000000000, 2.0000100000000001 0.0000000000000000,
+        2.0000100000000001 1.0000000000000000))']
+    id: 2401236767632
+  - geoms: ['POLYGON ((2.0000100000000001 1.0000000000000000, 3.0000000000000000 1.0000000000000000,
+        3.0000000000000000 0.0000000000000000, 2.0000100000000001 0.0000000000000000,
+        2.0000100000000001 1.0000000000000000))']
+    id: 2401236768192
+connections:
+- !!python/tuple
   - !!python/tuple
-    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
-      construction: false
-      exterior:
-      - !ShapeVertex_1 [2436691502080, 1000.0, 0.0]
-      - !ShapeVertex_1 [2436691502864, 1000.0, 1000.0]
-      id: 2436691503592
-      interiors: []
-    - - *id010
-      - *id011
+    - !!python/tuple [0.0, 0.0]
+    - !!python/tuple [0.0, 1.0]
+  - !!python/tuple [2401236750120, 2401236750176]
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 10.0, limit_neg: -180,
+    limit_pos: 180, preload: 0.0, stiffness: 100.0, z_pos: 0.5}
+- !!python/tuple
   - !!python/tuple
-    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
-      construction: false
-      exterior:
-      - !ShapeVertex_1 [2436691502528, 2000.0, 1000.0]
-      - !ShapeVertex_1 [2436691501352, 2000.0, 0.0]
-      id: 2436691501464
-      interiors: []
-    - - *id011
-      - *id012
-- - *id009
-- - !!python/tuple [10.0, 1.0, 10, -180, 180, 500.0]
-  - !!python/tuple [10.0, 1.0, 10, -180, 180, 500.0]
-  - !!python/tuple [10.0, 1.0, 10, -180, 180, 500.0]
+    - !!python/tuple [1.0, 0.0]
+    - !!python/tuple [1.0, 1.0]
+  - !!python/tuple [2401236750176, 2401236749896]
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 10.0, limit_neg: -180,
+    limit_pos: 180, preload: 0.0, stiffness: 100.0, z_pos: 0.5}
+- !!python/tuple
+  - !!python/tuple
+    - !!python/tuple [2.0, 1.0]
+    - !!python/tuple [2.0, 0.0]
+  - !!python/tuple [2401236749896, 2401236746424]
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 10.0, limit_neg: -180,
+    limit_pos: 180, preload: 0.0, stiffness: 100.0, z_pos: 0.5}
+material_properties:
+- !!python/object:foldable_robotics.dynamics_info.MaterialProperty
+  E1: 1
+  E2: 1
+  color: &id002 !!python/tuple [0.2, 0.2, 0.2, 0.5]
+  density: 1
+  is_adhesive: false
+  is_conductive: false
+  is_flexible: false
+  is_rigid: true
+  name: rigid
+  poisson: 0.5
+  thickness: 0.2
+- !!python/object:foldable_robotics.dynamics_info.MaterialProperty
+  E1: 1
+  E2: 1
+  color: &id001 !!python/tuple [0.68359375, 0.31640625, 0.31640625, 0.5]
+  density: 1
+  is_adhesive: true
+  is_conductive: false
+  is_flexible: false
+  is_rigid: false
+  name: adhesive
+  poisson: 0.5
+  thickness: 0.2
+- !!python/object:foldable_robotics.dynamics_info.MaterialProperty
+  E1: 1
+  E2: 1
+  color: !!python/tuple [1.0, 1.0, 0.0, 0.5]
+  density: 1
+  is_adhesive: false
+  is_conductive: false
+  is_flexible: true
+  is_rigid: false
+  name: flexible
+  poisson: 0.5
+  thickness: 0.2
+- !!python/object:foldable_robotics.dynamics_info.MaterialProperty
+  E1: 1
+  E2: 1
+  color: *id001
+  density: 1
+  is_adhesive: true
+  is_conductive: false
+  is_flexible: false
+  is_rigid: false
+  name: adhesive
+  poisson: 0.5
+  thickness: 0.2
+- !!python/object:foldable_robotics.dynamics_info.MaterialProperty
+  E1: 1
+  E2: 1
+  color: *id002
+  density: 1
+  is_adhesive: false
+  is_conductive: false
+  is_flexible: false
+  is_rigid: true
+  name: rigid
+  poisson: 0.5
+  thickness: 0.2
+newtonian_ids: [2401236750120]
