@@ -10,6 +10,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 72450176
     is_adhesive: false
     is_conductive: false
+    is_flexible: false
     is_rigid: true
     name: rigid
     poisson: 0.5
@@ -22,6 +23,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 72450120
     is_adhesive: true
     is_conductive: false
+    is_flexible: false
     is_rigid: false
     name: adhesive
     poisson: 0.5
@@ -34,6 +36,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 72450568
     is_adhesive: false
     is_conductive: false
+    is_flexible: true
     is_rigid: false
     name: flexible
     poisson: 0.5
@@ -46,6 +49,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 72450232
     is_adhesive: true
     is_conductive: false
+    is_flexible: false
     is_rigid: false
     name: adhesive
     poisson: 0.5
@@ -58,11 +62,12 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 72450400
     is_adhesive: false
     is_conductive: false
+    is_flexible: false
     is_rigid: true
     name: rigid
     poisson: 0.5
     thickness: 200.0
-dirname: C:\Users\daukes\Desktop
+dirname: C:\Users\daukes\code\foldable_dynamics\designs
 id: 9269984603
 operations:
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -145,7 +150,7 @@ operations:
   sketch_links:
     contact_points: [8377568]
 parent_program_name: popupCAD
-parent_program_version: 2016.07.11
+parent_program_version: 2017.05.31
 sketches:
   8377568: !!python/object:popupcad.filetypes.sketch.Sketch
     _basename: points

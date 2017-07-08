@@ -44,13 +44,14 @@ directory = './designs'
 from pynamics.variable_types import Differentiable
 from math import pi
 filename = 'pendulum2.cad.joints'
+#filename = 'pendulum2.cad.joints'
 #filename = 'dynamics-info.yaml'
 
 #filename = 'newMechanism.cad.joints'
 #filename = 'newMechanism1.cad.joints'
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
-#filename = 'sixBar1.cad.joints'
+filename = 'sixBar1.cad.joints'
 
 with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
@@ -81,11 +82,12 @@ def stepFunction(time):
 #bbb = round(0.5*(1+(system.t-8)/(Abs(system.t-8)+0.000000001)))
 #torqueFunctions = [0,0,0,0,1*system.t,0]#ramp function
 #torqueFunctions = [0,0,0,0,2*((Abs(system.t-2)+(system.t-2))/(2*Abs(system.t-2))-(Abs(system.t-8)+(system.t-8))/(2*Abs(system.t-8))),0]#step function
-torqueFunctions = [0,0,0,0,20*((.5*(1+(system.t-20)/(Abs(system.t-20)+0.000000001)))-(.5*(1+(system.t-30)/(Abs(system.t-30)+0.000000001)))),0]#step function
+#torqueFunctions = [0,0,0,0,20*((.5*(1+(system.t-20)/(Abs(system.t-20)+0.000000001)))-(.5*(1+(system.t-30)/(Abs(system.t-30)+0.000000001)))),0]#step function
+torqueFunctions = [0]*len(connections)
 
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
-g = Constant('g',9.81,system)
+g = Constant(9.81,'g',system)
 system.addforcegravity(-g*N.z)
 
 
@@ -93,9 +95,10 @@ system.addforcegravity(-g*N.z)
 # initial conditions should later be updated from the cad file
 #==============================================================================
 ini = [0]*len(system.state_variables())
+#ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
-#ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
@@ -206,7 +209,7 @@ pynamics.toc()
 #y2 = output2.calc(x)
 
 app = qg.QApplication(sys.argv)
-#animate.render(readjoints,d.material_properties)
+animate.render(readjoints,d.material_properties)
 animate.animate(readjoints,d.material_properties)
 #sys.exit(app.exec_())
 
