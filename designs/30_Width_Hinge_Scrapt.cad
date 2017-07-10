@@ -67,7 +67,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     name: rigid
     poisson: 0.5
     thickness: 0.5
-dirname: C:\Users\rkhodamb\Google Drive\Code\code_foldable_dynamics
+dirname: C:\Users\daukes\code\foldable_dynamics\designs
 id: 7819451561
 operations:
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -380,7 +380,7 @@ operations:
   sketch_links:
     contact_points: [2393396058488]
 parent_program_name: popupCAD
-parent_program_version: 2017.04.09
+parent_program_version: 2017.07.10
 sketches:
   1622974678184: !!python/object:popupcad.filetypes.sketch.Sketch
     _basename: Eleminate_Rectans.sketch
@@ -1907,7 +1907,7 @@ sketches:
       interiors: []
 subdesigns:
   334036328: !!python/object:popupcad.filetypes.design.Design
-    _basename: layer-numbers.cad
+    _basename: layer numbers.cad
     _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
       layers:
       - !!python/object:popupcad.filetypes.material2.Material2
@@ -2170,7 +2170,7 @@ subdesigns:
         name: Dummy
         poisson: 0.5
         thickness: 0.025
-    dirname: C:/Users/Mohammad/Desktop/Simple_hinge
+    dirname: C:/Users/daukes/popupcad_files/designs/featues
     id: 334036328
     operations:
     - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -2329,17 +2329,8 @@ subdesigns:
         - !!python/tuple [759281536, 0]
         - !!python/tuple [335601616, 0]
       sketch_links: {}
-    - !!python/object:popupcad_deprecated.locateoperation3.LocateOperation3
-      _description: ''
-      customname: ''
-      design_links: {}
-      id: 523570424
-      network: null
-      operation_links: {}
-      sketch_links:
-        sketch: [520465656]
     parent_program_name: popupCAD
-    parent_program_version: 2017.01.27
+    parent_program_version: 2017.07.10
     sketches:
       220776623: !!python/object:popupcad.filetypes.sketch.Sketch
         _basename: Layer 5
