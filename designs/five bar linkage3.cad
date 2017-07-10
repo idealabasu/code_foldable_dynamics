@@ -10,6 +10,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 523879480
     is_adhesive: false
     is_conductive: false
+    is_flexible: false
     is_rigid: true
     name: Carbon(0-90-0)
     poisson: 0.5
@@ -22,6 +23,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 348669432
     is_adhesive: true
     is_conductive: false
+    is_flexible: false
     is_rigid: false
     name: Pyralux
     poisson: 0.5
@@ -29,11 +31,12 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
   - !!python/object:popupcad.filetypes.material2.Material2
     E1: 1
     E2: 1
-    color: &id003 !!python/tuple [1.0, 1.0, 0.0, 0.2]
+    color: !!python/tuple [1.0, 1.0, 0.0, 0.2]
     density: 1
     id: 523893560
     is_adhesive: false
     is_conductive: false
+    is_flexible: true
     is_rigid: false
     name: Kapton
     poisson: 0.5
@@ -46,6 +49,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 523892832
     is_adhesive: true
     is_conductive: false
+    is_flexible: false
     is_rigid: false
     name: Pyralux
     poisson: 0.5
@@ -58,11 +62,12 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     id: 523893896
     is_adhesive: false
     is_conductive: false
+    is_flexible: false
     is_rigid: true
     name: Carbon(0-90-0)
     poisson: 0.5
     thickness: 0.025
-dirname: C:\Users\daukes\Desktop
+dirname: C:\Users\daukes\code\foldable_dynamics\designs
 id: 446254929736
 operations:
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -101,7 +106,7 @@ operations:
   _description: ''
   customname: ''
   design_links:
-    subdesign: [354442936]
+    subdesign: [2551565232056]
   flip: false
   id: 529135040
   network: null
@@ -249,7 +254,7 @@ operations:
   sketch_links:
     contact_points: [447610525848]
 parent_program_name: popupCAD
-parent_program_version: 2016.10.13
+parent_program_version: 2017.07.10
 sketches:
   334059112: !!python/object:popupcad.filetypes.sketch.Sketch
     _basename: 334059112.sketch
@@ -380,18 +385,19 @@ sketches:
     id: 447610525848
     operationgeometry: []
 subdesigns:
-  354442936: !!python/object:popupcad.filetypes.design.Design
+  2551565232056: !!python/object:popupcad.filetypes.design.Design
     _basename: suported_hinge.cad
     _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
       layers:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id002
+        color: &id004 !!python/tuple [0.2, 0.2, 0.2, 0.2]
         density: 1
         id: 354512400
         is_adhesive: false
         is_conductive: false
+        is_flexible: false
         is_rigid: true
         name: Carbon(0-90-0)
         poisson: 0.5
@@ -399,11 +405,12 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id001
+        color: &id003 !!python/tuple [0.68359375, 0.31640625, 0.31640625, 0.2]
         density: 1
         id: 354363264
         is_adhesive: true
         is_conductive: false
+        is_flexible: false
         is_rigid: false
         name: Pyralux
         poisson: 0.5
@@ -411,11 +418,12 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id003
+        color: !!python/tuple [1.0, 1.0, 0.0, 0.2]
         density: 1
         id: 357489576
         is_adhesive: false
         is_conductive: false
+        is_flexible: true
         is_rigid: false
         name: Kapton
         poisson: 0.5
@@ -423,11 +431,12 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id001
+        color: *id003
         density: 1
         id: 357489688
         is_adhesive: true
         is_conductive: false
+        is_flexible: false
         is_rigid: false
         name: Pyralux
         poisson: 0.5
@@ -435,23 +444,24 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id002
+        color: *id004
         density: 1
         id: 357489744
         is_adhesive: false
         is_conductive: false
+        is_flexible: false
         is_rigid: true
         name: Carbon(0-90-0)
         poisson: 0.5
         thickness: 0.025
-    dirname: C:/Users/danaukes/popupCAD_files/designs/hinges
-    id: 354442936
+    dirname: C:/Users/daukes/Desktop
+    id: 2551565232056
     operations:
     - !!python/object:popupcad.manufacturing.transform_external.TransformExternal
       _description: ''
       customname: ''
       design_links:
-        subdesign: [338535312]
+        subdesign: [2551565529160]
       flip: false
       id: 357524088
       network: null
@@ -469,7 +479,7 @@ subdesigns:
       _description: ''
       customname: ''
       design_links:
-        subdesign: [338535312]
+        subdesign: [2551565529160]
       flip: true
       id: 357629624
       network: null
@@ -564,17 +574,8 @@ subdesigns:
       operation_links: {}
       sketch_links:
         sketch: [545598712]
-    - !!python/object:popupcad_deprecated.locateoperation3.LocateOperation3
-      _description: ''
-      customname: ''
-      design_links: {}
-      id: 547324368
-      network: null
-      operation_links: {}
-      sketch_links:
-        sketch: [356841736]
     parent_program_name: popupCAD
-    parent_program_version: 2014.10.07
+    parent_program_version: 2017.07.10
     sketches:
       354512512: !!python/object:popupcad.filetypes.sketch.Sketch
         _basename: 354512512.sketch
@@ -732,18 +733,19 @@ subdesigns:
           id: 545581096
           interiors: []
     subdesigns:
-      338535312: !!python/object:popupcad.filetypes.design.Design
+      2551565529160: !!python/object:popupcad.filetypes.design.Design
         _basename: supported_half.cad
         _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
           layers:
           - !!python/object:popupcad.filetypes.material2.Material2
             E1: 1
             E2: 1
-            color: *id002
+            color: &id006 !!python/tuple [0.2, 0.2, 0.2, 0.2]
             density: 1
             id: 338535760
             is_adhesive: false
             is_conductive: false
+            is_flexible: false
             is_rigid: true
             name: Carbon(0-90-0)
             poisson: 0.5
@@ -751,11 +753,12 @@ subdesigns:
           - !!python/object:popupcad.filetypes.material2.Material2
             E1: 1
             E2: 1
-            color: *id001
+            color: &id005 !!python/tuple [0.68359375, 0.31640625, 0.31640625, 0.2]
             density: 1
             id: 338535816
             is_adhesive: true
             is_conductive: false
+            is_flexible: false
             is_rigid: false
             name: Pyralux
             poisson: 0.5
@@ -763,11 +766,12 @@ subdesigns:
           - !!python/object:popupcad.filetypes.material2.Material2
             E1: 1
             E2: 1
-            color: *id003
+            color: !!python/tuple [1.0, 1.0, 0.0, 0.2]
             density: 1
             id: 338535872
             is_adhesive: false
             is_conductive: false
+            is_flexible: true
             is_rigid: false
             name: Kapton
             poisson: 0.5
@@ -775,11 +779,12 @@ subdesigns:
           - !!python/object:popupcad.filetypes.material2.Material2
             E1: 1
             E2: 1
-            color: *id001
+            color: *id005
             density: 1
             id: 338535928
             is_adhesive: true
             is_conductive: false
+            is_flexible: false
             is_rigid: false
             name: Pyralux
             poisson: 0.5
@@ -787,17 +792,18 @@ subdesigns:
           - !!python/object:popupcad.filetypes.material2.Material2
             E1: 1
             E2: 1
-            color: *id002
+            color: *id006
             density: 1
             id: 338535984
             is_adhesive: false
             is_conductive: false
+            is_flexible: false
             is_rigid: true
             name: Carbon(0-90-0)
             poisson: 0.5
             thickness: 0.025
-        dirname: C:/Users/danaukes/popupCAD_files/designs/hinges
-        id: 338535312
+        dirname: C:/Users/daukes/Desktop
+        id: 2551565529160
         operations:
         - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
           _description: ''
@@ -809,17 +815,8 @@ subdesigns:
           operation_links: {}
           sketch_links:
             sketch: [340577080]
-        - !!python/object:popupcad_deprecated.locateoperation3.LocateOperation3
-          _description: ''
-          customname: ''
-          design_links: {}
-          id: 354578160
-          network: null
-          operation_links: {}
-          sketch_links:
-            sketch: [354510384]
         parent_program_name: popupCAD
-        parent_program_version: 2014.09.11
+        parent_program_version: 2017.07.10
         sketches:
           340577080: !!python/object:popupcad.filetypes.sketch.Sketch
             _basename: 340577080.sketch
@@ -934,7 +931,7 @@ subdesigns:
               id: 340609736
               interiors: []
           354510384: !!python/object:popupcad.filetypes.sketch.Sketch
-            _basename: 354510384.sketch
+            _basename: locate line
             constraintsystem: !!python/object:popupcad.constraints.constraint_system.ConstraintSystem
               constraints:
               - !!python/object:popupcad.constraints.constraints.HorizontalConstraint
