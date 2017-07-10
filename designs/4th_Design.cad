@@ -67,7 +67,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     name: rigid
     poisson: 0.5
     thickness: 0.003
-dirname: C:\Users\msharifz\Google Drive\idealab\IROS-2017 Paper\Designes\3-DOF\4th-Acrylic
+dirname: C:\Users\daukes\code\foldable_dynamics\designs
 id: 2072808586712
 operations:
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -358,7 +358,7 @@ operations:
   sketch_links:
     sketch: [1836731675984]
 parent_program_name: popupCAD
-parent_program_version: 2017.07.06
+parent_program_version: 2017.07.10
 sketches:
   1469735031: !!python/object:popupcad.filetypes.sketch.Sketch
     _basename: 1739697095176.sketch
@@ -2619,7 +2619,7 @@ sketches:
       interiors: []
 subdesigns:
   334036328: !!python/object:popupcad.filetypes.design.Design
-    _basename: layer-numbers.cad
+    _basename: layer numbers.cad
     _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
       layers:
       - !!python/object:popupcad.filetypes.material2.Material2
@@ -2882,7 +2882,7 @@ subdesigns:
         name: Dummy
         poisson: 0.5
         thickness: 0.025
-    dirname: C:/Users/Mohammad/Desktop
+    dirname: C:/Users/daukes/popupcad_files/designs/featues
     id: 334036328
     operations:
     - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -3041,17 +3041,8 @@ subdesigns:
         - !!python/tuple [759281536, 0]
         - !!python/tuple [335601616, 0]
       sketch_links: {}
-    - !!python/object:popupcad_deprecated.locateoperation3.LocateOperation3
-      _description: ''
-      customname: ''
-      design_links: {}
-      id: 523570424
-      network: null
-      operation_links: {}
-      sketch_links:
-        sketch: [520465656]
     parent_program_name: popupCAD
-    parent_program_version: 2017.03.17
+    parent_program_version: 2017.07.10
     sketches:
       220776623: !!python/object:popupcad.filetypes.sketch.Sketch
         _basename: Layer 5
