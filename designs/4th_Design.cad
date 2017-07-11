@@ -67,7 +67,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     name: rigid
     poisson: 0.5
     thickness: 0.003
-dirname: C:\Users\daukes\code\foldable_dynamics\designs
+dirname: C:\Users\rkhodamb\Google Drive\Code\code_foldable_dynamics\designs
 id: 2072808586712
 operations:
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -357,6 +357,51 @@ operations:
   operation_links: {}
   sketch_links:
     sketch: [1836731675984]
+- !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
+  _description: ''
+  customname: fixed
+  design_links: {}
+  id: 2442591471376
+  layer_links: [1887818150072, 1887818150352, 1887818150464, 1887818150688, 1887818150240]
+  network: null
+  operation_links: {}
+  sketch_links:
+    sketch: [2442508591904]
+- !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
+  _description: ''
+  customname: ''
+  design_links: {}
+  id: 2442591463184
+  layer_links: [1887818150072, 1887818150352, 1887818150464, 1887818150688, 1887818150240]
+  network: null
+  operation_links: {}
+  sketch_links:
+    sketch: [2442591469864]
+- !!python/object:popupcad.manufacturing.joint_operation3.JointOperation3
+  _description: ''
+  customname: ''
+  design_links: {}
+  id: 2442585075384
+  joint_defs:
+  - !!python/object:popupcad.manufacturing.joint_operation3.JointDef
+    damping: 3.5e-05
+    joint_layer: 1887818150464
+    limit_negative: -180
+    limit_positive: 180
+    preload_angle: 0.0
+    sketch: 1887940829704
+    stiffness: 0.114
+    sublaminate_layers: [1887818150072, 1887818150352, 1887818150464, 1887818150688,
+      1887818150240]
+    width: 2.0
+  network: null
+  operation_links:
+    fixed:
+    - !!python/tuple [2442591471376, 0]
+    parent:
+    - !!python/tuple [1887942025792, 0]
+  sketch_links:
+    contact_points: [2442591469864]
 parent_program_name: popupCAD
 parent_program_version: 2017.07.10
 sketches:
@@ -2617,6 +2662,124 @@ sketches:
       - !ShapeVertex_1 [2215774836160, -1.0054844606946984, 1.0420475319926874]
       id: 2215774811864
       interiors: []
+  2442508291992: !!python/object:popupcad.filetypes.sketch.Sketch
+    _basename: 2442508291992.sketch
+    constraintsystem: !!python/object:popupcad.constraints.constraint_system.ConstraintSystem
+      constraints: []
+    id: 2442508291992
+    operationgeometry:
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [2442508973056, 46.22224300333386, -73.57644089448063]
+      - !ShapeVertex_1 [2442508973280, 55.68831705875974, -96.05836677611701]
+      - !ShapeVertex_1 [2442508973336, 38.53105783330032, -101.38303343229407]
+      id: 2442508973504
+      interiors: []
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [2442508974456, 63.37950222879322, -16.77999656192548]
+      - !ShapeVertex_1 [2442508972104, 85.86142811042961, -33.93725578738484]
+      - !ShapeVertex_1 [2442508972384, 59.82972445800854, -40.445181700490124]
+      id: 2442508972608
+      interiors: []
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [2442508973224, -27.731460554680613, -72.39318163755239]
+      - !ShapeVertex_1 [2442508973392, -36.01427535317826, -89.55044086301176]
+      - !ShapeVertex_1 [2442508972944, -21.22353464157536, -100.19977417536583]
+      id: 2442508973000
+      interiors: []
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [2442508973560, -41.33894200935529, -32.75399653045661]
+      - !ShapeVertex_1 [2442508974008, -60.86271974867111, -45.178218728203035]
+      - !ShapeVertex_1 [2442508974344, -37.197534610106494, -54.64429278362892]
+      id: 2442508974120
+      interiors: []
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [2442508974568, -36.01427535317826, 31.14200334366791]
+      - !ShapeVertex_1 [2442508975016, -51.39664569324529, 18.12615151745736]
+      - !ShapeVertex_1 [2442508974512, -36.60590498164238, 8.660077462031506]
+      id: 2442508974680
+      interiors: []
+    - !!python/object:popupcad.filetypes.genericshapes.GenericPolyline
+      construction: false
+      exterior:
+      - !ShapeVertex_1 [2442508973448, 54.505057801831455, 27.592225572883212]
+      - !ShapeVertex_1 [2442508974064, 70.47905777036259, 19.309410774385587]
+      - !ShapeVertex_1 [2442508974288, 56.87157631568797, 8.660077462031506]
+      id: 2442508973728
+      interiors: []
+    - !!python/object:popupcad.filetypes.genericshapes.GenericTwoPointRect
+      construction: false
+      exterior:
+      - !ShapeVertex_1
+        - 2442508560984
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - &id006 !!python/object/apply:numpy.dtype
+            args: [f8, 0, 1]
+            state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+          - !!binary |
+            AiTPMc+IA8A=
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - *id006
+          - !!binary |
+            srZ1SZpuAEA=
+      - !ShapeVertex_1
+        - 2442508561656
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - *id006
+          - !!binary |
+            hVPffDv75T8=
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - *id006
+          - !!binary |
+            P5BAqVqW9z8=
+      id: 2442508561880
+      interiors: []
+  2442508591904: !!python/object:popupcad.filetypes.sketch.Sketch
+    _basename: Fixed.sketch
+    constraintsystem: !!python/object:popupcad.constraints.constraint_system.ConstraintSystem
+      constraints: []
+    id: 2442508591904
+    operationgeometry:
+    - !!python/object:popupcad.filetypes.genericshapes.GenericTwoPointRect
+      construction: false
+      exterior:
+      - !ShapeVertex_1
+        - 2442585068376
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - *id006
+          - !!binary |
+            TeClN77LTMA=
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - *id006
+          - !!binary |
+            YpmyHhvgTUA=
+      - !ShapeVertex_1
+        - 2442585068320
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - *id006
+          - !!binary |
+            yp5az+yGHUA=
+        - !!python/object/apply:numpy.core.multiarray.scalar
+          - *id006
+          - !!binary |
+            WwMnlqg3PkA=
+      id: 2442552409784
+      interiors: []
+  2442591469864: !!python/object:popupcad.filetypes.sketch.Sketch
+    _basename: empty.sketch
+    constraintsystem: !!python/object:popupcad.constraints.constraint_system.ConstraintSystem
+      constraints: []
+    id: 2442591469864
+    operationgeometry: []
 subdesigns:
   334036328: !!python/object:popupcad.filetypes.design.Design
     _basename: layer numbers.cad
@@ -2625,7 +2788,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: &id006 !!python/tuple [0.5, 0.5, 0.5, 0.2]
+        color: &id007 !!python/tuple [0.5, 0.5, 0.5, 0.2]
         density: 1
         id: 781885168
         is_adhesive: false
@@ -2638,7 +2801,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800138688
         is_adhesive: false
@@ -2651,7 +2814,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800141040
         is_adhesive: false
@@ -2664,7 +2827,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800140760
         is_adhesive: false
@@ -2677,7 +2840,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800140928
         is_adhesive: false
@@ -2690,7 +2853,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800137568
         is_adhesive: false
@@ -2703,7 +2866,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800139528
         is_adhesive: false
@@ -2716,7 +2879,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800137400
         is_adhesive: false
@@ -2729,7 +2892,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800137456
         is_adhesive: false
@@ -2742,7 +2905,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800137680
         is_adhesive: false
@@ -2755,7 +2918,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800138464
         is_adhesive: false
@@ -2768,7 +2931,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800166016
         is_adhesive: false
@@ -2781,7 +2944,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 800166240
         is_adhesive: false
@@ -2794,7 +2957,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 762548176
         is_adhesive: false
@@ -2807,7 +2970,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 762547672
         is_adhesive: false
@@ -2820,7 +2983,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 762546720
         is_adhesive: false
@@ -2833,7 +2996,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 762545600
         is_adhesive: false
@@ -2846,7 +3009,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 762545992
         is_adhesive: false
@@ -2859,7 +3022,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 762545824
         is_adhesive: false
@@ -2872,7 +3035,7 @@ subdesigns:
       - !!python/object:popupcad.filetypes.material2.Material2
         E1: 1
         E2: 1
-        color: *id006
+        color: *id007
         density: 1
         id: 762544760
         is_adhesive: false

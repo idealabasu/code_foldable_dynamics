@@ -43,7 +43,7 @@ directory = './designs'
 #directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
-filename = 'pendulum2.cad.joints'
+#filename = 'pendulum2.cad.joints'
 #filename = 'pendulum2.cad.joints'
 #filename = 'dynamics-info.yaml'
 
@@ -51,7 +51,8 @@ filename = 'pendulum2.cad.joints'
 #filename = 'newMechanism1.cad.joints'
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
-filename = 'sixBar1.cad.joints'
+#filename = 'sixBar1.cad.joints'
+filename = '4th_Design.cad.joints'
 
 with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
@@ -87,14 +88,14 @@ torqueFunctions = [0]*len(connections)
 
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
-g = Constant(9.81,'g',system)
+g = Constant(98.1,'g',system)
 system.addforcegravity(-g*N.z)
 
 
 #==============================================================================
 # initial conditions should later be updated from the cad file
 #==============================================================================
-ini = [0]*len(system.state_variables())
+#ini = [0]*len(system.get_state_variables())
 #ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints

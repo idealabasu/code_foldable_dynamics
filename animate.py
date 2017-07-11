@@ -51,7 +51,7 @@ def render(rundata,material_properties,size=(1024,768),delete_images=False):
     centerpoint = qg.QVector3D(3.5,-1,1)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 5
+    w.opts['distance'] = 0.5
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(*size)
@@ -109,10 +109,10 @@ def animate(rundata,material_properties):
     centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 5
+    w.opts['distance'] = 0.5
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
-    w.resize(1280,1020)
+    w.resize(1024,768)
     
     ee = numpy.array(rundata.ee)
     
