@@ -275,7 +275,7 @@ def plot(t,x,y):
     plt.figure()
     plt.plot(t,x[:,0:3])        
     
-def build_transformss(Rx,y):
+def build_transformss(Rx,y,y0):
     from pyqtgraph import Transform3D
     transformss = []
     for ii,aa in enumerate(Rx):
@@ -283,7 +283,7 @@ def build_transformss(Rx,y):
         for jj,bb in enumerate(aa):
             bb=bb.T
             T1 = numpy.eye(4)
-            T1[:3,3] = -y[0,jj]
+            T1[:3,3] = -y0[jj]
             T2 = numpy.eye(4)
             T2[:3,:3] = bb
             T3 = numpy.eye(4)
