@@ -67,12 +67,12 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     name: rigid
     poisson: 0.5
     thickness: 10.0
-dirname: C:\Users\rkhodamb\Google Drive\Code\code_foldable_dynamics
+dirname: C:\Users\rkhodamb\Google Drive\Code\code_foldable_dynamics\designs
 id: 1184799379
 operations:
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
   _description: ''
-  customname: ''
+  customname: Body
   design_links: {}
   id: 2806051933096
   layer_links: [2805952750032, 2805952749864, 2805952749752, 2805952749640, 2805952750200]
@@ -82,7 +82,7 @@ operations:
     sketch: [2806051850560]
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
   _description: ''
-  customname: ''
+  customname: Joints
   design_links: {}
   id: 2806052065008
   layer_links: [2805952750032, 2805952749864, 2805952749640, 2805952750200]
@@ -117,7 +117,7 @@ operations:
   sketch_links: {}
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
   _description: ''
-  customname: ''
+  customname: Fixed
   design_links: {}
   id: 2840574139864
   layer_links: [2805952750032, 2805952749864, 2805952749752, 2805952749640, 2805952750200]
@@ -151,7 +151,7 @@ operations:
   sketch_links:
     contact_points: [2806112760216]
 parent_program_name: popupCAD
-parent_program_version: 2017.04.19
+parent_program_version: 2017.07.13
 sketches:
   2806051850560: !!python/object:popupcad.filetypes.sketch.Sketch
     _basename: body

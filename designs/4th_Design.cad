@@ -14,7 +14,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     is_rigid: true
     name: rigid
     poisson: 0.5
-    thickness: 0.003
+    thickness: 3.0
   - !!python/object:popupcad.filetypes.material2.Material2
     E1: 1
     E2: 1
@@ -66,7 +66,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     is_rigid: true
     name: rigid
     poisson: 0.5
-    thickness: 0.003
+    thickness: 3.0
 dirname: C:\Users\rkhodamb\Google Drive\Code\code_foldable_dynamics\designs
 id: 2072808586712
 operations:
@@ -390,7 +390,7 @@ operations:
     limit_positive: 180
     preload_angle: 0.0
     sketch: 1887940829704
-    stiffness: 0.114
+    stiffness: 0.0114
     sublaminate_layers: [1887818150072, 1887818150352, 1887818150464, 1887818150688,
       1887818150240]
     width: 2.0
@@ -403,7 +403,7 @@ operations:
   sketch_links:
     contact_points: [2442591469864]
 parent_program_name: popupCAD
-parent_program_version: 2017.07.10
+parent_program_version: 2017.07.13
 sketches:
   1469735031: !!python/object:popupcad.filetypes.sketch.Sketch
     _basename: 1739697095176.sketch

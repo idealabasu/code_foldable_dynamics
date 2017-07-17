@@ -42,16 +42,16 @@ def gen_mesh_item(body):
     meshitem = pgo.GLMeshItem(vertexes=all_points, faces=all_triangles, vertexColors=colors,smooth=True)
     return meshitem
 
-def render(rundata,material_properties,size=(1024,768),delete_images=False):
+def render(rundata,material_properties,size=(700,700),delete_images=False):
     w = ViewWidget()    
     #w.setBackgroundColor(1,1,1,1)
         
     meshitemss = [body.mesh_items(material_properties) for body in rundata.rigidbodies]
     [[w.addItem(meshitem) for meshitem in meshitems] for meshitems in meshitemss]
-    centerpoint = qg.QVector3D(3.5,-1,1)
+    centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 0.5
+    w.opts['distance'] = 0.3
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(*size)
@@ -109,10 +109,10 @@ def animate(rundata,material_properties):
     centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 0.5
-    w.opts['azimuth'] = -45
-    w.opts['elevation'] = 30
-    w.resize(1024,768)
+    w.opts['distance'] = 0.3
+    w.opts['azimuth'] = 0
+    w.opts['elevation'] = 90
+    w.resize(700,700)
     
     ee = numpy.array(rundata.ee)
     

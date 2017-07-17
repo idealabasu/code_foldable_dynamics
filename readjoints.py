@@ -43,7 +43,7 @@ directory = './designs'
 #directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
-#filename = 'pendulum2.cad.joints'
+filename = 'pendulum2.cad.joints'
 #filename = 'pendulum2.cad.joints'
 #filename = 'dynamics-info.yaml'
 
@@ -52,8 +52,9 @@ from math import pi
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
 #filename = 'sixBar1.cad.joints'
-filename = '4th_Design.cad.joints'
-
+#filename = '4th_Design.cad.joints'
+#filename = 'test.cad.joints'
+filename = 'W_3.5.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
 from foldable_robotics.laminate import Laminate
@@ -88,18 +89,18 @@ torqueFunctions = [0]*len(connections)
 
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
-g = Constant(98.1,'g',system)
-system.addforcegravity(-g*N.z)
+g = Constant(9.81,'g',system)
+system.addforcegravity(-g*N.y)
 
 
 #==============================================================================
 # initial conditions should later be updated from the cad file
 #==============================================================================
-#ini = [0]*len(system.get_state_variables())
+ini = [0.3638,0 ]#*len(system.get_state_variables())
 #ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
-ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+#ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
@@ -173,7 +174,7 @@ else:
 #        #new_rigid_body.vector_from_fixed(new_rigid_body.body.mass_properties()[2]).dot(N.z) - unused_child.vector_from_fixed(unused_child.body.mass_properties()[2]).dot(N.z)          
 #        #generations[3][0].vector_from_fixed(generations[3][0].body.mass_properties()[2]).dot(N.y) - generations[3][0].vector_from_fixed(generations[2][0].body.mass_properties()[2]).dot(N.y)     
 #==============================================================================
-       ] 
+       ]    
 
     eq1_d = [system.derivative(item) for item in eq1]
     eq1_dd = [(system.derivative(item)) for item in eq1_d]
@@ -184,7 +185,7 @@ else:
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final=5)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final=10)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
@@ -213,4 +214,8 @@ app = qg.QApplication(sys.argv)
 animate.render(readjoints,d.material_properties)
 animate.animate(readjoints,d.material_properties)
 #sys.exit(app.exec_())
-
+plt.figure(1)
+plt.plot(t,y[:,1])
+plt.show()
+#plt.plot(y[:,0],y[:,1])
+#plt.axis('equal')
