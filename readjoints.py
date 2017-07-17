@@ -215,7 +215,13 @@ animate.render(readjoints,d.material_properties)
 animate.animate(readjoints,d.material_properties)
 #sys.exit(app.exec_())
 plt.figure(1)
-plt.plot(t,y[:,1])
+plt.plot(t,x[:,0])
 plt.show()
 #plt.plot(y[:,0],y[:,1])
 #plt.axis('equal')
+lines = []
+for item in zip(t,x[:,0],x[:,1]):
+    lines.append('{0:0.5e},{1:0.5e},{2:0.5e},{3:0.5e}\n'.format(*item))
+
+with open('output.csv','w') as f:
+    f.writelines(lines)
