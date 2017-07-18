@@ -21,27 +21,6 @@ class ViewWidget(pgo.GLViewWidget):
         super(ViewWidget,self).__init__()
         pass
 
-def gen_mesh_item(body):
-    colors = []
-    all_points = []
-    all_triangles = []
-    
-    for layer in body:
-        z = body.layerdef.z_values[layer]
-        for geom in body.geoms[layer]:
-            cdt = geom.triangles_inner()
-            triangles = [[(point.x,point.y,z) for point in triangle.points_] for triangle in cdt.GetTriangles()]        
-            points = list(set([point for triangle in triangles for point in triangle]))
-            all_points.extend(points)
-            triangles2 = [[all_points.index(point) for point in tri] for tri in triangles]
-            all_triangles.extend(triangles2)
-            colors.extend([layer.color]*len(points))
-            
-    all_points = numpy.array(all_points)
-    all_triangles = numpy.array(all_triangles)
-    meshitem = pgo.GLMeshItem(vertexes=all_points, faces=all_triangles, vertexColors=colors,smooth=True)
-    return meshitem
-
 def render(rundata,material_properties,size=(1024,768),delete_images=False):
     w = ViewWidget()    
     #w.setBackgroundColor(1,1,1,1)
