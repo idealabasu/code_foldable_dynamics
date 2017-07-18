@@ -34,7 +34,7 @@ from sympy.functions import Abs
 from pynamics.frame import Frame
 from foldable_robotics.dynamics_info import DynamicsInfo
 #directory = './designs'
-directory = 'C:\\Users\\daukes\\Desktop\\mohammad'
+directory = 'C:\\Users\\danaukes\\Dropbox (Personal)\\mohammad'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
@@ -186,7 +186,7 @@ else:
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final=10,fps=60)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final=10,fps=100)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
