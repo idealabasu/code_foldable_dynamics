@@ -33,7 +33,8 @@ from pynamics.particle import Particle
 from sympy.functions import Abs
 from pynamics.frame import Frame
 from foldable_robotics.dynamics_info import DynamicsInfo
-directory = './designs'
+#directory = './designs'
+directory = 'C:\\Users\\daukes\\Desktop\\mohammad'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
@@ -43,7 +44,7 @@ directory = './designs'
 #directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
-filename = 'pendulum2.cad.joints'
+#filename = 'pendulum2.cad.joints'
 #filename = 'pendulum2.cad.joints'
 #filename = 'dynamics-info.yaml'
 
@@ -51,7 +52,8 @@ filename = 'pendulum2.cad.joints'
 #filename = 'newMechanism1.cad.joints'
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
-filename = 'sixBar1.cad.joints'
+#filename = 'sixBar1.cad.joints'
+filename = 'W_3.5.cad.joints'
 
 with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
@@ -88,17 +90,18 @@ torqueFunctions = [0]*len(connections)
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
 g = Constant(9.81,'g',system)
-system.addforcegravity(-g*N.z)
+system.addforcegravity(-g*N.y)
 
 
 #==============================================================================
 # initial conditions should later be updated from the cad file
 #==============================================================================
-ini = [0]*len(system.state_variables())
+ini = [0.3623,0]
+#ini = [0]*len(system.state_variables())
 #ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
-ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+#ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
@@ -183,7 +186,7 @@ else:
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final=5)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final=10,fps=60)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
@@ -210,8 +213,17 @@ pynamics.toc()
 #output2=Output([KE-PE],system)
 #y2 = output2.calc(x)
 
-app = qg.QApplication(sys.argv)
-animate.render(readjoints,d.material_properties)
-animate.animate(readjoints,d.material_properties)
-#sys.exit(app.exec_())
 
+lines = []
+#for item in zip(t,q,q_d,q_dd):
+#    lines.append('{0:0.5e},{1:0.5e},{2:0.5e},{3:0.5e}\n'.format(*item))
+for item in zip(t,x[:,0]):
+    lines.append('{0:0.5e},{1:0.5e}\n'.format(*item))
+
+with open('output1.csv','w') as file_object:
+    file_object.writelines(lines)
+
+
+app = qg.QApplication(sys.argv)
+w=animate.animate(readjoints,d.material_properties)
+sys.exit(app.exec_())

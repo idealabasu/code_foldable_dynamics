@@ -88,7 +88,7 @@ def animate(rundata,material_properties):
     centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 5
+    w.opts['distance'] = 1
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(1280,1020)
@@ -102,8 +102,9 @@ def animate(rundata,material_properties):
     t = qc.QTimer()
     t.timeout.connect(lambda:update(t,w,ee,meshitemss))
     t.start(rundata.animation_params.t_step*1000)
+    w.timer = t
+    return w
 #    w.close()
-    
 ii = 0
 
 if __name__=='__main__':
