@@ -16,10 +16,31 @@ import numpy
 import sympy
 from pynamics.vector import Vector
 import PyQt5.QtGui as qg
+from pynamics.output import Output
+
 
 
 
 class ReadJoints(object):
+    @classmethod
+    def build(cls,x,animation_params,rigidbodies,system):
+    #    print('calculating outputs..')
+        N = system.newtonian
+        basis_vectors = [N.x,N.y,N.z]
+        points1 = [[rb.particle.pCM.dot(bv) for bv in basis_vectors] for rb in rigidbodies]
+        output = Output(points1,system)
+        y0 = output.calc(numpy.array([[0]*len(system.get_state_variables())]))
+        
+        y = output.calc(x)
+        output3 = Output([N.getR(rb.frame) for rb in rigidbodies],system)
+        #output4 = Output(A_full,system)
+        R = output3.calc(x)
+        R = R.reshape(-1,len(rigidbodies),3,3)
+        T = build_transformss(R,y,y0)
+        bodies = [item.laminate for item in rigidbodies]    
+        readjoints = cls(bodies,T.tolist(),animation_params)
+        return readjoints
+
     def __init__(self,rigidbodies,ee,animation_params):
         self.rigidbodies = rigidbodies
         self.ee = [[item.matrix().tolist() for item in item2] for item2 in ee]
