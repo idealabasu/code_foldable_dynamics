@@ -20,6 +20,7 @@ import copy
 import costum made functions
 """
 import pynamics
+
 from pynamics.variable_types import Constant
 from pynamics.variable_types import Differentiable
 from pynamics.system import System
@@ -34,7 +35,7 @@ from sympy.functions import Abs
 from pynamics.frame import Frame
 from foldable_robotics.dynamics_info import DynamicsInfo
 #directory = './designs'
-directory = 'C:\\Users\\danaukes\\Dropbox (Personal)\\mohammad'
+directory = 'C:\\Users\\daukes\\Dropbox (Personal)\\mohammad'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
