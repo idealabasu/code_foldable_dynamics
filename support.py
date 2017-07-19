@@ -6,18 +6,36 @@ Please see LICENSE for full license.
 """
 import pynamics
 pynamics.script_mode = False
-from pynamics.variable_types import Differentiable
-from pynamics.frame import Frame
-from pynamics.body import Body
 from pynamics.dyadic import Dyadic
 import numpy
 from pynamics.vector import Vector
 import PyQt5.QtGui as qg
 from pynamics.output import Output
 from pynamics.variable_types import Constant
+Constant.typestring = 'c'
+Constant.typeformat = '{0}{1:d}'
+from pynamics.variable_types import Differentiable
+Differentiable.typestring = 'q'
+Differentiable.typeformat = '{0}{1:d}'
+from pynamics.variable_types import Variable
+Variable.typestring = 'v'
+Variable.typeformat = '{0}{1:d}'
+from pynamics.frame import Frame
+Frame.typestring = 'F'
+Frame.typeformat = '{0}{1:d}'
+from pynamics.body import Body
+Body.typestring = 'B'
+Body.typeformat = '{0}{1:d}'
 
 
-
+class MassConstant(Constant):
+    typestring = 'm'
+class SpringConstant(Constant):
+    typestring = 'b'
+class DamperConstant(Constant):
+    typestring = 'b'
+class IniConstant(Constant):
+    typestring = 'qini'
 
 class ReadJoints(object):
     @classmethod
@@ -124,7 +142,7 @@ class AnimationParameters(object):
         self.t_step = 1./fps
 
 def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_properties,torqueFunctions):
-    from math import pi
+    from sympy import pi
     rigidbodies = rigidbodies[:]
     connections = connections[:]
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb) 
@@ -182,9 +200,9 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
 #                lim_pos = joint_props.limit_pos
                 joint_z = joint_props.z_pos
                 
-                ck = Constant(k,name = 'k'+str(counter),system = pynamics_system)
-                cb = Constant(b,name = 'b'+str(counter),system = pynamics_system)
-                cq0 = Constant(q0,name = 'q0'+str(counter),system = pynamics_system)
+                ck = SpringConstant(k,system = pynamics_system)
+                cb = DamperConstant(b,system = pynamics_system)
+                cq0 = IniConstant(q0,system = pynamics_system)
 #                clim_neg = Constant(lim_neg,system = pynamics_system)
 #                clim_pos = Constant(lim_pos,system = pynamics_system)
 #                cjoint_z = Constant(joint_z,system = pynamics_system)
@@ -266,11 +284,13 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,pynamics_system,
     parent.set_fixed(reference_coord,referencepoint)
     volume_total,mass_total,center_of_mass,I = parent.gen_info(material_properties)
 #    centroid = numpy.r_[centroid,[0]]
+
+    cm = MassConstant(mass_total,system = pynamics_system)
     I_dyadic = Dyadic.build(parent.frame,I[0,0],I[1,1],I[2,2],I[0,1],I[1,2],I[2,0])
 
     newvec = parent.vector_from_fixed(center_of_mass)
 #    p = Particle(newvec,1,pynamics_system)
-    b = Body(None,parent.frame,newvec,mass_total,I_dyadic,pynamics_system)
+    b = Body(None,parent.frame,newvec,cm,I_dyadic,pynamics_system)
     parent.set_body(b)
     
     for child in parent.frame.children:
