@@ -95,7 +95,7 @@ class RigidBody(object):
         return new
 
     def gen_info(self,mass_properties):
-        volume_total,mass_total,center_of_mass,I = self.laminate.mass_properties(mass_properties)
+        mass_total,volume_total,center_of_mass,I = self.laminate.mass_properties(mass_properties)
 #        layers = lam[:]
 #        layer = layers[0].unary_union(layers)
 #        areas = numpy.array([shape.area for shape in layer.geoms])
