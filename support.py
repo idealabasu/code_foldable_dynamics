@@ -31,7 +31,7 @@ Body.typeformat = '{0}{1:d}'
 class MassConstant(Constant):
     typestring = 'm'
 class SpringConstant(Constant):
-    typestring = 'b'
+    typestring = 'k'
 class DamperConstant(Constant):
     typestring = 'b'
 class IniConstant(Constant):
