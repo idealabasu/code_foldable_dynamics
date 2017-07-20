@@ -20,6 +20,7 @@ import copy
 import costum made functions
 """
 import pynamics
+
 from pynamics.variable_types import Constant
 from pynamics.variable_types import Differentiable
 from pynamics.system import System
@@ -33,7 +34,8 @@ from pynamics.particle import Particle
 from sympy.functions import Abs
 from pynamics.frame import Frame
 from foldable_robotics.dynamics_info import DynamicsInfo
-directory = './designs'
+#directory = './designs'
+directory = 'C:\\Users\\danaukes\\Dropbox (Personal)\\mohammad'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
@@ -43,7 +45,7 @@ directory = './designs'
 #directory = 'C:\\Users\\daukes\\desktop'
 from pynamics.variable_types import Differentiable
 from math import pi
-filename = 'pendulum2.cad.joints'
+#filename = 'pendulum2.cad.joints'
 #filename = 'pendulum2.cad.joints'
 #filename = 'dynamics-info.yaml'
 
@@ -185,25 +187,13 @@ else:
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final=10)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final=10,fps=100)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=1,args=(1e8,1e3))#use with Baumgartes
 
-print('calculating outputs..')
-points1 = [[rb.particle.pCM.dot(bv) for bv in basis_vectors] for rb in rigidbodies]
-output = Output(points1,system)
-y0 = output.calc(numpy.array([[0]*len(system.get_state_variables())]))
-
-y = output.calc(x)
-output3 = Output([N.getR(rb.frame) for rb in rigidbodies],system)
-#output4 = Output(A_full,system)
-R = output3.calc(x)
-R = R.reshape(-1,len(rigidbodies),3,3)
-T = support.build_transformss(R,y,y0)
-bodies = [item.laminate for item in rigidbodies]    
-readjoints = ReadJoints(bodies,T.tolist(),animation_params)
+readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
 
 pynamics.toc()
 
@@ -212,18 +202,10 @@ pynamics.toc()
 #output2=Output([KE-PE],system)
 #y2 = output2.calc(x)
 
-app = qg.QApplication(sys.argv)
-animate.render(readjoints,d.material_properties)
-animate.animate(readjoints,d.material_properties)
-#sys.exit(app.exec_())
-plt.figure(1)
-plt.plot(t,x[:,0])
-plt.show()
-#plt.plot(y[:,0],y[:,1])
-#plt.axis('equal')
-lines = []
-for item in zip(t,x[:,0],x[:,1]):
-    lines.append('{0:0.5e},{1:0.5e},{2:0.5e},{3:0.5e}\n'.format(*item))
+import idealab_tools.data_exchange.csv as csv
+csv.write('output1.csv',numpy.c_[t,x[:,0]])
 
-with open('output.csv','w') as f:
-    f.writelines(lines)
+app = qg.QApplication(sys.argv)
+animate.render(readjoints,d.material_properties,delete_images=True)
+w=animate.animate(readjoints,d.material_properties)
+sys.exit(app.exec_())

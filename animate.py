@@ -21,28 +21,7 @@ class ViewWidget(pgo.GLViewWidget):
         super(ViewWidget,self).__init__()
         pass
 
-def gen_mesh_item(body):
-    colors = []
-    all_points = []
-    all_triangles = []
-    
-    for layer in body:
-        z = body.layerdef.z_values[layer]
-        for geom in body.geoms[layer]:
-            cdt = geom.triangles_inner()
-            triangles = [[(point.x,point.y,z) for point in triangle.points_] for triangle in cdt.GetTriangles()]        
-            points = list(set([point for triangle in triangles for point in triangle]))
-            all_points.extend(points)
-            triangles2 = [[all_points.index(point) for point in tri] for tri in triangles]
-            all_triangles.extend(triangles2)
-            colors.extend([layer.color]*len(points))
-            
-    all_points = numpy.array(all_points)
-    all_triangles = numpy.array(all_triangles)
-    meshitem = pgo.GLMeshItem(vertexes=all_points, faces=all_triangles, vertexColors=colors,smooth=True)
-    return meshitem
-
-def render(rundata,material_properties,size=(700,700),delete_images=False):
+def render(rundata,material_properties,size=(1024,768),delete_images=False):
     w = ViewWidget()    
     #w.setBackgroundColor(1,1,1,1)
         
@@ -51,13 +30,17 @@ def render(rundata,material_properties,size=(700,700),delete_images=False):
     centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 0.3
+    w.opts['distance'] = .3
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(*size)
     
-    if not os.path.exists('render/'):
+    if os.path.exists('render/'):
+        shutil.rmtree('render')
         os.mkdir('render')
+    else:        
+        os.mkdir('render')
+    
     
     ee = numpy.array(rundata.ee)
     
@@ -109,10 +92,10 @@ def animate(rundata,material_properties):
     centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = 0.3
-    w.opts['azimuth'] = 0
-    w.opts['elevation'] = 90
-    w.resize(700,700)
+    w.opts['distance'] = .3
+    w.opts['azimuth'] = -45
+    w.opts['elevation'] = 30
+    w.resize(1280,1020)
     
     ee = numpy.array(rundata.ee)
     
@@ -123,8 +106,9 @@ def animate(rundata,material_properties):
     t = qc.QTimer()
     t.timeout.connect(lambda:update(t,w,ee,meshitemss))
     t.start(rundata.animation_params.t_step*1000)
+    w.timer = t
+    return w
 #    w.close()
-    
 ii = 0
 
 if __name__=='__main__':

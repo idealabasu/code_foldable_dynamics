@@ -6,20 +6,57 @@ Please see LICENSE for full license.
 """
 import pynamics
 pynamics.script_mode = False
-from pynamics.variable_types import Differentiable
-from pynamics.frame import Frame
-#from pynamics.particle import Particle
-from pynamics.body import Body
 from pynamics.dyadic import Dyadic
 import numpy
-#import popupcad
-import sympy
 from pynamics.vector import Vector
 import PyQt5.QtGui as qg
+from pynamics.output import Output
+from pynamics.variable_types import Constant
+Constant.typestring = 'c'
+Constant.typeformat = '{0}{1:d}'
+from pynamics.variable_types import Differentiable
+Differentiable.typestring = 'q'
+Differentiable.typeformat = '{0}{1:d}'
+from pynamics.variable_types import Variable
+Variable.typestring = 'v'
+Variable.typeformat = '{0}{1:d}'
+from pynamics.frame import Frame
+Frame.typestring = 'F'
+Frame.typeformat = '{0}{1:d}'
+from pynamics.body import Body
+Body.typestring = 'B'
+Body.typeformat = '{0}{1:d}'
 
 
+class MassConstant(Constant):
+    typestring = 'm'
+class SpringConstant(Constant):
+    typestring = 'b'
+class DamperConstant(Constant):
+    typestring = 'b'
+class IniConstant(Constant):
+    typestring = 'qini'
 
 class ReadJoints(object):
+    @classmethod
+    def build(cls,x,animation_params,rigidbodies,system):
+    #    print('calculating outputs..')
+        N = system.newtonian
+        basis_vectors = [N.x,N.y,N.z]
+        points1 = [[rb.body.pCM.dot(bv) for bv in basis_vectors] for rb in rigidbodies]
+        output = Output(points1,system)
+        y0 = output.calc(numpy.array([[0]*len(system.get_state_variables())]))
+        
+        y = output.calc(x)
+        output3 = Output([N.getR(rb.frame) for rb in rigidbodies],system)
+        #output4 = Output(A_full,system)
+        R = output3.calc(x)
+        R = R.reshape(-1,len(rigidbodies),3,3)
+        T = build_transformss(R,y,y0)
+        bodies = [item.laminate for item in rigidbodies]    
+        readjoints = cls(bodies,T.tolist(),animation_params)
+        return readjoints
+
     def __init__(self,rigidbodies,ee,animation_params):
         self.rigidbodies = rigidbodies
         self.ee = [[item.matrix().tolist() for item in item2] for item2 in ee]
@@ -31,26 +68,26 @@ def vector_from_fixed(fixed_matrix,fixed_vector,new_matrix,frame):
     vec2 = fixed_vector+vec1
     return vec2     
 
-def add_spring_between_points(P1,P3,pynamics_system,N_rb,k_stop,b):
-    constraint1 = P1 - P3
-    c1_d = constraint1.diff_in_parts(N_rb.frame,pynamics_system)
-    pynamics_system.add_spring_force(k_stop,constraint1,c1_d)
-#    pynamics_system.addforce(-b*c1_d,c1_d)
+#def add_spring_between_points(P1,P3,pynamics_system,N_rb,k_stop,b):
+#    constraint1 = P1 - P3
+#    c1_d = constraint1.diff_in_parts(N_rb.frame,pynamics_system)
+#    pynamics_system.add_spring_force(k_stop,constraint1,c1_d)
+##    pynamics_system.addforce(-b*c1_d,c1_d)
 
-def find_constraints(unused_connections):
-    constraint_sets = []
-
-    for line, bodies in unused_connections:
-        points = line.exteriorpoints()
-        points = numpy.c_[points,[0,0]]
-        
-        v1 = bodies[0].vector_from_fixed(points[0])
-        v2 = bodies[0].vector_from_fixed(points[1])
-        v3 = bodies[1].vector_from_fixed(points[0])
-        v4 = bodies[1].vector_from_fixed(points[1])
-        constraint_sets.append([v1,v2,v3,v4])
-
-    return constraint_sets
+#def find_constraints(unused_connections):
+#    constraint_sets = []
+#
+#    for line, bodies in unused_connections:
+#        points = line.exteriorpoints()
+#        points = numpy.c_[points,[0,0]]
+#        
+#        v1 = bodies[0].vector_from_fixed(points[0])
+#        v2 = bodies[0].vector_from_fixed(points[1])
+#        v3 = bodies[1].vector_from_fixed(points[0])
+#        v4 = bodies[1].vector_from_fixed(points[1])
+#        constraint_sets.append([v1,v2,v3,v4])
+#
+#    return constraint_sets
     
 class RigidBody(object):
     def __init__(self,laminate,frame):
@@ -66,17 +103,17 @@ class RigidBody(object):
     def get_fixed(self):
         return numpy.array(self.fixed_initial_coordinates),self.fixed_vector
 
-    def set_particle(self,particle):
-        self.particle = particle
+    def set_body(self,body):
+        self.body = body
 
     @classmethod
     def build(cls,laminate):
-        frame = Frame(str(laminate.id))
+        frame = Frame()
         new = cls(laminate,frame)
         return new
 
     def gen_info(self,mass_properties):
-        volume_total,mass_total,center_of_mass,I = self.laminate.mass_properties(mass_properties)
+        mass_total,volume_total,center_of_mass,I = self.laminate.mass_properties(mass_properties)
 #        layers = lam[:]
 #        layer = layers[0].unary_union(layers)
 #        areas = numpy.array([shape.area for shape in layer.geoms])
@@ -105,7 +142,7 @@ class AnimationParameters(object):
         self.t_step = 1./fps
 
 def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_properties,torqueFunctions):
-    from math import pi
+    from sympy import pi
     rigidbodies = rigidbodies[:]
     connections = connections[:]
     parent_children,unused_connections,generations = characterize_tree(connections,rigidbodies,N_rb) 
@@ -159,9 +196,16 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
                 k = joint_props.stiffness
                 b = joint_props.damping
                 q0 = joint_props.preload
-                lim_neg = joint_props.limit_neg
-                lim_pos = joint_props.limit_pos
+#                lim_neg = joint_props.limit_neg
+#                lim_pos = joint_props.limit_pos
                 joint_z = joint_props.z_pos
+                
+                ck = SpringConstant(k,system = pynamics_system)
+                cb = DamperConstant(b,system = pynamics_system)
+                cq0 = IniConstant(q0,system = pynamics_system)
+#                clim_neg = Constant(lim_neg,system = pynamics_system)
+#                clim_pos = Constant(lim_pos,system = pynamics_system)
+#                cjoint_z = Constant(joint_z,system = pynamics_system)
                 
                 points = numpy.c_[line,[joint_z,joint_z]]
                 axis = points[1] - points[0]
@@ -174,10 +218,10 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
                 child.frame.rotate_fixed_axis_directed(parent.frame,axis,x,pynamics_system)
                 
                 w = parent.frame.getw_(child.frame)
-                t_damper = -b*w
-                spring_stretch = (x-(q0*pi/180))*fixedaxis
+                t_damper = -cb*w
+                spring_stretch = (x-(cq0*pi/180))*fixedaxis
                 pynamics_system.addforce(t_damper,w)
-                pynamics_system.add_spring_force(k,spring_stretch,w)
+                pynamics_system.add_spring_force(ck,spring_stretch,w)
                 pynamics_system.addforce(torqueFunctions[counter]*fixedaxis,w) 
                 counter =counter+1
     child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,pynamics_system,connections_rev,material_properties)
@@ -240,13 +284,14 @@ def child_velocities(parent,referencepoint,reference_coord,N_rb,pynamics_system,
     parent.set_fixed(reference_coord,referencepoint)
     volume_total,mass_total,center_of_mass,I = parent.gen_info(material_properties)
 #    centroid = numpy.r_[centroid,[0]]
-    
+
+    cm = MassConstant(mass_total,system = pynamics_system)
     I_dyadic = Dyadic.build(parent.frame,I[0,0],I[1,1],I[2,2],I[0,1],I[1,2],I[2,0])
 
     newvec = parent.vector_from_fixed(center_of_mass)
 #    p = Particle(newvec,1,pynamics_system)
-    b = Body(str(parent.laminate.id),parent.frame,newvec,mass_total,I_dyadic,pynamics_system)
-    parent.set_particle(b)
+    b = Body(None,parent.frame,newvec,cm,I_dyadic,pynamics_system)
+    parent.set_body(b)
     
     for child in parent.frame.children:
         child = child.rigidbody
