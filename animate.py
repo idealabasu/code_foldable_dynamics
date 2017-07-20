@@ -36,7 +36,7 @@ def render(rundata,material_properties,size=(1024,768),delete_images=False):
     w.resize(*size)
     
     if os.path.exists('render/'):
-        shutil.rmtree('render')
+        shutil.rmtree('render',ignore_errors=True)
         os.mkdir('render')
     else:        
         os.mkdir('render')
@@ -49,11 +49,10 @@ def render(rundata,material_properties,size=(1024,768),delete_images=False):
     
     w.show()
     for ii in range(len(ee)):
-        for jj,mi in enumerate(meshitemss):
+        for jj,mi in enumerate(meshitems):
             tr = ee[ii,jj]
             tr =qg.QMatrix4x4(*tr.flatten().tolist())
-            for kk in mi:
-                kk.setTransform(tr)
+            mi.setTransform(tr)
 #        w.updateGL()
         w.paintGL()
         w.grabFrameBuffer().save('render/img_{0:04d}.png'.format(ii))
@@ -65,7 +64,7 @@ def render(rundata,material_properties,size=(1024,768),delete_images=False):
     subprocess.call('ffmpeg -r {0} -i render/img_%04d.png -vcodec libx264 -preset slow -crf 10 render.mp4'.format(str(rundata.animation_params.fps)))
     
     if delete_images:
-        shutil.rmtree('render')
+        shutil.rmtree('render',ignore_errors=True)
 
 import idealab_tools.decorators
 
@@ -75,8 +74,7 @@ def update(t,w,ee,meshitems):
         for jj,mi in enumerate(meshitems):
             tr = ee[update.ii,jj]
             tr =qg.QMatrix4x4(*tr.flatten().tolist())
-            for kk in mi:
-                kk.setTransform(tr)
+            mi.setTransform(tr)
         update.ii+=1
     else:
         update.ii=0
@@ -104,7 +102,7 @@ def animate(rundata,material_properties):
 
     w.show()
     t = qc.QTimer()
-    t.timeout.connect(lambda:update(t,w,ee,meshitemss))
+    t.timeout.connect(lambda:update(t,w,ee,meshitems))
     t.start(rundata.animation_params.t_step*1000)
     w.timer = t
     return w
