@@ -34,8 +34,8 @@ from pynamics.particle import Particle
 from sympy.functions import Abs
 from pynamics.frame import Frame
 from foldable_robotics.dynamics_info import DynamicsInfo
-#directory = './designs'
-directory = 'C:\\Users\\danaukes\\Dropbox (Personal)\\mohammad'
+directory = './designs'
+#directory = 'C:\\Users\\danaukes\\Dropbox (Personal)\\mohammad'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
 #filename = 'five bar linkage3.cad.joints'
 #filename = 'five bar linkage3_Torgue1.cad.joints'
@@ -54,9 +54,9 @@ from math import pi
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
 #filename = 'sixBar1.cad.joints'
-#filename = '4th_Design.cad.joints'
+filename = '4th_Design.cad1.joints'
 #filename = 'test.cad.joints'
-filename = 'W_3.5.cad.joints'
+#filename = 'W_3.5.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
 from foldable_robotics.laminate import Laminate
@@ -91,18 +91,18 @@ torqueFunctions = [0]*len(connections)
 
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
-g = Constant(9.81,'g',system)
-system.addforcegravity(-g*N.y)
+#g = Constant(0,'g',system)
+#system.addforcegravity(-g*N.y)
 
 
 #==============================================================================
 # initial conditions should later be updated from the cad file
 #==============================================================================
-ini = [0.3638,0 ]#*len(system.get_state_variables())
+#ini = [0.3623,0 ]#*len(system.get_state_variables())
 #ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
-#ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+ini = [0.01, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
@@ -182,16 +182,16 @@ else:
     eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
 
-    func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-#func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+    #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final=10,fps=100)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final= 1,fps=30)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-#x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-5,atol=1e-5,hmin=1e-14,full_output=1,args=(1e8,1e3))#use with Baumgartes
+#x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
+x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,hmin=1e-14,full_output=1,args=(1e8,1e3))#use with Baumgartes
 
 readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
 
