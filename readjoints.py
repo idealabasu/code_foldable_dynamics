@@ -91,7 +91,9 @@ torqueFunctions = [0]*len(connections)
 
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
-#g = Constant(0,'g',system)
+material_properties = d.material_properties
+#
+#g = Constant(9.81,'g',system)
 #system.addforcegravity(-g*N.y)
 
 
@@ -192,15 +194,15 @@ else:
 
 
     #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final= 1,fps=30)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final= 5,fps=30)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,hmin=1e-14,full_output=1,args=(1e8,1e3))#use with Baumgartes
+x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=(1e2,1e1))#use with Baumgartes
 
 readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
 
@@ -213,8 +215,9 @@ cy = constraint_output.calc(x)
 
 import idealab_tools.data_exchange.csv as csv
 csv.write('output1.csv',numpy.c_[t,x[:,0]])
-
+plt.plot(cy)
+ 
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,d.material_properties,delete_images=True)
-w=animate.animate(readjoints,d.material_properties)
+animate.render(readjoints,material_properties,delete_images=True)
+w=animate.animate(readjoints,material_properties)
 sys.exit(app.exec_())
