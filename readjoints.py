@@ -102,7 +102,7 @@ new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb
 #ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
-ini = [0.01, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+ini = [1, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
@@ -129,6 +129,15 @@ else:
 
     ghost_frame = new_rigid_body.frame#this is the copy of the body that has been created using the half of the mass and inertia of the unused bodies  (unused_child or unused_parent)
     unused_child_frame = unused_child.frame
+    
+    v1 = new_rigid_body.vector_from_fixed((1,2,1))- unused_child.vector_from_fixed((1,2,1))
+    v2 = new_rigid_body.vector_from_fixed((3,2,1))- unused_child.vector_from_fixed((3,2,1))
+    v3 = new_rigid_body.vector_from_fixed((1,4,1))- unused_child.vector_from_fixed((1,4,1))
+    
+    c1 = v1.dot(v1)
+    c2 = v2.dot(v2)
+    c3 = v3.dot(v3)
+    
     eq1 = [
 #==============================================================================
 #         l1.dot(l1),
@@ -146,9 +155,9 @@ else:
 #        new_rigid_body.vector_from_fixed((3,2,1)).dot(N.z) - unused_child.vector_from_fixed((3,2,1)).dot(N.z),
 #==============================================================================
 #these settins work for both 5 bar and 4 bar mechanisms mentioned above, tolerance should be e^-8 for 5 bar to solve       
-       ghost_frame.z.dot(N.z)-unused_child_frame.z.dot(N.z),
-       new_rigid_body.vector_from_fixed((1,2,1)).dot(N.z) - unused_child.vector_from_fixed((1,2,1)).dot(N.z),
-       new_rigid_body.vector_from_fixed((3,2,1)).dot(N.z) - unused_child.vector_from_fixed((3,2,1)).dot(N.z),
+    c1,
+    c2,
+    c3,
 #==============================================================================
 #        #ghost_frame.x.dot(unused_child_frame.x)-1, 
 #        #ghost_frame.y.dot(unused_child_frame.y)-1,
@@ -199,8 +208,8 @@ pynamics.toc()
 
 #KE = system.KE
 #PE = system.getPEGravity(O) - system.getPESprings()
-#output2=Output([KE-PE],system)
-#y2 = output2.calc(x)
+constraint_output=Output([c1,c2,c3],system)
+cy = constraint_output.calc(x)
 
 import idealab_tools.data_exchange.csv as csv
 csv.write('output1.csv',numpy.c_[t,x[:,0]])
