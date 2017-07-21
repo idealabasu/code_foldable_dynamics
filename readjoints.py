@@ -93,8 +93,8 @@ new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb
 
 material_properties = d.material_properties
 #
-#g = Constant(9.81,'g',system)
-#system.addforcegravity(-g*N.y)
+g = Constant(9.81,'g',system)
+system.addforcegravity(-g*N.z)
 
 
 #==============================================================================
@@ -198,7 +198,7 @@ else:
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final= 5,fps=30)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
