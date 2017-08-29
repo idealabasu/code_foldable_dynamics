@@ -90,8 +90,9 @@ def vector_from_fixed(fixed_matrix,fixed_vector,new_matrix,frame):
 #    return constraint_sets
     
 class RigidBody(object):
-    def __init__(self,laminate,frame):
+    def __init__(self,laminate,frame,material_prop):
         self.laminate = laminate
+        self.material_prop = material_prop
         self.frame = frame
         self.frame.rigidbody = self
         self.laminate.rigidbody = self
@@ -107,13 +108,13 @@ class RigidBody(object):
         self.body = body
 
     @classmethod
-    def build(cls,laminate):
+    def build(cls,laminate, material_prop):
         frame = Frame()
-        new = cls(laminate,frame)
+        new = cls(laminate,frame,material_prop)
         return new
 
-    def gen_info(self,mass_properties):
-        mass_total,volume_total,center_of_mass,I = self.laminate.mass_properties(mass_properties)
+    def gen_info(self):
+        mass_total,volume_total,center_of_mass,I = self.laminate.mass_properties(self.material_prop)
 #        layers = lam[:]
 #        layer = layers[0].unary_union(layers)
 #        areas = numpy.array([shape.area for shape in layer.geoms])
@@ -159,17 +160,11 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
         unused_child = connection[1][1]
         joint_prop = connection [2]
         #modify the mass properties of the unused_child and new_rigid_body
-        counter = 0
-        for prop in material_properties:
-            density = prop.density
-            #TODO: fix next line
-#            unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
-
-            #moment of inertia also changes when the mass changes so it should be taken care of in the future
-            #unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
-            counter = counter+1
+        for prop in unused_child.material_prop:
+            prop.density /=2
         new_laminate = unused_child.laminate.copy(identical=False)
-        new_rigid_body = RigidBody.build(new_laminate)
+        mp = [item2.copy() for item2 in unused_child.material_prop]
+        new_rigid_body = RigidBody.build(new_laminate,mp)
         rigidbodies.append(new_rigid_body)
         connections.append((unused_joint,(unused_parent,new_rigid_body),joint_prop))
         #connections[unused_joint][1] = new_rigid_body
@@ -282,7 +277,7 @@ def characterize_tree(connections,rigidbodies,N_rb):
     
 def child_velocities(parent,referencepoint,reference_coord,N_rb,pynamics_system,connections_rev,material_properties):
     parent.set_fixed(reference_coord,referencepoint)
-    volume_total,mass_total,center_of_mass,I = parent.gen_info(material_properties)
+    volume_total,mass_total,center_of_mass,I = parent.gen_info()
 #    centroid = numpy.r_[centroid,[0]]
 
     cm = MassConstant(mass_total,system = pynamics_system)
