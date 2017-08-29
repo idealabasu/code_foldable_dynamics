@@ -267,43 +267,43 @@ connections:
     - !!python/tuple [0.009331878857394406, -0.029306516282004123]
     - !!python/tuple [-0.025668121142605367, -0.08992829454691477]
   - !!python/tuple [2335932219520, 2335932116944]
-  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 3.5e-06,
-    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0114, z_pos: 0.0030749999999999996}
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 1.678049064471508e-05,
+    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0102, z_pos: 0.0030749999999999996}
 - !!python/tuple
   - !!python/tuple
     - !!python/tuple [0.009331878857394406, -0.029306516282004123]
     - !!python/tuple [0.0443318788573945, -0.08992829454691477]
   - !!python/tuple [2335932116944, 2335932201616]
-  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 3.5e-06,
-    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0114, z_pos: 0.0030749999999999996}
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 1.786656212414032e-05,
+    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0102, z_pos: 0.0030749999999999996}
 - !!python/tuple
   - !!python/tuple
     - !!python/tuple [0.009331878857394406, -0.029306516282004123]
     - !!python/tuple [-0.04862367071994965, -0.0448356589881555]
   - !!python/tuple [2335932219464, 2335932219520]
-  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 3.5e-06,
-    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0114, z_pos: 0.0030749999999999996}
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 1.786656212414032e-05,
+    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0102, z_pos: 0.0030749999999999996}
 - !!python/tuple
   - !!python/tuple
     - !!python/tuple [0.009331878857394406, -0.029306516282004123]
     - !!python/tuple [0.0693318788573944, -0.029306516282004123]
   - !!python/tuple [2335932201616, 2335932167672]
-  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 3.5e-06,
-    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0114, z_pos: 0.0030749999999999996}
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 1.678049064471508e-05,
+    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0102, z_pos: 0.0030749999999999996}
 - !!python/tuple
   - !!python/tuple
     - !!python/tuple [0.009331878857394406, -0.029306516282004123]
     - !!python/tuple [0.05882935354045273, 0.020190958401054213]
   - !!python/tuple [2335931266664, 2335932167672]
-  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 3.5e-06,
-    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0114, z_pos: 0.0030749999999999996}
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 2.193087295547546e-05,
+    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0102, z_pos: 0.0030749999999999996}
 - !!python/tuple
   - !!python/tuple
     - !!python/tuple [0.009331878857394406, -0.029306516282004123]
     - !!python/tuple [-0.040165595825663925, 0.020190958401054213]
   - !!python/tuple [2335932219464, 2335931266664]
-  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 3.5e-06,
-    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0114, z_pos: 0.0030749999999999996}
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 2.193087295547546e-05,
+    limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0102, z_pos: 0.0030749999999999996}
 material_properties:
 - !!python/object:foldable_robotics.dynamics_info.MaterialProperty
   E1: 1

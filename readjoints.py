@@ -14,6 +14,7 @@ import yaml
 import scipy.integrate
 import scipy.linalg
 import matplotlib.pyplot as plt
+import pickle
 plt.ion()#interactive mode on
 import copy
 """
@@ -54,7 +55,7 @@ from math import pi
 #filename = 'Prototype_1.joints'
 #filename = 'fiveBar.cad.joints'
 #filename = 'sixBar1.cad.joints'
-filename = '4th_Design.cad1.joints'
+filename = '5th_Design.cad.joints'
 #filename = 'test.cad.joints'
 #filename = 'W_3.5.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
@@ -104,7 +105,12 @@ system.addforcegravity(-g*N.z)
 #ini = [0]*len(system.state_variables())
 #ini = [0, 0, 0.0, 0.0, 0, 100]#
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]#fiveBar.cad.joints
-ini = [1, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+#ini = [0.20000, 0.0570000, 0.0251100, -0.0376900, -0.08000, -0.083000, 0.0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+#ini = [0.20000*2, 0.0570000*2, 0.0251100*2, -0.0376900*2, -0.08000*2, -0.083000*2, 0.0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+#ini = [-0.097000, -0.2650000, 0.28090000, -0.18570000, 0.19600000, 0.1186000, 0.0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+#ini = [0.40100000, 0.114000000, 0.5010000, -0.7380000, -0.162000000, -0.169000, 0.0000000, 0.000000, 0.00000, 0.0000000, 0.0000000, 0.0000000]#sixBar1.cad.joints
+ini = [-0.196, -0.531, 0.562, -0.3712, 0.39340, 0.236, 0.0000000, 0.000000, 0.00000, 0.0000000, 0.0000000, 0.0000000]#sixBar1.cad.joints
+
 #ini = [0.000001, 0, 0.0, 0.0, 0, 0, 0, 0]#newmechanism.cad.joints
 #ini = [0.0001, 0.000, 0.000, 0.000, 0, 0, .0001, 0, 0, 0, 0, 0, 0, 0]#newmechanism1.cad.joints
 #==============================================================================
@@ -193,31 +199,60 @@ else:
     eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
 
-    #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+    func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+    #func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
+animation_params = support.AnimationParameters(t_final= 60,fps=30)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
+## Saving the objects:
+#with open('objs.pickle', 'wb') as f:  # Python 3: open(..., 'wb')
+#    pickle.dump([t, func1, ini, animation_params, rigidbodies, c1, c2, c3], f)
+
+
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=(1e2,1e1))#use with Baumgartes
-
+x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-6,atol=1e-6,full_output=True,args=(1e3,1e2))#use with Baumgartes
 readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
-
+constraint_output=Output([c1,c2,c3],system)
+cy = constraint_output.calc(x)
+import idealab_tools.data_exchange.csv as csv
+csv.write('output1.csv',numpy.c_[t,x])
+plt.plot(cy)
+#increment = ini[0]/10
+#sum = increment
+#for counter in range(0, 9):
+##x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
+#    ini = [sum, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0, 0, 0, 0, 0, 0]
+#    x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=(1e2,1e1))#use with Baumgartes
+#    sum = sum + increment
+#
+#    readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
+#
+#    constraint_output=Output([c1,c2,c3],system)
+#    cy = constraint_output.calc(x)
+#    import idealab_tools.data_exchange.csv as csv
+#    csv.write('output'+str(sum)+'.csv',numpy.c_[t,x[:,0]])
+#    plt.plot(cy)
 pynamics.toc()
 
 #KE = system.KE
 #PE = system.getPEGravity(O) - system.getPESprings()
-constraint_output=Output([c1,c2,c3],system)
-cy = constraint_output.calc(x)
 
-import idealab_tools.data_exchange.csv as csv
-csv.write('output1.csv',numpy.c_[t,x[:,0]])
-plt.plot(cy)
+
+
  
 app = qg.QApplication(sys.argv)
 animate.render(readjoints,material_properties,delete_images=True)
 w=animate.animate(readjoints,material_properties)
 sys.exit(app.exec_())
+
+
+# obj0, obj1, obj2 are created here...
+
+
+
+## Getting back the objects:
+#with open('objs.pickle','rb') as f:  # Python 3: open(..., 'rb')
+#    obj0, obj1, obj2 = pickle.load(f)

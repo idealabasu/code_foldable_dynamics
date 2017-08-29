@@ -162,8 +162,9 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
         counter = 0
         for prop in material_properties:
             density = prop.density
+            prop.density = density/2
             #TODO: fix next line
-#            unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
+#           unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
 
             #moment of inertia also changes when the mass changes so it should be taken care of in the future
             #unused_child.body.layerdef.layers[counter].density = unused_child.body.layerdef.layers[counter].density/2
@@ -216,7 +217,7 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
 
                 x,x_d,x_dd = Differentiable(system = pynamics_system)
                 child.frame.rotate_fixed_axis_directed(parent.frame,axis,x,pynamics_system)
-                
+                #add the air damping if necesssary
                 w = parent.frame.getw_(child.frame)
                 t_damper = -cb*w
                 spring_stretch = (x-(cq0*pi/180))*fixedaxis
@@ -224,6 +225,9 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
                 pynamics_system.add_spring_force(ck,spring_stretch,w)
                 pynamics_system.addforce(torqueFunctions[counter]*fixedaxis,w) 
                 counter =counter+1
+    for prop in material_properties:
+            density = prop.density
+            prop.density = density*2
     child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,pynamics_system,connections_rev,material_properties)
     #modify mass here of both unused_child and new_rigid body using same_bodies as a reference of the bodies which need to be changed.
 #==============================================================================
