@@ -61,8 +61,14 @@ filename = '5th_Design.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
 from foldable_robotics.laminate import Laminate
+
+material_properties = d.material_properties
+
 allbodies = [Laminate.import_dict(item) for item in d.connected_items]
-allbodies_dict = dict([(item.id,support.RigidBody.build(item)) for item in allbodies])
+allbodies_dict  = {}
+for item in allbodies:
+    mp = [item2.copy() for item2 in material_properties]
+    allbodies_dict[item.id] = support.RigidBody.build(item,mp) 
 rigidbodies = [allbodies_dict[item.id] for item in allbodies]
 system = System()
 
@@ -92,7 +98,6 @@ torqueFunctions = [0]*len(connections)
 
 new_rigid_body,unused_child, generations = support.build_frames(rigidbodies,N_rb,connections,system,O,d.material_properties,torqueFunctions)
 
-material_properties = d.material_properties
 #
 g = Constant(9.81,'g',system)
 system.addforcegravity(-g*N.z)
