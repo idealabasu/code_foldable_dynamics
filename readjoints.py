@@ -238,11 +238,14 @@ eq1 = [
     ]
 eq1_d = [system.derivative(item) for item in eq1]
 eq1_dd = [(system.derivative(item)) for item in eq1_d]
-func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+#func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
 t2 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-x2,details=scipy.integrate.odeint(func1,ini,t2,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
+#x2,details=scipy.integrate.odeint(func1,ini,t2,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
+x2,details = scipy.integrate.odeint(func1,ini,t2,rtol=1e-6,atol=1e-6,full_output=True,args=(1e2,1e1))#use with Baumgartes
+
 x = numpy.append(x1,x2,axis = 0)
 t = numpy.append(t1,t2+t1[-1],axis = 0)
 readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
