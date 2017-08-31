@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Aug 30 17:16:38 2017
+
+@author: rkhodamb
+"""
+# -*- coding: utf-8 -*-
+"""
 Written by Daniel M. Aukes
 Email: danaukes<at>gmail.com
 Please see LICENSE for full license.
@@ -220,70 +226,27 @@ else:
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 animation_params = support.AnimationParameters(t_final= 20,fps=30)#,fps=1000)    
-t1 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 ## Saving the objects:
 #with open('objs.pickle', 'wb') as f:  # Python 3: open(..., 'wb')
 #    pickle.dump([t, func1, ini, animation_params, rigidbodies, c1, c2, c3], f)
 
 
-#x,details = scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x1,details = scipy.integrate.odeint(func1,ini,t1,rtol=1e-6,atol=1e-6,full_output=True,args=(1e2,1e1))#use with Baumgartes
-#ini = [-0.196, -0.531, 0.562, -0.3712, 0.39340, 0.236, 0.0000000, 0.000000, 0.00000, 0.0000000, 0.0000000, 0.0000000]#sixBar1.cad.joints
-ini = [x1[0,-1], x1[1,-1], x1[2,-1], x1[3,-1], x1[4,-1], x1[5,-1], x1[6,-1], x1[7,-1], x1[8,-1], x1[9,-1], x1[10,-1], x1[11,-1]]#sixBar1.cad.joints
-eq1 = [
-       c1,
-    c2,
-    c3,
-    ]
-eq1_d = [system.derivative(item) for item in eq1]
-eq1_dd = [(system.derivative(item)) for item in eq1_d]
-func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+import shelve
 
-animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
-t2 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-x2,details=scipy.integrate.odeint(func1,ini,t2,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x = numpy.append(x1,x2,axis = 0)
-t = numpy.append(t1,t2+t1[-1],axis = 0)
-readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
-constraint_output=Output([c1,c2,c3],system)
-cy = constraint_output.calc(x1)
-import idealab_tools.data_exchange.csv as csv
-csv.write('output1.csv',numpy.c_[t,x])
-plt.plot(cy)
-#increment = ini[0]/10
-#sum = increment
-#for counter in range(0, 9):
-##x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-#    ini = [sum, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0, 0, 0, 0, 0, 0]
-#    x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=(1e2,1e1))#use with Baumgartes
-#    sum = sum + increment
-#
-#    readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
-#
-#    constraint_output=Output([c1,c2,c3],system)
-#    cy = constraint_output.calc(x)
-#    import idealab_tools.data_exchange.csv as csv
-#    csv.write('output'+str(sum)+'.csv',numpy.c_[t,x[:,0]])
-#    plt.plot(cy)
-pynamics.toc()
+#T='Hiya'
+#val=[1,2,3]
+directory = ''
+filename='./designs/shelve.out'
+my_shelf = shelve.open(filename,'n') # 'n' for new
 
-#KE = system.KE
-#PE = system.getPEGravity(O) - system.getPESprings()
-
-
-
- 
-app = qg.QApplication(sys.argv)
-animate.render(readjoints,material_properties,delete_images=True)
-w=animate.animate(readjoints,material_properties)
-sys.exit(app.exec_())
-
-
-# obj0, obj1, obj2 are created here...
-
-
-
-## Getting back the objects:
-#with open('objs.pickle','rb') as f:  # Python 3: open(..., 'rb')
-#    obj0, obj1, obj2 = pickle.load(f)
+for key in dir():
+    try:
+        my_shelf[key] = globals()[key]
+    except TypeError:
+        #
+        # __builtins__, my_shelf, and imported modules can not be shelved.
+        #
+        print('ERROR shelving: {0}'.format(key))
+my_shelf.close()
