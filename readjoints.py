@@ -213,14 +213,16 @@ else:
     eq1_d = [system.derivative(item) for item in eq1]
     eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
-
-    #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+#func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
+func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+    
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 animation_params = support.AnimationParameters(t_final= 60,fps=30)#,fps=1000)    
-t1 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+#t1 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+
 
 ## Saving the objects:
 #with open('objs.pickle', 'wb') as f:  # Python 3: open(..., 'wb')
@@ -228,9 +230,9 @@ t1 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_para
 
 
 #x,details = scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x1,details = scipy.integrate.odeint(func1,ini,t1,rtol=1e-6,atol=1e-6,full_output=True,args=(1e2,1e1))#use with Baumgartes
+x1,details = scipy.integrate.odeint(func1,ini,t[0:900],rtol=1e-6,atol=1e-6,full_output=True,args=(1e2,1e1))#use with Baumgartes
 #ini = [-0.196, -0.531, 0.562, -0.3712, 0.39340, 0.236, 0.0000000, 0.000000, 0.00000, 0.0000000, 0.0000000, 0.0000000]#sixBar1.cad.joints
-ini = [x1[0,-1], x1[1,-1], x1[2,-1], x1[3,-1], x1[4,-1], x1[5,-1], 0, 0, 0, 0, 0, 0]#sixBar1.cad.joints
+ini = [x1[-1,0],x1[-1,1],x1[-1,2],x1[-1,3],x1[-1,4],x1[-1,5],0,0,0,0,0,0] #sixBar1.cad.joints
 eq1 = [
        c1,
     c2,
@@ -241,18 +243,19 @@ eq1_dd = [(system.derivative(item)) for item in eq1_d]
 func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
 #func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
-animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
-t2 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
-x2,details=scipy.integrate.odeint(func1,ini,t2,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-#x2,details = scipy.integrate.odeint(func1,ini,t2,rtol=1e-8,atol=1e-8,full_output=True,args=(1e3,1e2))#use with Baumgartes
+#animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
+#t2 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
+#x2,details=scipy.integrate.odeint(func1,ini,t[75:-1],rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
+x2,details = scipy.integrate.odeint(func1,ini,t[900:-1],rtol=1e-8,atol=1e-8,full_output=True,args=(1e2,1e1))#use with Baumgartes
 
 x = numpy.append(x1,x2,axis = 0)
-t = numpy.append(t1,t2+t1[-1],axis = 0)
+#t = numpy.append(t1,t2+t1[-1],axis = 0)
 readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
 constraint_output=Output([c1,c2,c3],system)
-cy = constraint_output.calc(x1)
+
+cy = constraint_output.calc(x)
 import idealab_tools.data_exchange.csv as csv
-csv.write('output1.csv',numpy.c_[t,x])
+csv.write('output1.csv',numpy.c_[t[0:-1],x])
 plt.plot(cy)
 #increment = ini[0]/10
 #sum = increment
