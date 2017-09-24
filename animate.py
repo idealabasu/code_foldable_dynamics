@@ -30,7 +30,7 @@ def render(rundata,material_properties,size=(1024,768),delete_images=False):
     centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = .3
+    w.opts['distance'] = 3
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(*size)
@@ -61,7 +61,7 @@ def render(rundata,material_properties,size=(1024,768),delete_images=False):
     w.close()
     if os.path.exists('render.mp4'):
         os.remove('render.mp4')
-    subprocess.call('ffmpeg -r {0} -i render/img_%04d.png -vcodec libx264 -preset slow -crf 10 render.mp4'.format(str(rundata.animation_params.fps)))
+    subprocess.call('ffmpeg -r {0} -i render/img_%04d.png -vcodec libxvid -qscale:v 1 -preset slow -crf 10 render.mp4'.format(str(rundata.animation_params.fps)))
     
     if delete_images:
         shutil.rmtree('render',ignore_errors=True)
@@ -90,7 +90,7 @@ def animate(rundata,material_properties):
     centerpoint = qg.QVector3D(0,0,0)
     
     w.opts['center'] = centerpoint
-    w.opts['distance'] = .3
+    w.opts['distance'] = 3
     w.opts['azimuth'] = -45
     w.opts['elevation'] = 30
     w.resize(1280,1020)

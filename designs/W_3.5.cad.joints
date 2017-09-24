@@ -80,7 +80,7 @@ connections:
     - !!python/tuple [-0.028199854854633704, -0.0222550310414817]
     - !!python/tuple [0.021800145145366302, -0.0222550310414817]
   - !!python/tuple [2207488445184, 2207488444064]
-  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 2.5e-5,
+  - !!python/object:foldable_robotics.dynamics_info.JointProps {damping: 2.5e-4,
     limit_neg: -180, limit_pos: 180, preload: 0.0, stiffness: 0.0076, z_pos: 0.00317}
 material_properties:
 - !!python/object:foldable_robotics.dynamics_info.MaterialProperty

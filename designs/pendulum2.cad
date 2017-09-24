@@ -67,7 +67,7 @@ _layerdef: !!python/object:popupcad.filetypes.layerdef.LayerDef
     name: rigid
     poisson: 0.5
     thickness: 200.0
-dirname: C:\Users\daukes\code\foldable_dynamics\designs
+dirname: C:\Users\rkhodamb\Google Drive\Code\code_foldable_dynamics\designs
 id: 9269984603
 operations:
 - !!python/object:popupcad.manufacturing.simplesketchoperation.SimpleSketchOp
@@ -150,7 +150,7 @@ operations:
   sketch_links:
     contact_points: [8377568]
 parent_program_name: popupCAD
-parent_program_version: 2017.05.31
+parent_program_version: 2017.09.21
 sketches:
   8377568: !!python/object:popupcad.filetypes.sketch.Sketch
     _basename: points
