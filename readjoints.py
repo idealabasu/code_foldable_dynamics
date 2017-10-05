@@ -61,12 +61,12 @@ with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
 from foldable_robotics.laminate import Laminate
 
-material_properties = d.material_properties
+#material_properties = d.material_properties
 
 allbodies = [Laminate.import_dict(item) for item in d.connected_items]
 allbodies_dict  = {}
 for item in allbodies:
-    mp = [item2.copy() for item2 in material_properties]
+    mp = [item2.copy() for item2 in d.material_properties]
     allbodies_dict[item.id] = support.RigidBody.build(item,mp) 
 rigidbodies = [allbodies_dict[item.id] for item in allbodies]
 system = System()
@@ -223,6 +223,6 @@ csv.write('output1.csv',numpy.c_[t,x[:,0]])
 plt.plot(cy)
  
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,material_properties,delete_images=True)
-w=animate.animate(readjoints,material_properties)
+animate.render(readjoints,d.material_properties,delete_images=True)
+w=animate.animate(readjoints,d.material_properties)
 sys.exit(app.exec_())
