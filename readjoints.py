@@ -207,7 +207,7 @@ animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
 #x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=(1e2,1e1))#use with Baumgartes
+x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=({'alpha':1e2,'beta':1e1},))#use with Baumgartes
 
 readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
 
