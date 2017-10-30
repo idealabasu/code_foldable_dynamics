@@ -199,7 +199,7 @@ else:
 
 
     #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, constants = system.constant_values, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
