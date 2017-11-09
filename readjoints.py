@@ -274,7 +274,7 @@ plt.plot(cy)
 #    plt.plot(cy)
 pynamics.toc()
 
-#KE = system.KE
+#KE = system.get_KE()
 #PE = system.getPEGravity(O) - system.getPESprings()
 
 
