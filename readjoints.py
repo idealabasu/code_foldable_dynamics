@@ -34,6 +34,7 @@ from pynamics.particle import Particle
 from sympy.functions import Abs
 from pynamics.frame import Frame
 from foldable_robotics.dynamics_info import DynamicsInfo
+import pynamics.integration
 directory = './designs'
 #directory = 'C:\\Users\\danaukes\\Dropbox (Personal)\\mohammad'
 #directory ='C:\\Users\\rkhodamb\\Desktop'
@@ -199,15 +200,15 @@ else:
 
 
     #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, constants = system.constant_values, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, eq_active = [True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
 #t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
 t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 
-#x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x,details=scipy.integrate.odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=({'alpha':1e2,'beta':1e1},))#use with Baumgartes
+#x,details=pynamics.integration.integrate_odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
+x,details=pynamics.integration.integrate_odeint(func1,ini,t,rtol=1e-3,atol=1e-3,full_output=True,args=({'alpha':1e2,'beta':1e1,'constants':system.constant_values},))#use with Baumgartes
 
 readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
 

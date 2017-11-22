@@ -216,7 +216,7 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
                 t_damper = -cb*w
                 spring_stretch = (x-(cq0*pi/180))*fixedaxis
                 pynamics_system.addforce(t_damper,w)
-                pynamics_system.add_spring_force(ck,spring_stretch,w)
+                pynamics_system.add_spring_force1(ck,spring_stretch,w)
                 pynamics_system.addforce(torqueFunctions[counter]*fixedaxis,w) 
                 counter =counter+1
     child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,pynamics_system,connections_rev,material_properties)
