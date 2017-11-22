@@ -214,7 +214,7 @@ readjoints = support.ReadJoints.build(x,animation_params,rigidbodies,system)
 
 pynamics.toc()
 
-#KE = system.KE
+#KE = system.get_KE()
 #PE = system.getPEGravity(O) - system.getPESprings()
 constraint_output=Output([c1,c2,c3],system)
 cy = constraint_output.calc(x)
