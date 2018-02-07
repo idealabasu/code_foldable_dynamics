@@ -62,12 +62,12 @@ with open(os.path.join(directory,filename),'r') as f:
     d = yaml.load(f)
 from foldable_robotics.laminate import Laminate
 
-material_properties = d.material_properties
+#material_properties = d.material_properties
 
 allbodies = [Laminate.import_dict(item) for item in d.connected_items]
 allbodies_dict  = {}
 for item in allbodies:
-    mp = [item2.copy() for item2 in material_properties]
+    mp = [item2.copy() for item2 in d.material_properties]
     allbodies_dict[item.id] = support.RigidBody.build(item,mp) 
 rigidbodies = [allbodies_dict[item.id] for item in allbodies]
 system = System()
@@ -214,7 +214,7 @@ else:
     eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
 #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, constants = system.constant_values, eq_active = [True, True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
     
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
@@ -230,7 +230,7 @@ t = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_param
 
 
 #x,details = scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x1,details = scipy.integrate.odeint(func1,ini,t[0:900],rtol=1e-6,atol=1e-6,full_output=True,args=(1e2,1e1))#use with Baumgartes
+x1,details = scipy.integrate.odeint(func1,ini,t[0:900],rtol=1e-6,atol=1e-6,full_output=True,args=({'alpha':1e2,'beta':1e1},))#use with Baumgartes
 #ini = [-0.196, -0.531, 0.562, -0.3712, 0.39340, 0.236, 0.0000000, 0.000000, 0.00000, 0.0000000, 0.0000000, 0.0000000]#sixBar1.cad.joints
 ini = [x1[-1,0],x1[-1,1],x1[-1,2],x1[-1,3],x1[-1,4],x1[-1,5],0,0,0,0,0,0] #sixBar1.cad.joints
 eq1 = [
@@ -246,7 +246,7 @@ func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
 #animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
 #t2 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 #x2,details=scipy.integrate.odeint(func1,ini,t[75:-1],rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x2,details = scipy.integrate.odeint(func1,ini,t[900:-1],rtol=1e-8,atol=1e-8,full_output=True,args=(1e2,1e1))#use with Baumgartes
+x2,details = scipy.integrate.odeint(func1,ini,t[900:-1],rtol=1e-8,atol=1e-8,full_output=True,args=({'alpha':1e2,'beta':1e1},))#use with Baumgartes
 
 x = numpy.append(x1,x2,axis = 0)
 #t = numpy.append(t1,t2+t1[-1],axis = 0)
@@ -274,15 +274,15 @@ plt.plot(cy)
 #    plt.plot(cy)
 pynamics.toc()
 
-#KE = system.KE
+#KE = system.get_KE()
 #PE = system.getPEGravity(O) - system.getPESprings()
 
 
 
  
 app = qg.QApplication(sys.argv)
-animate.render(readjoints,material_properties,delete_images=True)
-w=animate.animate(readjoints,material_properties)
+animate.render(readjoints,d.material_properties,delete_images=True)
+w=animate.animate(readjoints,d.material_properties)
 sys.exit(app.exec_())
 
 
