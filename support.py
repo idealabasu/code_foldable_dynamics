@@ -71,7 +71,7 @@ def vector_from_fixed(fixed_matrix,fixed_vector,new_matrix,frame):
 #def add_spring_between_points(P1,P3,pynamics_system,N_rb,k_stop,b):
 #    constraint1 = P1 - P3
 #    c1_d = constraint1.diff_in_parts(N_rb.frame,pynamics_system)
-#    pynamics_system.add_spring_force(k_stop,constraint1,c1_d)
+#    pynamics_system.add_spring_force1(k_stop,constraint1,c1_d)
 ##    pynamics_system.addforce(-b*c1_d,c1_d)
 
 #def find_constraints(unused_connections):
@@ -216,7 +216,7 @@ def build_frames(rigidbodies,N_rb,connections,pynamics_system,O,material_propert
                 t_damper = -cb*w
                 spring_stretch = (x-(cq0*pi/180))*fixedaxis
                 pynamics_system.addforce(t_damper,w)
-                pynamics_system.add_spring_force(ck,spring_stretch,w)
+                pynamics_system.add_spring_force1(ck,spring_stretch,w)
                 pynamics_system.addforce(torqueFunctions[counter]*fixedaxis,w) 
                 counter =counter+1
     child_velocities(N_rb,O,numpy.array([0,0,0]),N_rb,pynamics_system,connections_rev,material_properties)
