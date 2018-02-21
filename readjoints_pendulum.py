@@ -21,6 +21,7 @@ import copy
 import costum made functions
 """
 import pynamics
+import pynamics.integration
 
 from pynamics.variable_types import Constant
 from pynamics.variable_types import Differentiable
@@ -128,7 +129,7 @@ f,ma = system.getdynamics()
 
 #=========mycode=============
 if new_rigid_body== []:
-    func1 = system.state_space_post_invert(f, ma)#no constraints    
+    func1 = system.state_space_post_invert(f, ma, constants = system.constant_values)#no constraints    
         
 else:
     p1 = new_rigid_body.vector_from_fixed((1,2,3))
@@ -214,7 +215,7 @@ else:
     eq1_dd = [(system.derivative(item)) for item in eq1_d]
 
 #func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
-    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, presolve_constants = True, eq_active = [True, True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
+    func1 = system.state_space_post_invert2(f,ma, eq1_dd, eq1_d, eq1, constants = system.constant_values, eq_active = [True, True, True, True])#Baumgartes constraints, the number of True should be equal to number of active constraints
     
 
 #animation_params = support_test.AnimationParameters(t_final=5)#,fps=1000)    
@@ -230,7 +231,7 @@ t1 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_para
 
 
 #x,details = scipy.integrate.odeint(func1,ini,t,rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x1,details = scipy.integrate.odeint(func1,ini,t1,rtol=1e-6,atol=1e-6,full_output=True,args=(1e2,1e1))#use with Baumgartes
+x1,details = pynamics.integration.integrate_odeint(func1,ini,t1,rtol=1e-6,atol=1e-6,full_output=True,args=({'alpha':1e2,'beta':1e1},))#use with Baumgartes
 #ini = [-0.196, -0.531, 0.562, -0.3712, 0.39340, 0.236, 0.0000000, 0.000000, 0.00000, 0.0000000, 0.0000000, 0.0000000]#sixBar1.cad.joints
 #ini = [x1[-1,0],x1[-1,1],x1[-1,2],x1[-1,3],x1[-1,4],x1[-1,5],0,0,0,0,0,0] #sixBar1.cad.joints
 #eq1 = [
