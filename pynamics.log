@@ -1,0 +1,59 @@
+2018-02-14 09:35:40,097 - pynamics.system - INFO - getting dynamic equations
+2018-02-14 09:36:33,733 - pynamics.system - INFO - getting dynamic equations
+2018-02-14 09:39:01,926 - pynamics.system - INFO - getting dynamic equations
+2018-02-14 09:40:23,125 - pynamics.system - INFO - getting dynamic equations
+2018-02-14 09:40:25,766 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-14 09:45:54,009 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-14 09:45:54,084 - pynamics.integration - INFO - beginning integration
+2018-02-14 09:45:54,086 - pynamics.system - INFO - integration at time 0000.00
+2018-02-14 09:47:41,738 - pynamics.system - INFO - integration at time 0000.33
+2018-02-14 09:49:33,252 - pynamics.system - INFO - integration at time 0000.97
+2018-02-14 09:51:25,381 - pynamics.system - INFO - integration at time 0002.19
+2018-02-14 09:53:17,722 - pynamics.system - INFO - integration at time 0005.14
+2018-02-14 09:55:09,864 - pynamics.system - INFO - integration at time 0011.41
+2018-02-14 10:03:18,771 - pynamics.system - INFO - integration at time 0017.04
+2018-02-14 10:19:28,934 - pynamics.system - INFO - integration at time 0023.28
+2018-02-14 10:20:47,993 - pynamics.integration - INFO - finished integration
+2018-02-14 10:20:48,213 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-14 10:22:04,409 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-14 10:22:04,411 - pynamics.integration - INFO - beginning integration
+2018-02-14 10:22:04,412 - pynamics.system - INFO - integration at time 0030.00
+2018-02-21 08:53:38,835 - pynamics.system - INFO - getting dynamic equations
+2018-02-21 08:53:39,141 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-21 08:53:39,392 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-21 08:53:39,394 - pynamics.system - INFO - integration at time 0000.00
+2018-02-21 08:59:07,528 - pynamics.system - INFO - getting dynamic equations
+2018-02-21 08:59:07,787 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-21 08:59:08,010 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-21 08:59:08,011 - pynamics.system - INFO - integration at time 0000.00
+2018-02-21 10:50:52,607 - pynamics.system - INFO - getting dynamic equations
+2018-02-21 10:50:52,885 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-21 10:50:53,138 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-21 10:50:53,139 - pynamics.system - INFO - integration at time 0000.00
+2018-02-21 10:53:40,260 - pynamics.system - INFO - getting dynamic equations
+2018-02-21 10:53:40,532 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-21 10:53:40,791 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-21 10:55:22,007 - pynamics.system - INFO - getting dynamic equations
+2018-02-21 10:55:22,290 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-21 10:55:22,565 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-21 10:55:22,566 - pynamics.integration - INFO - beginning integration
+2018-02-21 10:55:22,568 - pynamics.system - INFO - integration at time 0000.00
+2018-02-21 10:57:57,864 - pynamics.system - INFO - getting dynamic equations
+2018-02-21 10:58:05,430 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-21 10:58:06,660 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-21 10:58:06,661 - pynamics.integration - INFO - beginning integration
+2018-02-21 10:58:06,663 - pynamics.system - INFO - integration at time 0000.00
+2018-02-21 10:59:23,218 - pynamics.system - INFO - getting dynamic equations
+2018-02-21 10:59:23,483 - pynamics.system - INFO - solving a = f/m and creating function
+2018-02-21 10:59:24,115 - pynamics.system - INFO - done solving a = f/m and creating function
+2018-02-21 10:59:24,116 - pynamics.integration - INFO - beginning integration
+2018-02-21 10:59:24,117 - pynamics.system - INFO - integration at time 0000.00
+2018-02-21 10:59:24,529 - pynamics.system - INFO - integration at time 0003.32
+2018-02-21 10:59:24,749 - pynamics.integration - INFO - finished integration
+2018-02-21 10:59:24,801 - pynamics.output - INFO - calculating outputs
+2018-02-21 10:59:24,802 - pynamics.output - INFO - done calculating outputs
+2018-02-21 10:59:24,803 - pynamics.output - INFO - calculating outputs
+2018-02-21 10:59:24,831 - pynamics.output - INFO - done calculating outputs
+2018-02-21 10:59:24,864 - pynamics.output - INFO - calculating outputs
+2018-02-21 10:59:24,899 - pynamics.output - INFO - done calculating outputs
+2018-02-21 10:59:24,967 - pynamics - INFO - 1519235964.9676983
