@@ -247,7 +247,7 @@ func1 = system.state_space_post_invert(f, ma, eq1_dd)#constraints
 #animation_params = support.AnimationParameters(t_final= 10,fps=30)#,fps=1000)    
 #t2 = numpy.r_[animation_params.t_initial:animation_params.t_final:animation_params.t_step]
 #x2,details=pynamics.integration.integrate_odeint(func1,ini,t[75:-1],rtol=1e-8,atol=1e-8,full_output=True)#use without Baumgartes
-x2,details = pynamics.integration.integrate_odeint(func1,ini,t[900:-1],rtol=1e-8,atol=1e-8,full_output=True,args=({'alpha':1e2,'beta':1e1},))#use with Baumgartes
+x2,details = pynamics.integration.integrate_odeint(func1,ini,t[900:-1],rtol=1e-8,atol=1e-8,full_output=True,args=({'alpha':1e2,'beta':1e1,'constants':system.constant_values},))#use with Baumgartes
 
 x = numpy.append(x1,x2,axis = 0)
 #t = numpy.append(t1,t2+t1[-1],axis = 0)
