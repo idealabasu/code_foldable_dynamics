@@ -113,7 +113,7 @@ if __name__=='__main__':
     app = qg.QApplication(sys.argv)
     
     with open('rundata','r') as f:
-        rundata = yaml.load(f)
+        rundata = yaml.load(f,Loader=yaml.FullLoader)
 #    render(rundata,show=True,render_video=False)
     animate(rundata)
         

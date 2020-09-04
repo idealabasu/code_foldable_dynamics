@@ -59,7 +59,7 @@ filename = '4th_Design.cad1.joints'
 #filename = 'test.cad.joints'
 #filename = 'W_3.5.cad.joints'
 with open(os.path.join(directory,filename),'r') as f:
-    d = yaml.load(f)
+    d = yaml.load(f,Loader=yaml.FullLoader)
 from foldable_robotics.laminate import Laminate
 
 #material_properties = d.material_properties
